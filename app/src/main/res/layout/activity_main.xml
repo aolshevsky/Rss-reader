@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/activity_view"
     tools:context=".MainActivity">
 
     <TextView
@@ -22,7 +23,7 @@
         android:layout_height="64dp"
         android:layout_marginBottom="148dp"
         android:layout_marginEnd="224dp"
-        android:text="Start"
+        android:text="@string/start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

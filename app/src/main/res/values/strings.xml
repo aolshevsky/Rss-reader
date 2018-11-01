@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="start_btn">Button</string>
-    <string name="btn">Button</string>
-    <string name="start">\@string/Start</string>
+    <string name="start">Make 4ydo</string>
 </resources>
