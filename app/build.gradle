@@ -51,8 +51,8 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        paid {
-            versionNameSuffix "-paid"
+        premium {
+            versionNameSuffix "-premium"
         }
         dev {
             versionNameSuffix "-dev"

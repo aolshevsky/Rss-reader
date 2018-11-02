@@ -1,25 +1,23 @@
 package com.example.user.myapplication;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-
-import static android.Manifest.*;
+import static android.Manifest.permission;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,41 +36,32 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasPermissions()){
-                    // our app has permissions.
-                    makeFolder();
-
-                }
-                else {
-                    //our app doesn't have permissions, So i m requesting permissions.
+                if (hasNeedPermissions()) {
+                    showPhoneState();
+                } else {
                     requestPerms();
                 }
             }
         });
     }
 
-    private void makeFolder(){
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"fandroid");
-
-        if (!file.exists()){
-            Boolean ff = file.mkdir();
-            if (ff){
-                Toast.makeText(MainActivity.this, "Folder created successfully", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(MainActivity.this, "Failed to create folder", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-        else {
-            Toast.makeText(MainActivity.this, "Folder already exist", Toast.LENGTH_SHORT).show();
+    @SuppressLint("HardwareIds")
+    private void showPhoneState() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = "IMEI: ";
+        TextView imei_txt = (TextView) findViewById(R.id.imei_view);
+        try {
+            imei += tm.getDeviceId();
+            imei_txt.setText(imei);
+        } catch (SecurityException e) {
+            imei_txt.setText(e.getMessage());
         }
     }
 
-    private boolean hasPermissions(){
+
+    private boolean hasNeedPermissions(){
         int res = 0;
-        //string array of permissions,
-        String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = new String[]{permission.READ_PHONE_STATE};
 
         for (String perms : permissions){
             res = checkCallingOrSelfPermission(perms);
@@ -84,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPerms(){
-        String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = new String[]{permission.READ_PHONE_STATE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(permissions,PERMISSION_REQUEST_CODE);
         }
@@ -111,33 +100,30 @@ public class MainActivity extends AppCompatActivity {
 
         if (allowed){
             //user granted all permissions we can perform our task.
-            makeFolder();
+            showPhoneState();
         }
         else {
             // we will give warning to user that they haven't granted permissions.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(permission.WRITE_EXTERNAL_STORAGE)){
-                    Toast.makeText(this, "Storage Permissions denied.", Toast.LENGTH_SHORT).show();
-                    requestPerms();
-                } else {
-                    showNoStoragePermissionSnackbar();
-                }
+            if (shouldShowRequestPermissionRationale(permission.READ_PHONE_STATE)) {
+                Toast.makeText(this, "Phone Permissions denied.", Toast.LENGTH_SHORT).show();
+                requestPerms();
+            } else {
+                showNoPhonePermissionSnackbar();
             }
         }
 
     }
 
 
-
-    public void showNoStoragePermissionSnackbar() {
-        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), "Storage permission isn't granted" , Snackbar.LENGTH_LONG)
+    public void showNoPhonePermissionSnackbar() {
+        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), "Phone permission isn't granted" , Snackbar.LENGTH_LONG)
                 .setAction("SETTINGS", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         openApplicationSettings();
 
                         Toast.makeText(getApplicationContext(),
-                                "Open Permissions and grant the Storage permission",
+                                "Open Permissions and grant the Phone permission",
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }

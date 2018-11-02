@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="start">Make 4ydo</string>
+    <string name="get_imei">BABAX</string>
+    <string name="imei_txt">No permission to get imei</string>
 </resources>
