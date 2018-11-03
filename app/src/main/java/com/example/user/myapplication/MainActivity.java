@@ -34,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        if (savedInstanceState != null &&
+                savedInstanceState.getString("IMEI") != null) {
+            String saved_imei = savedInstanceState.getString("IMEI");
+            String imei_str = "IMEI: ";
+            TextView imei_txt = (TextView) findViewById(R.id.imei_view);
+            imei_txt.setText(imei_str.concat(saved_imei));
+        }
         Log.d(LOG_TAG, "onCreate");
 
         TextView ver_view = findViewById(R.id.version_name);
@@ -53,6 +61,48 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(LOG_TAG, "onRestart");
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(LOG_TAG, "onRestoreInstanceState");
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume ");
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("IMEI", findViewById(R.id.imei_view).toString());
+        Log.d(LOG_TAG, "onSaveInstanceState");
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
     }
 
     private void showPhoneState() {
