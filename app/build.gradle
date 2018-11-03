@@ -7,8 +7,16 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     def command = "git describe".execute().text.trim()
+    // command = "0.0"
+    def result = ""
     def values = command.split('-')
-    def result = values[0] + '.' + values[1]
+    if (values.length == 1){
+        result = values[0] + ".0"
+    }
+    else{
+        result = values[0] + '.' + values[1]
+    }
+
     println result
     def versionPropsFile = file('version.properties')
     Properties versionProps = new Properties()
@@ -52,9 +60,11 @@ android {
     flavorDimensions "version"
     productFlavors {
         premium {
+            dimension 'version'
             versionNameSuffix "-premium"
         }
         dev {
+            dimension 'version'
             versionNameSuffix "-dev"
         }
     }

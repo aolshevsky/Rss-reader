@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="get_imei">BABAX</string>
+    <string name="get_imei">БОМБА</string>
     <string name="imei_txt">No permission to get imei</string>
     <string name="app_ver">app version: </string>
     <string name="msg_no_per">No permission to get imei</string>
