@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myapplication.util.RequestCode;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import static android.Manifest.permission;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSION_REQUEST_CODE = 123;
 
     final String LOG_TAG = "myLogs";
 
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestPerms(){
         String[] permissions = new String[]{permission.READ_PHONE_STATE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            requestPermissions(permissions,PERMISSION_REQUEST_CODE);
+            requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, Boolean> allowed = new HashMap<>();
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
+            case RequestCode.PERMISSION_REQUEST_CODE: {
                 for (int i = 0, len = grantResults.length; i < len; i++) {
                     allowed.put(permissions[i] ,(grantResults[i] == PackageManager.PERMISSION_GRANTED));
                 }
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.parse("package:" + getPackageName()));
-        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
+        startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
     }
 
 
