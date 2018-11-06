@@ -15,4 +15,9 @@
         android:name="com.example.user.myapplication.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/simpleFragment"
+        android:name="com.example.user.myapplication.fragment.SimpleFragment"
+        android:label="fragment_simple"
+        tools:layout="@layout/fragment_simple" />
 </navigation>

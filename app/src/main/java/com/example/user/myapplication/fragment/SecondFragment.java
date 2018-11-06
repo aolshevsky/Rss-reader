@@ -45,7 +45,7 @@ public class SecondFragment extends Fragment {
             imei_txt.setText(imei_str.concat(saved_imei));
         }
          */
-        phoneStateView = inflater.inflate(R.layout.fragment_second, null);
+        phoneStateView = inflater.inflate(R.layout.fragment_second, container, false);
 
         return phoneStateView;
     }

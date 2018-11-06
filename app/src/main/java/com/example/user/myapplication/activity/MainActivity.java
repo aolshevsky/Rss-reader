@@ -11,9 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -39,12 +42,9 @@ public class MainActivity extends AppCompatActivity {
     final String LOG_TAG = "myLogs";
 
     private NavController navController;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
-    private ProfileFragment profileFragment;
-    private SecondFragment secondFragment;
-
-    private FragmentManager manager;
-    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        initialToggle();
 
-        manager = getSupportFragmentManager();
-
-        profileFragment = new ProfileFragment();
-        secondFragment = new SecondFragment();
 
         if(!hasNeedPermissions())
             requestPerms();
@@ -90,6 +87,22 @@ public class MainActivity extends AppCompatActivity {
         });
 */
 
+    }
+
+    private void initialToggle(){
+        drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -241,39 +254,6 @@ public class MainActivity extends AppCompatActivity {
     public void onFragmentProfileBackClick(View view) {
         navController.popBackStack();
     }
-
-    /*
-    public void onClickFragment(View view){
-        transaction = manager.beginTransaction();
-
-        switch (view.getId()){
-            case R.id.btnAdd:
-                if (manager.findFragmentByTag(ProfileFragment.TAG) == null) {
-                    transaction.add(R.id.container, profileFragment, ProfileFragment.TAG);
-                }
-                break;
-            case R.id.btnDelete:
-                if (manager.findFragmentByTag(ProfileFragment.TAG) != null) {
-                    transaction.remove(profileFragment);
-                }
-                if (manager.findFragmentByTag(SecondFragment.TAG) != null) {
-                    transaction.remove(secondFragment);
-                }
-                break;
-            case R.id.btnReplace:
-                if (manager.findFragmentByTag(ProfileFragment.TAG) != null) {
-                    transaction.replace(R.id.container, secondFragment, SecondFragment.TAG);
-                }
-                if (manager.findFragmentByTag(SecondFragment.TAG) != null) {
-                    transaction.replace(R.id.container, profileFragment, ProfileFragment.TAG);
-                }
-                break;
-        }
-
-        transaction.commit();
-    }
-    */
-
 
 
 }

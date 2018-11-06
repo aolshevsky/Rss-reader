@@ -10,15 +10,13 @@ import android.view.ViewGroup;
 
 import com.example.user.myapplication.R;
 
-
-public class ProfileFragment extends Fragment {
-
-
-    public static final String TAG = "ProfileFragmentTag";
+public class SimpleFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_simple, container, false);
     }
+
 }
