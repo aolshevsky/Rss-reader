@@ -3,29 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/activity_view"
-    tools:context=".activity.MainActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/version_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="328dp"
         android:layout_marginEnd="164dp"
+        android:layout_marginBottom="328dp"
         android:text="Hello World!"
-        android:textColor="@color/colorPrimary"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/start_btn"
-        android:layout_width="110dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="468dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="144dp"
+        android:layout_marginBottom="464dp"
+        android:onClick="onClickGetIMEI"
         android:text="@string/get_imei"
-        android:textColor="@color/colorPrimary"
+        android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -34,10 +33,10 @@
         android:id="@+id/imei_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="272dp"
         android:layout_marginEnd="124dp"
+        android:layout_marginBottom="272dp"
         android:text="@string/imei_txt"
-        android:textColor="@color/colorPrimary"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

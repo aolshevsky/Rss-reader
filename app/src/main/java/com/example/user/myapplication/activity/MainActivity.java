@@ -1,6 +1,5 @@
-package com.example.user.myapplication;
+package com.example.user.myapplication.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +9,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -18,6 +19,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myapplication.BuildConfig;
+import com.example.user.myapplication.R;
+import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.fragment.SecondFragment;
 import com.example.user.myapplication.util.RequestCode;
 
 import java.util.HashMap;
@@ -30,12 +35,25 @@ public class MainActivity extends AppCompatActivity {
 
     final String LOG_TAG = "myLogs";
 
+    private ProfileFragment profileFragment;
+    private SecondFragment secondFragment;
+
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        manager = getSupportFragmentManager();
 
+        profileFragment = new ProfileFragment();
+        secondFragment = new SecondFragment();
+
+        if(!hasNeedPermissions())
+            requestPerms();
+/*
         if (savedInstanceState != null &&
                 savedInstanceState.getString("IMEI") != null) {
             String saved_imei = savedInstanceState.getString("IMEI");
@@ -44,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
             imei_txt.setText(imei_str.concat(saved_imei));
         }
         Log.d(LOG_TAG, "onCreate");
-
+*/
+/*
         TextView ver_view = findViewById(R.id.version_name);
         String ver_name = getResources().getString(R.string.app_ver) + BuildConfig.VERSION_NAME;
         ver_view.setText(ver_name);
@@ -62,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+*/
+
     }
 
     @Override
@@ -189,6 +210,46 @@ public class MainActivity extends AppCompatActivity {
                 Uri.parse("package:" + getPackageName()));
         startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
     }
+
+    public void onClickGetIMEI(View view){
+        if (hasNeedPermissions()) {
+            showPhoneState();
+        }
+        else {
+            requestPerms();
+        }
+    }
+
+    public void onClickFragment(View view){
+        transaction = manager.beginTransaction();
+
+        switch (view.getId()){
+            case R.id.btnAdd:
+                if (manager.findFragmentByTag(ProfileFragment.TAG) == null) {
+                    transaction.add(R.id.container, profileFragment, ProfileFragment.TAG);
+                }
+                break;
+            case R.id.btnDelete:
+                if (manager.findFragmentByTag(ProfileFragment.TAG) != null) {
+                    transaction.remove(profileFragment);
+                }
+                if (manager.findFragmentByTag(SecondFragment.TAG) != null) {
+                    transaction.remove(secondFragment);
+                }
+                break;
+            case R.id.btnReplace:
+                if (manager.findFragmentByTag(ProfileFragment.TAG) != null) {
+                    transaction.replace(R.id.container, secondFragment, SecondFragment.TAG);
+                }
+                if (manager.findFragmentByTag(SecondFragment.TAG) != null) {
+                    transaction.replace(R.id.container, profileFragment, ProfileFragment.TAG);
+                }
+                break;
+        }
+
+        transaction.commit();
+    }
+
 
 
 }

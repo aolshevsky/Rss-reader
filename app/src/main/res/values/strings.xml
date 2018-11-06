@@ -7,4 +7,9 @@
     <string name="msg_ph_per_den">Phone Permissions denied.</string>
     <string name="msg_ph_per_no_grtd">Phone permission isn\'t granted</string>
     <string name="msg_open_per">Open Permissions and grant the Phone permission</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="replace">Replace</string>
 </resources>
