@@ -28,12 +28,17 @@ import com.example.user.myapplication.util.RequestCode;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import static android.Manifest.permission;
 
 public class MainActivity extends AppCompatActivity {
 
 
     final String LOG_TAG = "myLogs";
+
+    private NavController navController;
 
     private ProfileFragment profileFragment;
     private SecondFragment secondFragment;
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         manager = getSupportFragmentManager();
 
@@ -220,6 +227,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void onFragmentSecondNextClick(View view) {
+        navController.navigate(R.id.profileFragment);
+    }
+
+    public void onFragmentSecondBackClick(View view) {}
+
+
+    public void onFragmentProfileNextClick(View view) {
+    }
+
+    public void onFragmentProfileBackClick(View view) {
+        navController.popBackStack();
+    }
+
+    /*
     public void onClickFragment(View view){
         transaction = manager.beginTransaction();
 
@@ -249,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         transaction.commit();
     }
+    */
 
 
 

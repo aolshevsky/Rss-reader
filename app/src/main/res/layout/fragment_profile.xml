@@ -70,7 +70,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
             android:orientation="horizontal">
 
@@ -86,6 +86,26 @@
                 android:layout_height="wrap_content"
                 android:text="Cancel" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onFragmentProfileBackClick"
+                android:text="Back" />
+
+            <Button
+                android:id="@+id/next_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onFragmentProfileNextClick"
+                android:text="Next" />
         </LinearLayout>
 
     </LinearLayout>
