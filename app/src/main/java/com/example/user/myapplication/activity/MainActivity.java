@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasNeedPermissions(){
         int res = 0;
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE};
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
 
         for (String perms : permissions){
             res = checkCallingOrSelfPermission(perms);
@@ -188,7 +190,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPerms(){
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE};
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
         }
@@ -198,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         Map<String, Boolean> allowed = new HashMap<>();
+        Boolean is_any_perms = false;
         switch (requestCode) {
             case RequestCode.PERMISSION_REQUEST_CODE: {
                 for (int i = 0, len = grantResults.length; i < len; i++) {
@@ -210,14 +215,31 @@ public class MainActivity extends AppCompatActivity {
             showPhoneState();
         }
         else {
-            // we will give warning to user that they haven't granted permissions.
+            // we will give warning to user that they haven't granted phone permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-                requestPerms();
-                Toast.makeText(this, getResources().getString(R.string.msg_ph_per_den), Toast.LENGTH_SHORT).show();
+                is_any_perms = true;
             }
             else {
                 showNoPhonePermissionSnackbar();
             }
+        }
+
+        if (!allowed.get(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            // we will give warning to user that they haven't granted storage permission.
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                is_any_perms = true;
+            }
+        }
+
+        if (!allowed.get(Manifest.permission.CAMERA)){
+            // we will give warning to user that they haven't granted camera permission.
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                is_any_perms = true;
+            }
+        }
+
+        if (is_any_perms){
+            requestPerms();
         }
 
     }
@@ -231,13 +253,15 @@ public class MainActivity extends AppCompatActivity {
                         openApplicationSettings();
 
                         Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.msg_open_per),
+                                getResources().getString(R.string.msg_open_ph_per),
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }
                 })
                 .show();
     }
+
+
 
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
