@@ -3,6 +3,7 @@ package com.example.user.myapplication.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,18 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.MainActivity;
+import com.example.user.myapplication.util.RequestCode;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SecondFragment extends Fragment {
 
@@ -47,7 +56,15 @@ public class SecondFragment extends Fragment {
         String ver_name = getResources().getString(R.string.app_ver) + BuildConfig.VERSION_NAME;
         ver_view.setText(ver_name);
 
-        if (hasNeedPermissions()) {
+        Button get_imei_btn = phoneStateView.findViewById(R.id.start_btn);
+        get_imei_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickGetIMEI();
+            }
+        });
+
+        if (((MainActivity)getActivity()).hasNeedPermissions(0)) {
             showPhoneState();
         }
 
@@ -65,17 +82,13 @@ public class SecondFragment extends Fragment {
         }
     }
 
-
-    private boolean hasNeedPermissions(){
-        int res = 0;
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE};
-
-        for (String perms : permissions){
-            res = getActivity().checkCallingOrSelfPermission(perms);
-            if (!(res == PackageManager.PERMISSION_GRANTED)){
-                return false;
-            }
+    private void onClickGetIMEI(){
+        if (((MainActivity)getActivity()).hasNeedPermissions(0)) {
+            showPhoneState();
         }
-        return true;
+        else {
+            ((MainActivity)getActivity()).requestNeedPerms(0);
+        }
     }
+
 }

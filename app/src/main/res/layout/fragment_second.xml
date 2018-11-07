@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="144dp"
         android:layout_marginBottom="464dp"
-        android:onClick="onClickGetIMEI"
         android:text="@string/get_imei"
         android:textAlignment="center"
         android:textSize="18sp"

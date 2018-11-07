@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.MainActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,7 +54,6 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     private void LoadImageAction(){
         Button load_btn = profileView.findViewById(R.id.select_image_btn);
         load_btn.setOnClickListener(new View.OnClickListener() {
@@ -76,10 +76,20 @@ public class ProfileFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                choosePhotoFromGallary();
+                                if (((MainActivity)getActivity()).hasNeedPermissions(1)) {
+                                    choosePhotoFromGallary();
+                                }
+                                else {
+                                    ((MainActivity)getActivity()).requestNeedPerms(1);
+                                }
                                 break;
                             case 1:
-                                takePhotoFromCamera();
+                                if (((MainActivity)getActivity()).hasNeedPermissions(2)) {
+                                    takePhotoFromCamera();
+                                }
+                                else {
+                                    ((MainActivity)getActivity()).requestNeedPerms(2);
+                                }
                                 break;
                         }
                     }

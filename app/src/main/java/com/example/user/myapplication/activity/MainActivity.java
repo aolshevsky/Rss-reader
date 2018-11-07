@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         initializeNavigation();
 
 
-        if(!hasNeedPermissions())
+        if(!hasAllPermissions())
             requestPerms();
 /*
         if (savedInstanceState != null &&
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean hasNeedPermissions(){
+    private boolean hasAllPermissions(){
         int res = 0;
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -189,6 +189,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean hasNeedPermissions(int per_ind){
+        int res = 0;
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+
+        res = checkCallingOrSelfPermission(permissions[per_ind]);
+        return res == PackageManager.PERMISSION_GRANTED;
+    }
+
+
     private void requestPerms(){
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -198,11 +209,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void requestNeedPerms(int per_ind){
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(new String[]{permissions[per_ind]},RequestCode.PERMISSION_REQUEST_CODE);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         Map<String, Boolean> allowed = new HashMap<>();
         Boolean is_any_perms = false;
+        Boolean val;
         switch (requestCode) {
             case RequestCode.PERMISSION_REQUEST_CODE: {
                 for (int i = 0, len = grantResults.length; i < len; i++) {
@@ -211,10 +232,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        if (allowed.get(Manifest.permission.READ_PHONE_STATE)){
-            showPhoneState();
-        }
-        else {
+        val = allowed.get(Manifest.permission.READ_PHONE_STATE);
+        if (val != null && !val){
             // we will give warning to user that they haven't granted phone permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
                 is_any_perms = true;
@@ -223,18 +242,25 @@ public class MainActivity extends AppCompatActivity {
                 showNoPhonePermissionSnackbar();
             }
         }
-
-        if (!allowed.get(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        val = allowed.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (val != null && !val){
             // we will give warning to user that they haven't granted storage permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 is_any_perms = true;
             }
-        }
+            else {
+                showNoStoragePermissionSnackbar();
+            }
 
-        if (!allowed.get(Manifest.permission.CAMERA)){
+        }
+        val = allowed.get(Manifest.permission.CAMERA);
+        if (val != null && !val){
             // we will give warning to user that they haven't granted camera permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                 is_any_perms = true;
+            }
+            else {
+                showNoCameraPermissionSnackbar();
             }
         }
 
@@ -261,7 +287,37 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void showNoCameraPermissionSnackbar() {
+        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_cam_per_no_grtd) , Snackbar.LENGTH_LONG)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openApplicationSettings();
 
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.msg_open_cam_per),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                })
+                .show();
+    }
+
+    public void showNoStoragePermissionSnackbar() {
+        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_store_per_no_grtd) , Snackbar.LENGTH_LONG)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openApplicationSettings();
+
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.msg_open_store_per),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                })
+                .show();
+    }
 
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -269,14 +325,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
     }
 
-    public void onClickGetIMEI(View view){
-        if (hasNeedPermissions()) {
-            showPhoneState();
-        }
-        else {
-            requestPerms();
-        }
-    }
+
 
 
     public void onFragmentSecondNextClick(View view) {
