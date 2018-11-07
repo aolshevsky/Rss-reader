@@ -1,5 +1,6 @@
 package com.example.user.myapplication.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -7,34 +8,38 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+
+import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.fragment.SecondFragment;
+import com.example.user.myapplication.fragment.SimpleFragment;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.fragment.ProfileFragment;
-import com.example.user.myapplication.fragment.SecondFragment;
 import com.example.user.myapplication.util.RequestCode;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
-import static android.Manifest.permission;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
 
     @Override
@@ -51,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        initialToggle();
+        initializeNavigation();
 
 
         if(!hasNeedPermissions())
@@ -89,8 +94,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initialToggle(){
+    private void initializeNavigation(){
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
+        initialToggle();
+    }
+
+    private void initialToggle(){
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -133,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("IMEI", findViewById(R.id.imei_view).toString());
+        // outState.putString("IMEI", findViewById(R.id.imei_view).toString());
         Log.d(LOG_TAG, "onSaveInstanceState");
     }
     @Override
@@ -162,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasNeedPermissions(){
         int res = 0;
-        String[] permissions = new String[]{permission.READ_PHONE_STATE};
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE};
 
         for (String perms : permissions){
             res = checkCallingOrSelfPermission(perms);
@@ -174,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPerms(){
-        String[] permissions = new String[]{permission.READ_PHONE_STATE};
+        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
         }
@@ -192,12 +206,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        if (allowed.get(permission.READ_PHONE_STATE)){
+        if (allowed.get(Manifest.permission.READ_PHONE_STATE)){
             showPhoneState();
         }
         else {
             // we will give warning to user that they haven't granted permissions.
-            if (shouldShowRequestPermissionRationale(permission.READ_PHONE_STATE)) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
                 requestPerms();
                 Toast.makeText(this, getResources().getString(R.string.msg_ph_per_den), Toast.LENGTH_SHORT).show();
             }

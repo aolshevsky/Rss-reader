@@ -2,30 +2,19 @@ package com.example.user.myapplication.fragment;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
-import com.example.user.myapplication.util.RequestCode;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SecondFragment extends Fragment {
 
