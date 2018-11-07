@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(!hasAllPermissions())
-            requestPerms();
+            requestAllPerms();
 /*
         if (savedInstanceState != null &&
                 savedInstanceState.getString("IMEI") != null) {
@@ -161,19 +161,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "onStop");
     }
 
-    private void showPhoneState() {
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = "IMEI: ";
-        TextView imei_txt = (TextView) findViewById(R.id.imei_view);
-        try {
-            imei += tm.getDeviceId();
-            imei_txt.setText(imei);
-        } catch (SecurityException e) {
-            imei_txt.setText(getResources().getString(R.string.msg_no_per));
-        }
-    }
-
-
     private boolean hasAllPermissions(){
         int res = 0;
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
@@ -188,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
     public boolean hasNeedPermissions(int per_ind){
         int res = 0;
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
@@ -200,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void requestPerms(){
+    private void requestAllPerms(){
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
@@ -208,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
         }
     }
-
     public void requestNeedPerms(int per_ind){
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -217,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{permissions[per_ind]},RequestCode.PERMISSION_REQUEST_CODE);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -265,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (is_any_perms){
-            requestPerms();
+            requestAllPerms();
         }
 
     }
@@ -324,23 +310,5 @@ public class MainActivity extends AppCompatActivity {
                 Uri.parse("package:" + getPackageName()));
         startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
     }
-
-
-
-
-    public void onFragmentSecondNextClick(View view) {
-        navController.navigate(R.id.profileFragment);
-    }
-
-    public void onFragmentSecondBackClick(View view) {}
-
-
-    public void onFragmentProfileNextClick(View view) {
-    }
-
-    public void onFragmentProfileBackClick(View view) {
-        navController.popBackStack();
-    }
-
 
 }
