@@ -4,14 +4,14 @@
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
         <item android:id="@id/profileFragment" android:title="Profile"/>
-        <item android:id="@id/simpleFragment" android:title="Simple"/>
-        <item android:id="@id/secondFragment" android:title="About"/>
+        <item android:id="@id/homeFragment" android:title="Home"/>
+        <item android:id="@id/aboutFragment" android:title="About"/>
     </group>
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="none">
-        <item android:id="@id/simpleFragment" android:title="Settings"/>
-        <item android:id="@id/simpleFragment" android:title="Exit"/>
+        <item android:id="@id/homeFragment" android:title="Settings"/>
+        <item android:id="@id/homeFragment" android:title="Exit"/>
     </group>
 
 

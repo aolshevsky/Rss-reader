@@ -168,11 +168,11 @@ public class ProfileFragment extends Fragment {
                     editTextEmail.setText(user.getEmail());
                     editTextPhone.setText(user.getPhone_number());
                     File imgFile = new  File(user.getImg_path());
-
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
                         avatarImgView.setImageBitmap(iconBitmap);
+                        img_path = user.getImg_path();
                     }
                 }
             }

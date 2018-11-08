@@ -297,6 +297,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onFragmentProfileCancelClick(View view) {
+        navController.navigate(R.id.ho);
+    }
 
     public void showNoPhonePermissionSnackbar() {
         Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_ph_per_no_grtd) , Snackbar.LENGTH_LONG)
