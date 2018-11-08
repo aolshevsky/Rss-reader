@@ -1,43 +1,45 @@
 package com.example.user.myapplication.activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
 
-import com.example.user.myapplication.fragment.ProfileFragment;
-import com.example.user.myapplication.fragment.SecondFragment;
-import com.example.user.myapplication.fragment.SimpleFragment;
+import com.example.user.myapplication.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.util.RequestCode;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 
@@ -46,10 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
     final String LOG_TAG = "myLogs";
 
-    private NavController navController;
+    public NavController navController;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private NavigationView navigationView;
+
+
+    private String user_id = "local_user";
+
+
+    private DatabaseReference databaseUsers;
 
 
     @Override
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeNavigation();
 
+        initializeDatabase();
 
         if(!hasAllPermissions())
             requestAllPerms();
@@ -96,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
@@ -153,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        loadUserInformation();
         Log.d(LOG_TAG, "onStart");
     }
     @Override
@@ -160,6 +169,41 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         Log.d(LOG_TAG, "onStop");
     }
+
+
+    private  void initializeDatabase(){
+        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
+    }
+
+    private void loadUserInformation(){
+
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.child(user_id).getValue(User.class);
+                if(user != null) {
+                    TextView textViewFullName = (TextView) findViewById(R.id.full_name_txt);
+                    TextView textViewEmail = (TextView) findViewById(R.id.email_txt);
+                    textViewFullName.setText(String.format("%s %s", user.getName(), user.getSurname()));
+                    textViewEmail.setText(user.getEmail());
+
+                    File imgFile = new  File(user.getImg_path());
+
+                    if(imgFile.exists()){
+                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        ImageView profileImgView = (ImageView) findViewById(R.id.profileImgView);
+                        profileImgView.setImageBitmap(iconBitmap);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private boolean hasAllPermissions(){
         int res = 0;
@@ -220,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
         }
         val = allowed.get(Manifest.permission.READ_PHONE_STATE);
         if (val != null && !val){
-            // we will give warning to user that they haven't granted phone permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
                 is_any_perms = true;
             }
@@ -230,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
         }
         val = allowed.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (val != null && !val){
-            // we will give warning to user that they haven't granted storage permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 is_any_perms = true;
             }
@@ -241,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         }
         val = allowed.get(Manifest.permission.CAMERA);
         if (val != null && !val){
-            // we will give warning to user that they haven't granted camera permission.
             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                 is_any_perms = true;
             }

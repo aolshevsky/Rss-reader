@@ -26,11 +26,11 @@
         <ImageView
             android:id="@+id/avatarImgView"
             android:layout_width="match_parent"
-            android:layout_height="104dp"
+            android:layout_height="100dp"
             tools:srcCompat="@tools:sample/avatars" />
 
         <EditText
-            android:id="@+id/name_txt"
+            android:id="@+id/name_txtEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40sp"
@@ -42,7 +42,7 @@
             android:textColor="@android:color/darker_gray" />
 
         <EditText
-            android:id="@+id/surname_txt"
+            android:id="@+id/surname_txtEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40sp"
@@ -54,7 +54,7 @@
             android:textColor="@android:color/darker_gray" />
 
         <EditText
-            android:id="@+id/phone_txt"
+            android:id="@+id/phone_txtEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40sp"
@@ -65,7 +65,7 @@
             android:hint="Phone number" />
 
         <EditText
-            android:id="@+id/email_txt"
+            android:id="@+id/email_txtEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40sp"

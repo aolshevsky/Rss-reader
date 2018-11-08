@@ -3,21 +3,32 @@ package com.example.user.myapplication.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
+import com.example.user.myapplication.model.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -41,6 +53,16 @@ public class ProfileFragment extends Fragment {
     private View profileView;
 
 
+    private EditText editTextEmail;
+    private EditText editTextName;
+    private EditText editTextSurname;
+    private EditText editTextPhone;
+    private String img_path;
+    private String user_id = "local_user";
+
+
+    private DatabaseReference databaseUsers;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,13 +70,121 @@ public class ProfileFragment extends Fragment {
 
         imageview = profileView.findViewById(R.id.avatarImgView);
 
-        LoadImageAction();
+        loadImageAction();
+
+        initializeEditTextButton();
+
+        initializeDatabase();
 
         return profileView;
     }
 
 
-    private void LoadImageAction(){
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadUserInformation();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        // saveUser();
+    }
+
+
+    private  void initializeDatabase(){
+        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
+    }
+
+    private void initializeEditTextButton(){
+        editTextName = (EditText) profileView.findViewById(R.id.name_txtEdit);
+        editTextSurname = (EditText) profileView.findViewById(R.id.surname_txtEdit);
+        editTextEmail = (EditText) profileView.findViewById(R.id.email_txtEdit);
+        editTextPhone = (EditText) profileView.findViewById(R.id.phone_txtEdit);
+        Button buttonSave = (Button) profileView.findViewById(R.id.save_btn);
+        img_path = "";
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUser();
+            }
+        });
+    }
+
+    private void saveUser(){
+        String name = editTextName.getText().toString();
+        String surname = editTextSurname.getText().toString();
+        String phone_number = editTextPhone.getText().toString();
+        String email = editTextEmail.getText().toString();
+
+        if (TextUtils.isEmpty(name)){
+            editTextName.setError("Please enter your Name");
+            editTextName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(surname)){
+            editTextSurname.setError("Please enter your Surname");
+            editTextSurname.requestFocus();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            editTextEmail.setError("Please enter a valid email");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(phone_number)){
+            editTextPhone.setError("Please enter your Phone number");
+            editTextPhone.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(img_path)){
+            Toast.makeText(getActivity(), "Please load or create image", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // String id = databaseUsers.push().getKey();
+        User user = new User(user_id, name, surname, email, phone_number, img_path);
+
+        databaseUsers.child(user_id).setValue(user);
+        Toast.makeText(getActivity(), "Save user", Toast.LENGTH_LONG).show();
+
+    }
+
+    private void loadUserInformation(){
+
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.child(user_id).getValue(User.class);
+                if(user != null) {
+                    editTextName.setText(user.getName());
+                    editTextSurname.setText(user.getSurname());
+                    editTextEmail.setText(user.getEmail());
+                    editTextPhone.setText(user.getPhone_number());
+                    File imgFile = new  File(user.getImg_path());
+
+                    if(imgFile.exists()){
+                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
+                        avatarImgView.setImageBitmap(iconBitmap);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadImageAction(){
         Button load_btn = profileView.findViewById(R.id.select_image_btn);
         load_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +251,7 @@ public class ProfileFragment extends Fragment {
                 Uri contentURI = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
+                    img_path = saveImage(bitmap);
                     Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageview.setImageBitmap(bitmap);
 
@@ -134,7 +264,7 @@ public class ProfileFragment extends Fragment {
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
+            img_path = saveImage(thumbnail);
             Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
