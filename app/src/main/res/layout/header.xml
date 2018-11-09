@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:background="@drawable/header"
     android:padding="20dp">
 
-    <ImageView
-        android:id="@+id/profileImgView"
-        android:src="@drawable/profile_icon"
-        android:layout_width="75dp"
-        android:layout_height="75dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/profileImgView"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
+        <ImageButton
+            android:id="@+id/edit_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:onClick="onEditClick"
+            android:src="@drawable/ic_action_edit" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/full_name_txt"

@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,6 +64,7 @@ public class ProfileFragment extends Fragment {
 
 
     private DatabaseReference databaseUsers;
+    private StorageReference mStorageRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +72,14 @@ public class ProfileFragment extends Fragment {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         imageview = profileView.findViewById(R.id.avatarImgView);
+
+        imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPictureDialog();
+            }
+        });
+
 
         loadImageAction();
 
@@ -95,6 +106,7 @@ public class ProfileFragment extends Fragment {
 
     private  void initializeDatabase(){
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     private void initializeEditTextButton(){
@@ -152,7 +164,7 @@ public class ProfileFragment extends Fragment {
         User user = new User(user_id, name, surname, email, phone_number, img_path);
 
         databaseUsers.child(user_id).setValue(user);
-        Toast.makeText(getActivity(), "Save user", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Save user" + img_path, Toast.LENGTH_LONG).show();
 
     }
 
@@ -172,7 +184,7 @@ public class ProfileFragment extends Fragment {
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
                         avatarImgView.setImageBitmap(iconBitmap);
-                        img_path = user.getImg_path();
+                        // img_path = user.getImg_path();
                     }
                 }
             }

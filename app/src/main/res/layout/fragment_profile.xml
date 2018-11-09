@@ -37,9 +37,8 @@
             android:layout_marginTop="20sp"
             android:layout_marginRight="40sp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Name"
-            android:textColor="@android:color/darker_gray" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/surname_txtEdit"
@@ -49,9 +48,8 @@
             android:layout_marginTop="20sp"
             android:layout_marginRight="40sp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Surname"
-            android:textColor="@android:color/darker_gray" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/phone_txtEdit"
@@ -62,8 +60,7 @@
             android:layout_marginRight="40sp"
             android:ems="10"
             android:hint="Phone number"
-            android:inputType="phone"
-            android:textColor="@android:color/darker_gray" />
+            android:inputType="phone" />
 
         <EditText
             android:id="@+id/email_txtEdit"
@@ -74,8 +71,7 @@
             android:layout_marginRight="40sp"
             android:ems="10"
             android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:textColor="@android:color/darker_gray" />
+            android:inputType="textEmailAddress" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,6 +90,7 @@
                 android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="onFragmentProfileCancelClick"
                 android:text="Cancel" />
 
             <Button

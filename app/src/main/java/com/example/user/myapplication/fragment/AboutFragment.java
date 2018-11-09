@@ -3,6 +3,7 @@ package com.example.user.myapplication.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +25,14 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*
+
         if (savedInstanceState != null &&
                 savedInstanceState.getString("IMEI") != null) {
             String saved_imei = savedInstanceState.getString("IMEI");
-            String imei_str = "IMEI: ";
             TextView imei_txt = (TextView) getView().findViewById(R.id.imei_view);
-            imei_txt.setText(imei_str.concat(saved_imei));
+            imei_txt.setText(String.format("IMEI: %s",saved_imei));
         }
-         */
+
         phoneStateView = inflater.inflate(R.layout.fragment_about, container, false);
 
         return phoneStateView;
@@ -62,14 +62,19 @@ public class AboutFragment extends Fragment {
 
     private void showPhoneState() {
         TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = "IMEI: ";
         TextView imei_txt = (TextView) phoneStateView.findViewById(R.id.imei_view);
         try {
-            imei += tm.getDeviceId();
-            imei_txt.setText(imei);
+            imei_txt.setText(String.format("IMEI: %s", tm.getDeviceId()));
         } catch (SecurityException e) {
             imei_txt.setText(getResources().getString(R.string.msg_no_per));
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("IMEI", phoneStateView.findViewById(R.id.imei_view).toString());
+        Log.d("myLog", "onSaveInstanceState");
     }
 
     private void onClickGetIMEI(){

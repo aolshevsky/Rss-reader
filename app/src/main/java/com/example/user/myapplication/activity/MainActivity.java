@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(LOG_TAG, "onCreate");
 
         initializeNavigation();
 
@@ -70,45 +71,16 @@ public class MainActivity extends AppCompatActivity {
 
         if(!hasAllPermissions())
             requestAllPerms();
-/*
-        if (savedInstanceState != null &&
-                savedInstanceState.getString("IMEI") != null) {
-            String saved_imei = savedInstanceState.getString("IMEI");
-            String imei_str = "IMEI: ";
-            TextView imei_txt = (TextView) findViewById(R.id.imei_view);
-            imei_txt.setText(imei_str.concat(saved_imei));
-        }
-        Log.d(LOG_TAG, "onCreate");
-*/
-/*
-        TextView ver_view = findViewById(R.id.version_name);
-        String ver_name = getResources().getString(R.string.app_ver) + BuildConfig.VERSION_NAME;
-        ver_view.setText(ver_name);
-        showPhoneState();
-        Button btn = (Button) findViewById(R.id.start_btn);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hasNeedPermissions()) {
-                    showPhoneState();
-                }
-                else {
-                    requestPerms();
-                }
-            }
-        });
-*/
 
     }
-
+    // упорядочить код,вынести все в отдельные классы кнопка имя
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
+        // NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
         initialToggle();
     }
 
@@ -298,7 +270,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFragmentProfileCancelClick(View view) {
-        navController.navigate(R.id.ho);
+        navController.popBackStack();
+        navController.navigate(R.id.homeFragment);
+        drawerLayout.closeDrawers();
+    }
+
+    public void onEditClick(View view) {
+        navController.popBackStack();
+        navController.navigate(R.id.profileFragment);
+        drawerLayout.closeDrawers();
     }
 
     public void showNoPhonePermissionSnackbar() {
