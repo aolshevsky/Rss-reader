@@ -10,10 +10,14 @@ import com.example.user.myapplication.R;
 
 public class HomeFragment extends Fragment {
 
+    private View homeView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        homeView = inflater.inflate(R.layout.fragment_home, container, false);
+        getActivity().setTitle("Home");
+        return homeView;
     }
 
 }

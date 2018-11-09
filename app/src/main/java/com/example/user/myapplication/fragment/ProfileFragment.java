@@ -83,6 +83,8 @@ public class ProfileFragment extends Fragment {
 
         initializeDatabase();
 
+        getActivity().setTitle("Profile");
+
         return profileView;
     }
 

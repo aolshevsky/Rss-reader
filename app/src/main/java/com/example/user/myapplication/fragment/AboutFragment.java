@@ -35,6 +35,8 @@ public class AboutFragment extends Fragment {
 
         phoneStateView = inflater.inflate(R.layout.fragment_about, container, false);
 
+        getActivity().setTitle("About");
+
         return phoneStateView;
     }
 
