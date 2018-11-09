@@ -87,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
         //NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
+
+        View headerview = navigationView.getHeaderView(0);
+        LinearLayout profile_click_place = (LinearLayout) headerview.findViewById(R.id.profile_click_place);
+        profile_click_place.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                onEditClick(v);
+            }
+        });
     }
 
     @Override
@@ -97,13 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.aboutFragment);
                 return true;
         }
-        LinearLayout profile_click_place = (LinearLayout) findViewById(R.id.profile_click_place);
-        profile_click_place.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
-            }
-        });
         return super.onOptionsItemSelected(item);
     }
 
