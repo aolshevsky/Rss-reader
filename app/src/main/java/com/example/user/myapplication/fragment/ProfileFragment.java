@@ -72,16 +72,12 @@ public class ProfileFragment extends Fragment {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         imageview = profileView.findViewById(R.id.avatarImgView);
-
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
             }
         });
-
-
-        loadImageAction();
 
         initializeEditTextButton();
 
@@ -192,16 +188,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
-
-    private void loadImageAction(){
-        Button load_btn = profileView.findViewById(R.id.select_image_btn);
-        load_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPictureDialog();
             }
         });
     }
