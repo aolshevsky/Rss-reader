@@ -15,14 +15,18 @@ import com.example.user.myapplication.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     public NavController navController;
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
 
 
     private String user_id = "local_user";
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "onCreate");
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         initializeNavigation();
 
@@ -80,66 +86,45 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
-        // NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
-        initialToggle();
-    }
-
-    private void initialToggle(){
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        if (toggle.onOptionsItemSelected(item)){
-            return true;
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.about_toolbar_button:
+                navController.navigate(R.id.aboutFragment);
+                return true;
         }
+        LinearLayout profile_click_place = (LinearLayout) findViewById(R.id.profile_click_place);
+        profile_click_place.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy");
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+        return true;
     }
+
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(LOG_TAG, "onPause");
     }
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(LOG_TAG, "onRestart");
-    }
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.d(LOG_TAG, "onRestoreInstanceState");
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, "onResume ");
-    }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // outState.putString("IMEI", findViewById(R.id.imei_view).toString());
-        Log.d(LOG_TAG, "onSaveInstanceState");
-    }
-    @Override
     protected void onStart() {
         super.onStart();
         loadUserInformation();
         Log.d(LOG_TAG, "onStart");
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(LOG_TAG, "onStop");
     }
 
 

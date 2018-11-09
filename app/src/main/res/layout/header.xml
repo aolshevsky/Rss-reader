@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:background="@drawable/header"
-    android:padding="20dp">
+    android:paddingTop="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp" >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,20 +30,29 @@
             android:src="@drawable/ic_action_edit" />
 
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/profile_click_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:clickable="true" >
+        <TextView
+            android:id="@+id/full_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Aleksey Olshevski"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/full_name_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Aleksey Olshevski"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/email_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="aleksey.olshevski@gmail.com"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/email_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="aleksey.olshevski@gmail.com"
-        android:textColor="@color/white" />
+
 </LinearLayout>
