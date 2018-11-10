@@ -269,16 +269,14 @@ public class ProfileFragment extends Fragment {
                     editTextEmail.setText(user.getEmail());
                     editTextPhone.setText(user.getPhone_number());
 
-                    if(user.getImg_path().equals("")) {
+                    File imgFile = new  File(user.getImg_path());
+                    if(imgFile.exists()){
+                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
+                        avatarImgView.setImageBitmap(iconBitmap);
+                        img_path = user.getImg_path();
+                    } else {
                         downloadFromFirebaseStorage();
-                    }else{
-                        File imgFile = new  File(user.getImg_path());
-                        if(imgFile.exists()){
-                            Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                            ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
-                            avatarImgView.setImageBitmap(iconBitmap);
-                            img_path = user.getImg_path();
-                        }
                     }
                 }
             }
@@ -367,7 +365,7 @@ public class ProfileFragment extends Fragment {
 
     private String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
         File wallpaperDirectory = new File(
                 Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
         // have the object build the directory structure, if needed.
