@@ -19,8 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
@@ -33,7 +31,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -41,7 +42,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment {
 
 
     private void uploadImageToFirebaseStorage(){
-        progressBar.setMessage("Uploading image...");
+        progressBar.setMessage("Uploading...");
         progressBar.show();
         Log.d("myLogs", img_path);
         Uri file = Uri.fromFile(new File(img_path));
@@ -198,8 +198,64 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(getActivity(), "Upload image failed", Toast.LENGTH_LONG).show();
                         progressBar.dismiss();
                     }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                        progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
+                    }
+                })
+                .addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                        System.out.println("Upload is paused!");
+                    }
                 });
     }
+
+    private void downloadFromFirebaseStorage() {
+        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
+        StorageReference image_storage = storageRef.child(new_file_path);
+        if (image_storage != null) {
+            progressBar.setTitle("Downloading...");
+            progressBar.setMessage(null);
+            progressBar.show();
+        try {
+            final File localFile = File.createTempFile("images", ".jpg");
+
+            image_storage.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
+                    avatarImgView.setImageBitmap(bmp);
+                    img_path = saveImage(bmp);
+                    saveUser();
+                    progressBar.dismiss();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    progressBar.dismiss();
+                    Toast.makeText(getActivity(), "Download failed. Check internet connection", Toast.LENGTH_LONG).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                    progressBar.setMessage("Downloaded " + ((int) progress) + "%...");
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } else {
+        Toast.makeText(getActivity(), "Upload file before downloading", Toast.LENGTH_LONG).show();
+    }
+}
 
     private void loadUserInformation(){
 
@@ -212,12 +268,17 @@ public class ProfileFragment extends Fragment {
                     editTextSurname.setText(user.getSurname());
                     editTextEmail.setText(user.getEmail());
                     editTextPhone.setText(user.getPhone_number());
-                    File imgFile = new  File(user.getImg_path());
-                    if(imgFile.exists()){
-                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
-                        avatarImgView.setImageBitmap(iconBitmap);
-                        img_path = user.getImg_path();
+
+                    if(user.getImg_path().equals("")) {
+                        downloadFromFirebaseStorage();
+                    }else{
+                        File imgFile = new  File(user.getImg_path());
+                        if(imgFile.exists()){
+                            Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                            ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
+                            avatarImgView.setImageBitmap(iconBitmap);
+                            img_path = user.getImg_path();
+                        }
                     }
                 }
             }

@@ -29,7 +29,6 @@
                 android:id="@+id/avatarImgView"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                tools:srcCompat="@tools:sample/avatars"
                 android:src="@drawable/camera1"/>
 
             <EditText
