@@ -1,5 +1,6 @@
 package com.example.user.myapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,12 +19,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,10 +66,11 @@ public class ProfileFragment extends Fragment {
     private EditText editTextPhone;
     private String img_path;
     private String user_id = "local_user";
+    private ProgressDialog progressBar;
 
 
     private DatabaseReference databaseUsers;
-    private StorageReference mStorageRef;
+    private StorageReference storageRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +91,8 @@ public class ProfileFragment extends Fragment {
 
         getActivity().setTitle("Profile");
 
+        loadUserInformation();
+
         return profileView;
     }
 
@@ -92,7 +100,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadUserInformation();
+
     }
 
     @Override
@@ -104,7 +112,7 @@ public class ProfileFragment extends Fragment {
 
     private  void initializeDatabase(){
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        storageRef = FirebaseStorage.getInstance().getReference();
     }
 
     private void initializeEditTextButton(){
@@ -113,6 +121,7 @@ public class ProfileFragment extends Fragment {
         editTextEmail = (EditText) profileView.findViewById(R.id.email_txtEdit);
         editTextPhone = (EditText) profileView.findViewById(R.id.phone_txtEdit);
         Button buttonSave = (Button) profileView.findViewById(R.id.save_btn);
+        progressBar = new ProgressDialog(getActivity());
         img_path = "";
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +169,36 @@ public class ProfileFragment extends Fragment {
 
         // String id = databaseUsers.push().getKey();
         User user = new User(user_id, name, surname, email, phone_number, img_path);
-
+        uploadImageToFirebaseStorage();
         databaseUsers.child(user_id).setValue(user);
-        Toast.makeText(getActivity(), "Save user" + img_path, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Save user", Toast.LENGTH_LONG).show();
 
+    }
+
+
+    private void uploadImageToFirebaseStorage(){
+        progressBar.setMessage("Uploading image...");
+        progressBar.show();
+        Log.d("myLogs", img_path);
+        Uri file = Uri.fromFile(new File(img_path));
+        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
+        StorageReference image_storage = storageRef.child(new_file_path);
+
+        image_storage.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getActivity(), "Upload image success", Toast.LENGTH_LONG).show();
+                        progressBar.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getActivity(), "Upload image failed", Toast.LENGTH_LONG).show();
+                        progressBar.dismiss();
+                    }
+                });
     }
 
     private void loadUserInformation(){
@@ -182,7 +217,7 @@ public class ProfileFragment extends Fragment {
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
                         avatarImgView.setImageBitmap(iconBitmap);
-                        // img_path = user.getImg_path();
+                        img_path = user.getImg_path();
                     }
                 }
             }
@@ -280,8 +315,8 @@ public class ProfileFragment extends Fragment {
         }
 
         try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTime() + ".jpg");
+            // Calendar.getInstance().getTime()
+            File f = new File(wallpaperDirectory, "profile_icon.jpg");
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());

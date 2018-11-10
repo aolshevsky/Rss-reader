@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
-        //NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
 
         View headerview = navigationView.getHeaderView(0);
         LinearLayout profile_click_place = (LinearLayout) headerview.findViewById(R.id.profile_click_place);
