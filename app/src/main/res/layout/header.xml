@@ -14,20 +14,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <ImageView
             android:id="@+id/profileImgView"
             android:layout_width="80dp"
             android:layout_height="80dp" />
-
-        <ImageButton
-            android:id="@+id/edit_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:onClick="onEditClick"
-            android:src="@drawable/ic_action_edit" />
 
     </RelativeLayout>
     <LinearLayout
