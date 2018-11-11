@@ -5,9 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,10 +16,15 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
@@ -59,7 +61,8 @@ import static com.example.user.myapplication.util.RequestCode.IMAGE_DIRECTORY;
 public class ProfileFragment extends Fragment {
 
 
-    private ImageView imageview;
+    private ImageView imageview_edit;
+    private ImageView imageview_show;
     private View profileView;
 
 
@@ -67,6 +70,10 @@ public class ProfileFragment extends Fragment {
     private EditText editTextName;
     private EditText editTextSurname;
     private EditText editTextPhone;
+    private TextView nameTextView;
+    private TextView surnameTextView;
+    private TextView emailTextView;
+    private TextView phoneTextView;
     private String img_path;
     private String user_id = "local_user";
     private ProgressDialog progressBar;
@@ -80,15 +87,16 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        imageview = profileView.findViewById(R.id.avatarImgView);
-        imageview.setOnClickListener(new View.OnClickListener() {
+        imageview_edit = profileView.findViewById(R.id.avatarImgView);
+        imageview_show = profileView.findViewById(R.id.avatarImgView1);
+        imageview_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
             }
         });
 
-        initializeEditTextButton();
+        initializeView();
 
         initializeDatabase();
 
@@ -118,12 +126,25 @@ public class ProfileFragment extends Fragment {
         storageRef = FirebaseStorage.getInstance().getReference();
     }
 
-    private void initializeEditTextButton(){
-        editTextName = (EditText) profileView.findViewById(R.id.name_txtEdit);
-        editTextSurname = (EditText) profileView.findViewById(R.id.surname_txtEdit);
-        editTextEmail = (EditText) profileView.findViewById(R.id.email_txtEdit);
-        editTextPhone = (EditText) profileView.findViewById(R.id.phone_txtEdit);
-        Button buttonSave = (Button) profileView.findViewById(R.id.save_btn);
+    private void initializeView(){
+        editTextName = profileView.findViewById(R.id.name_txtEdit);
+        editTextSurname = profileView.findViewById(R.id.surname_txtEdit);
+        editTextEmail = profileView.findViewById(R.id.email_txtEdit);
+        editTextPhone = profileView.findViewById(R.id.phone_txtEdit);
+        nameTextView = profileView.findViewById(R.id.name_txtView);
+        surnameTextView = profileView.findViewById(R.id.surname_txtView);
+        emailTextView = profileView.findViewById(R.id.email_txtView);
+        phoneTextView = profileView.findViewById(R.id.phone_txtView);
+        Button buttonSave = profileView.findViewById(R.id.save_btn);
+        ImageButton buttonSwitch = profileView.findViewById(R.id.switch_btn);
+        ImageButton buttonSwitch1 = profileView.findViewById(R.id.switch_btn1);
+        final ViewSwitcher viewSwitcher = profileView.findViewById(R.id.profile_switcher);
+        Animation in = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
+        viewSwitcher.setInAnimation(in);
+
+        Animation out = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+        viewSwitcher.setOutAnimation(out);
+
         progressBar = new ProgressDialog(getActivity());
         img_path = "";
 
@@ -133,6 +154,19 @@ public class ProfileFragment extends Fragment {
                 saveUser();
             }
         });
+        buttonSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSwitcher.showNext();
+            }
+        });
+        buttonSwitch1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSwitcher.showNext();
+            }
+        });
+
     }
 
     private void saveUser(){
@@ -232,8 +266,8 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
-                    avatarImgView.setImageBitmap(bmp);
+                    imageview_show.setImageBitmap(bmp);
+                    imageview_edit.setImageBitmap(bmp);
                     img_path = saveImage(bmp);
                     saveUser();
                     progressBar.dismiss();
@@ -272,11 +306,17 @@ public class ProfileFragment extends Fragment {
                     editTextEmail.setText(user.getEmail());
                     editTextPhone.setText(user.getPhone_number());
 
+                    nameTextView.setText(user.getName());
+                    surnameTextView.setText(user.getSurname());
+                    emailTextView.setText(user.getEmail());
+                    phoneTextView.setText(user.getPhone_number());
+
+
                     File imgFile = new  File(user.getImg_path());
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        ImageView avatarImgView = (ImageView) profileView.findViewById(R.id.avatarImgView);
-                        avatarImgView.setImageBitmap(iconBitmap);
+                        imageview_show.setImageBitmap(iconBitmap);
+                        imageview_edit.setImageBitmap(iconBitmap);
                         img_path = user.getImg_path();
                     } else {
                         downloadFromFirebaseStorage();
@@ -350,7 +390,8 @@ public class ProfileFragment extends Fragment {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
                     img_path = saveImage(bitmap);
                     Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
-                    imageview.setImageBitmap(bitmap);
+                    imageview_edit.setImageBitmap(bitmap);
+                    imageview_show.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -360,7 +401,8 @@ public class ProfileFragment extends Fragment {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            imageview.setImageBitmap(thumbnail);
+            imageview_edit.setImageBitmap(thumbnail);
+            imageview_show.setImageBitmap(thumbnail);
             img_path = saveImage(thumbnail);
             Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
@@ -368,8 +410,12 @@ public class ProfileFragment extends Fragment {
 
     private String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        Bitmap resized = Bitmap.createScaledBitmap(myBitmap,(int)(myBitmap.getWidth()*0.5), (int)(myBitmap.getHeight()*0.5), true);
-        resized.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+        if (myBitmap.getByteCount() > 200 * 1024) {
+            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, (int) (myBitmap.getWidth() * 0.5), (int) (myBitmap.getHeight() * 0.5), true);
+            resized.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
+        } else {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        }
         File wallpaperDirectory = new File(
                 Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
         // have the object build the directory structure, if needed.

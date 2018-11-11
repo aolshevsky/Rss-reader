@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.user.myapplication.BuildConfig;
@@ -48,17 +47,7 @@ public class AboutFragment extends Fragment {
         String ver_name = getResources().getString(R.string.app_ver) + BuildConfig.VERSION_NAME;
         ver_view.setText(ver_name);
 
-        Button get_imei_btn = phoneStateView.findViewById(R.id.start_btn);
-        get_imei_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickGetIMEI();
-            }
-        });
-
-        if (((MainActivity)getActivity()).hasNeedPermissions(0)) {
-            showPhoneState();
-        }
+        onOpenAbout();
 
     }
 
@@ -79,7 +68,7 @@ public class AboutFragment extends Fragment {
         Log.d("myLog", "onSaveInstanceState");
     }
 
-    private void onClickGetIMEI(){
+    private void onOpenAbout(){
         if (((MainActivity)getActivity()).hasNeedPermissions(0)) {
             showPhoneState();
         }

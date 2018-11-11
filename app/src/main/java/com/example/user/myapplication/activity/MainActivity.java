@@ -9,29 +9,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-
-import com.example.user.myapplication.model.User;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.util.RequestCode;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +33,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -82,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
     // упорядочить код,вынести все в отдельные классы кнопка имя
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         NavigationUI.setupWithNavController(navigationView, navController);
-        drawerLayout = (DrawerLayout) findViewById(R.id.activity_view);
+        drawerLayout = findViewById(R.id.activity_view);
 
         View headerview = navigationView.getHeaderView(0);
-        LinearLayout profile_click_place = (LinearLayout) headerview.findViewById(R.id.profile_click_place);
+        LinearLayout profile_click_place = headerview.findViewById(R.id.profile_click_place);
         profile_click_place.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -123,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "onPause");
     }
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         loadUserInformation();
         Log.d(LOG_TAG, "onStart");
     }
@@ -141,16 +136,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.child(user_id).getValue(User.class);
                 if(user != null) {
-                    TextView textViewFullName = (TextView) findViewById(R.id.full_name_txt);
-                    TextView textViewEmail = (TextView) findViewById(R.id.email_txt);
-                    textViewFullName.setText(String.format("%s %s", user.getName(), user.getSurname()));
+                    TextView textViewFullName = findViewById(R.id.full_name_txt);
+                    TextView textViewEmail = findViewById(R.id.email_txt);
+                    if (textViewFullName != null)
+                        textViewFullName.setText(String.format("%s %s", user.getName(), user.getSurname()));
                     textViewEmail.setText(user.getEmail());
 
                     File imgFile = new  File(user.getImg_path());
 
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        ImageView profileImgView = (ImageView) findViewById(R.id.profileImgView);
+                        ImageView profileImgView = findViewById(R.id.profileImgView);
                         profileImgView.setImageBitmap(iconBitmap);
                     }
                 }
