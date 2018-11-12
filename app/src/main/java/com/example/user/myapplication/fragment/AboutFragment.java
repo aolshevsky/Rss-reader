@@ -48,7 +48,6 @@ public class AboutFragment extends Fragment {
         ver_view.setText(ver_name);
 
         onOpenAbout();
-
     }
 
     private void showPhoneState() {

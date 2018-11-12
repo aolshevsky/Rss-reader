@@ -20,7 +20,8 @@ import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.util.RequestCode;
+import com.example.user.myapplication.utils.DatabaseHelper;
+import com.example.user.myapplication.utils.RequestCode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private String user_id = "local_user";
 
 
-    private DatabaseReference databaseUsers;
+    private DatabaseHelper databaseHelper;
 
 
     @Override
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeNavigation();
 
-        initializeDatabase();
+        databaseHelper = new DatabaseHelper();
 
         if(!hasAllPermissions())
             requestAllPerms();
@@ -120,44 +121,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadUserInformation();
+        databaseHelper.loadUserInformationMenu(this, user_id);
         Log.d(LOG_TAG, "onStart");
     }
 
 
-    private  void initializeDatabase(){
-        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
-    }
-
-    private void loadUserInformation(){
-
-        databaseUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.child(user_id).getValue(User.class);
-                if(user != null) {
-                    TextView textViewFullName = findViewById(R.id.full_name_txt);
-                    TextView textViewEmail = findViewById(R.id.email_txt);
-                    if (textViewFullName != null)
-                        textViewFullName.setText(String.format("%s %s", user.getName(), user.getSurname()));
-                    textViewEmail.setText(user.getEmail());
-
-                    File imgFile = new  File(user.getImg_path());
-
-                    if(imgFile.exists()){
-                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        ImageView profileImgView = findViewById(R.id.profileImgView);
-                        profileImgView.setImageBitmap(iconBitmap);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 
     private boolean hasAllPermissions(){
@@ -250,12 +218,6 @@ public class MainActivity extends AppCompatActivity {
             requestAllPerms();
         }
 
-    }
-
-    public void onFragmentProfileCancelClick(View view) {
-        navController.popBackStack();
-        navController.navigate(R.id.homeFragment);
-        drawerLayout.closeDrawers();
     }
 
     public void onEditClick(View view) {

@@ -29,6 +29,7 @@ import android.widget.ViewSwitcher;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.utils.DatabaseHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -53,9 +54,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static com.example.user.myapplication.util.RequestCode.CAMERA;
-import static com.example.user.myapplication.util.RequestCode.GALLERY;
-import static com.example.user.myapplication.util.RequestCode.IMAGE_DIRECTORY;
+import static com.example.user.myapplication.utils.RequestCode.CAMERA;
+import static com.example.user.myapplication.utils.RequestCode.GALLERY;
+import static com.example.user.myapplication.utils.RequestCode.IMAGE_DIRECTORY;
 
 
 public class ProfileFragment extends Fragment {
@@ -64,7 +65,6 @@ public class ProfileFragment extends Fragment {
     private ImageView imageview_edit;
     private ImageView imageview_show;
     private View profileView;
-
 
     private EditText editTextEmail;
     private EditText editTextName;
@@ -78,9 +78,10 @@ public class ProfileFragment extends Fragment {
     private String user_id = "local_user";
     private ProgressDialog progressBar;
 
+    private DatabaseHelper databaseHelper;
 
-    private DatabaseReference databaseUsers;
-    private StorageReference storageRef;
+    private ProfileFragment profileFragment;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,11 +99,13 @@ public class ProfileFragment extends Fragment {
 
         initializeView();
 
-        initializeDatabase();
+        databaseHelper = new DatabaseHelper();
 
         getActivity().setTitle("Profile");
 
         loadUserInformation();
+
+        profileFragment = this;
 
         return profileView;
     }
@@ -120,11 +123,6 @@ public class ProfileFragment extends Fragment {
         // saveUser();
     }
 
-
-    private  void initializeDatabase(){
-        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
-        storageRef = FirebaseStorage.getInstance().getReference();
-    }
 
     private void initializeView(){
         editTextName = profileView.findViewById(R.id.name_txtEdit);
@@ -206,97 +204,25 @@ public class ProfileFragment extends Fragment {
 
         // String id = databaseUsers.push().getKey();
         User user = new User(user_id, name, surname, email, phone_number, img_path);
-        uploadImageToFirebaseStorage();
-        databaseUsers.child(user_id).setValue(user);
+        databaseHelper.uploadImageToFirebaseStorage(progressBar, user_id, img_path);
+        databaseHelper.SaveUserToDatabase(user);
         Toast.makeText(getActivity(), "Save user", Toast.LENGTH_LONG).show();
 
     }
 
 
-    private void uploadImageToFirebaseStorage(){
-        progressBar.setMessage("Uploading...");
-        progressBar.show();
-        Log.d("myLogs", img_path);
-        Uri file = Uri.fromFile(new File(img_path));
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
-        StorageReference image_storage = storageRef.child(new_file_path);
-
-        image_storage.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getActivity(), "Upload image success", Toast.LENGTH_LONG).show();
-                        progressBar.dismiss();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getActivity(), "Upload image failed", Toast.LENGTH_LONG).show();
-                        progressBar.dismiss();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                        progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
-                    }
-                })
-                .addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                        System.out.println("Upload is paused!");
-                    }
-                });
+    public void SetProfileImg(Bitmap bmp){
+        imageview_show.setImageBitmap(bmp);
+        imageview_edit.setImageBitmap(bmp);
+        img_path = saveImage(bmp);
+        saveUser();
     }
 
-    private void downloadFromFirebaseStorage() {
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
-        StorageReference image_storage = storageRef.child(new_file_path);
-        if (image_storage != null) {
-            progressBar.setTitle("Downloading...");
-            progressBar.setMessage(null);
-            progressBar.show();
-        try {
-            final File localFile = File.createTempFile("images", ".jpg");
 
-            image_storage.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    imageview_show.setImageBitmap(bmp);
-                    imageview_edit.setImageBitmap(bmp);
-                    img_path = saveImage(bmp);
-                    saveUser();
-                    progressBar.dismiss();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    progressBar.dismiss();
-                    Toast.makeText(getActivity(), "Download failed. Check internet connection", Toast.LENGTH_LONG).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                    progressBar.setMessage("Downloaded " + ((int) progress) + "%...");
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    } else {
-        Toast.makeText(getActivity(), "Upload file before downloading", Toast.LENGTH_LONG).show();
-    }
-}
 
     private void loadUserInformation(){
 
-        databaseUsers.addValueEventListener(new ValueEventListener() {
+        databaseHelper.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.child(user_id).getValue(User.class);
@@ -319,7 +245,7 @@ public class ProfileFragment extends Fragment {
                         imageview_edit.setImageBitmap(iconBitmap);
                         img_path = user.getImg_path();
                     } else {
-                        downloadFromFirebaseStorage();
+                        databaseHelper.downloadFromFirebaseStorage(progressBar, profileFragment, user_id);
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.user.myapplication.util;
+package com.example.user.myapplication.utils;
 
 public class RequestCode {
 
