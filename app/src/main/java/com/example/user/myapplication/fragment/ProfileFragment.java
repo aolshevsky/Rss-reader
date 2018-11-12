@@ -29,6 +29,7 @@ import android.widget.ViewSwitcher;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
+import com.example.user.myapplication.utils.ImageHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,6 +71,7 @@ public class ProfileFragment extends Fragment {
 
     private DatabaseHelper databaseHelper;
     private PermissionsHelper permissionsHelper;
+    private ImageHelper imageHelper;
 
     private ProfileFragment profileFragment;
 
@@ -79,19 +81,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        imageview_edit = profileView.findViewById(R.id.avatarImgView);
-        imageview_show = profileView.findViewById(R.id.avatarImgView1);
-        imageview_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPictureDialog();
-            }
-        });
-
-        initializeView();
-
         databaseHelper = new DatabaseHelper();
         permissionsHelper = new PermissionsHelper();
+        imageHelper = new ImageHelper();
+
+        initializeView();
 
         loadUserInformation();
 
@@ -116,6 +110,9 @@ public class ProfileFragment extends Fragment {
 
 
     private void initializeView(){
+        imageview_edit = profileView.findViewById(R.id.avatarImgView);
+        imageview_show = profileView.findViewById(R.id.avatarImgView1);
+
         editTextName = profileView.findViewById(R.id.name_txtEdit);
         editTextSurname = profileView.findViewById(R.id.surname_txtEdit);
         editTextEmail = profileView.findViewById(R.id.email_txtEdit);
@@ -155,10 +152,16 @@ public class ProfileFragment extends Fragment {
                 viewSwitcher.showNext();
             }
         });
+        imageview_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageHelper.showPictureDialog(getActivity(), permissionsHelper);
+            }
+        });
 
     }
 
-    private void saveUser(){
+    public void saveUser(){
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
@@ -195,9 +198,9 @@ public class ProfileFragment extends Fragment {
 
         // String id = databaseUsers.push().getKey();
         User user = new User(user_id, name, surname, email, phone_number, img_path);
-        databaseHelper.uploadImageToFirebaseStorage(progressBar, user_id, img_path);
+        databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, user_id, img_path);
         databaseHelper.SaveUserToDatabase(user);
-        Toast.makeText(getActivity(), "Save user", Toast.LENGTH_LONG).show();
+        // Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
 
@@ -205,14 +208,10 @@ public class ProfileFragment extends Fragment {
     public void SetProfileImg(Bitmap bmp){
         imageview_show.setImageBitmap(bmp);
         imageview_edit.setImageBitmap(bmp);
-        img_path = saveImage(bmp);
-        saveUser();
+        img_path = imageHelper.saveImage(bmp);
     }
 
-
-
     private void loadUserInformation(){
-
         databaseHelper.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -248,115 +247,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void showPictureDialog(){
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
-        pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {
-                "Select photo from gallery",
-                "Capture photo from camera" };
-        pictureDialog.setItems(pictureDialogItems,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                if (permissionsHelper.hasNeedPermissions(getActivity(), 1)) {
-                                    choosePhotoFromGallary();
-                                }
-                                else {
-                                    permissionsHelper.requestNeedPerms(getActivity(), 1);
-                                }
-                                break;
-                            case 1:
-                                if (permissionsHelper.hasNeedPermissions(getActivity(), 2)) {
-                                    takePhotoFromCamera();
-                                }
-                                else {
-                                    permissionsHelper.requestNeedPerms(getActivity(), 2);
-                                }
-                                break;
-                        }
-                    }
-                });
-        pictureDialog.show();
-    }
-
-    private void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-                Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
-                    img_path = saveImage(bitmap);
-                    Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
-                    imageview_edit.setImageBitmap(bitmap);
-                    imageview_show.setImageBitmap(bitmap);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            imageview_edit.setImageBitmap(thumbnail);
-            imageview_show.setImageBitmap(thumbnail);
-            img_path = saveImage(thumbnail);
-            Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap.getByteCount() > 200 * 1024) {
-            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, (int) (myBitmap.getWidth() * 0.5), (int) (myBitmap.getHeight() * 0.5), true);
-            resized.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
-        } else {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            // Calendar.getInstance().getTime()
-            File f = new File(wallpaperDirectory, "profile_icon.jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(profileView.getContext(),
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("myLogs", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
+        imageHelper.onActivityResult(this, requestCode, resultCode, data);
     }
 
 }

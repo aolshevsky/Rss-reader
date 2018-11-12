@@ -52,7 +52,7 @@ public class DatabaseHelper {
     }
 
 
-    public void uploadImageToFirebaseStorage(final ProgressDialog progressBar, String user_id, String img_path){
+    public void uploadImageToFirebaseStorage(final Activity activity, final ProgressDialog progressBar, String user_id, String img_path){
         progressBar.setMessage("Uploading...");
         progressBar.show();
         Uri file = Uri.fromFile(new File(img_path));
@@ -70,7 +70,7 @@ public class DatabaseHelper {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        //Toast.makeText(getActivity(), "Upload image failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, "Upload image failed", Toast.LENGTH_LONG).show();
                         progressBar.dismiss();
                     }
                 })
@@ -91,6 +91,7 @@ public class DatabaseHelper {
     }
 
     public void downloadFromFirebaseStorage(final ProgressDialog progressBar, final ProfileFragment profileFragment, String user_id) {
+        final Activity activity = profileFragment.getActivity();
         String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
         StorageReference image_storage = storageRef.child(new_file_path);
         if (image_storage != null) {
@@ -105,13 +106,14 @@ public class DatabaseHelper {
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         profileFragment.SetProfileImg(bmp);
+                        profileFragment.saveUser();
                         progressBar.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         progressBar.dismiss();
-                        Toast.makeText(profileFragment.getActivity(), "Download failed. Check internet connection", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, "Download failed. Check internet connection", Toast.LENGTH_LONG).show();
                     }
                 }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
@@ -125,7 +127,7 @@ public class DatabaseHelper {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(profileFragment.getActivity(), "Upload file before downloading", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Upload file before downloading", Toast.LENGTH_LONG).show();
         }
     }
 
