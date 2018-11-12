@@ -11,15 +11,14 @@ import android.widget.TextView;
 
 import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
+import com.example.user.myapplication.utils.PermissionsHelper;
 
 import androidx.fragment.app.Fragment;
 
 public class AboutFragment extends Fragment {
 
     private View phoneStateView;
-
-    public static final String TAG = "SecondFragmentTag";
+    private PermissionsHelper permissionsHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +32,8 @@ public class AboutFragment extends Fragment {
         }
 
         phoneStateView = inflater.inflate(R.layout.fragment_about, container, false);
+
+        permissionsHelper = new PermissionsHelper();
 
         getActivity().setTitle("About");
 
@@ -68,11 +69,11 @@ public class AboutFragment extends Fragment {
     }
 
     private void onOpenAbout(){
-        if (((MainActivity)getActivity()).hasNeedPermissions(0)) {
+        if (permissionsHelper.hasNeedPermissions(getActivity(), 0)) {
             showPhoneState();
         }
         else {
-            ((MainActivity)getActivity()).requestNeedPerms(0);
+            permissionsHelper.requestNeedPerms(getActivity(), 0);
         }
     }
 

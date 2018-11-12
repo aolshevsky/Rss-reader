@@ -27,22 +27,12 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private ProgressDialog progressBar;
 
     private DatabaseHelper databaseHelper;
+    private PermissionsHelper permissionsHelper;
 
     private ProfileFragment profileFragment;
 
@@ -100,12 +91,12 @@ public class ProfileFragment extends Fragment {
         initializeView();
 
         databaseHelper = new DatabaseHelper();
-
-        getActivity().setTitle("Profile");
+        permissionsHelper = new PermissionsHelper();
 
         loadUserInformation();
 
         profileFragment = this;
+        getActivity().setTitle("Profile");
 
         return profileView;
     }
@@ -269,19 +260,19 @@ public class ProfileFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                if (((MainActivity)getActivity()).hasNeedPermissions(1)) {
+                                if (permissionsHelper.hasNeedPermissions(getActivity(), 1)) {
                                     choosePhotoFromGallary();
                                 }
                                 else {
-                                    ((MainActivity)getActivity()).requestNeedPerms(1);
+                                    permissionsHelper.requestNeedPerms(getActivity(), 1);
                                 }
                                 break;
                             case 1:
-                                if (((MainActivity)getActivity()).hasNeedPermissions(2)) {
+                                if (permissionsHelper.hasNeedPermissions(getActivity(), 2)) {
                                     takePhotoFromCamera();
                                 }
                                 else {
-                                    ((MainActivity)getActivity()).requestNeedPerms(2);
+                                    permissionsHelper.requestNeedPerms(getActivity(), 2);
                                 }
                                 break;
                         }

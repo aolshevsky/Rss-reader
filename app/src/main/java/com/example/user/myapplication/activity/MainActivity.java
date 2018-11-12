@@ -1,38 +1,16 @@
 package com.example.user.myapplication.activity;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
-import com.example.user.myapplication.utils.RequestCode;
+import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public NavController navController;
     private DrawerLayout drawerLayout;
 
-
-    private String user_id = "local_user";
-
+    PermissionsHelper permissionsHelper;
 
     private DatabaseHelper databaseHelper;
 
@@ -70,12 +46,13 @@ public class MainActivity extends AppCompatActivity {
         initializeNavigation();
 
         databaseHelper = new DatabaseHelper();
+        permissionsHelper = new PermissionsHelper();
 
-        if(!hasAllPermissions())
-            requestAllPerms();
+        if(!permissionsHelper.hasAllPermissions(this))
+            permissionsHelper.requestAllPerms(this);
 
     }
-    // упорядочить код,вынести все в отдельные классы кнопка имя
+
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -88,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         profile_click_place.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                onEditClick(v);
+                onProfileClick(v);
             }
         });
     }
@@ -114,170 +91,26 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(LOG_TAG, "onPause");
-    }
-    @Override
     protected void onResume() {
         super.onResume();
-        databaseHelper.loadUserInformationMenu(this, user_id);
+        databaseHelper.loadUserInformationMenu(this, "local_user");
         Log.d(LOG_TAG, "onStart");
-    }
-
-
-
-
-    private boolean hasAllPermissions(){
-        int res = 0;
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA};
-
-        for (String perms : permissions){
-            res = checkCallingOrSelfPermission(perms);
-            if (!(res == PackageManager.PERMISSION_GRANTED)){
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean hasNeedPermissions(int per_ind){
-        int res = 0;
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA};
-
-        res = checkCallingOrSelfPermission(permissions[per_ind]);
-        return res == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    private void requestAllPerms(){
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
-        }
-    }
-    public void requestNeedPerms(int per_ind){
-        String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            requestPermissions(new String[]{permissions[per_ind]},RequestCode.PERMISSION_REQUEST_CODE);
-        }
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        Map<String, Boolean> allowed = new HashMap<>();
-        Boolean is_any_perms = false;
-        Boolean val;
-        switch (requestCode) {
-            case RequestCode.PERMISSION_REQUEST_CODE: {
-                for (int i = 0, len = grantResults.length; i < len; i++) {
-                    allowed.put(permissions[i] ,(grantResults[i] == PackageManager.PERMISSION_GRANTED));
-                }
-                break;
-            }
-        }
-        val = allowed.get(Manifest.permission.READ_PHONE_STATE);
-        if (val != null && !val){
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-                is_any_perms = true;
-            }
-            else {
-                showNoPhonePermissionSnackbar();
-            }
-        }
-        val = allowed.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (val != null && !val){
-            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                is_any_perms = true;
-            }
-            else {
-                showNoStoragePermissionSnackbar();
-            }
-
-        }
-        val = allowed.get(Manifest.permission.CAMERA);
-        if (val != null && !val){
-            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                is_any_perms = true;
-            }
-            else {
-                showNoCameraPermissionSnackbar();
-            }
-        }
-
-        if (is_any_perms){
-            requestAllPerms();
-        }
-
+        permissionsHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    public void onEditClick(View view) {
+    public void onProfileClick(View view) {
         navController.popBackStack();
         navController.navigate(R.id.profileFragment);
         drawerLayout.closeDrawers();
     }
 
-    public void showNoPhonePermissionSnackbar() {
-        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_ph_per_no_grtd) , Snackbar.LENGTH_LONG)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openApplicationSettings();
 
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.msg_open_ph_per),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                })
-                .show();
-    }
 
-    public void showNoCameraPermissionSnackbar() {
-        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_cam_per_no_grtd) , Snackbar.LENGTH_LONG)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openApplicationSettings();
 
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.msg_open_cam_per),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                })
-                .show();
-    }
-
-    public void showNoStoragePermissionSnackbar() {
-        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), getResources().getString(R.string.msg_store_per_no_grtd) , Snackbar.LENGTH_LONG)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openApplicationSettings();
-
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.msg_open_store_per),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                })
-                .show();
-    }
-
-    public void openApplicationSettings() {
-        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + getPackageName()));
-        startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
-    }
 
 }
