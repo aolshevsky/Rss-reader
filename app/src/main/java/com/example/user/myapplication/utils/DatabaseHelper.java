@@ -53,8 +53,8 @@ public class DatabaseHelper {
 
 
     public void uploadImageToFirebaseStorage(final Activity activity, final ProgressDialog progressBar, String user_id, String img_path){
-        progressBar.setMessage("Uploading...");
-        progressBar.show();
+        //progressBar.setMessage("Uploading...");
+        //progressBar.show();
         Uri file = Uri.fromFile(new File(img_path));
         String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
         StorageReference image_storage = storageRef.child(new_file_path);
@@ -64,14 +64,14 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //Toast.makeText(getActivity(), "Upload image success", Toast.LENGTH_LONG).show();
-                        progressBar.dismiss();
+                        //progressBar.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(activity, "Upload image failed", Toast.LENGTH_LONG).show();
-                        progressBar.dismiss();
+                        //progressBar.dismiss();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -79,7 +79,7 @@ public class DatabaseHelper {
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
-                        progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
+                        //progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
                     }
                 })
                 .addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {

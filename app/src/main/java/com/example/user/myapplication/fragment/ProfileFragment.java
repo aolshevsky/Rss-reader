@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -68,6 +69,8 @@ public class ProfileFragment extends Fragment {
     private String img_path;
     private String user_id = "local_user";
     private ProgressDialog progressBar;
+    private ProgressBar saveProgressBar;
+    private Button buttonSave;
 
     private DatabaseHelper databaseHelper;
     private PermissionsHelper permissionsHelper;
@@ -121,7 +124,7 @@ public class ProfileFragment extends Fragment {
         surnameTextView = profileView.findViewById(R.id.surname_txtView);
         emailTextView = profileView.findViewById(R.id.email_txtView);
         phoneTextView = profileView.findViewById(R.id.phone_txtView);
-        Button buttonSave = profileView.findViewById(R.id.save_btn);
+        buttonSave = profileView.findViewById(R.id.save_btn);
         ImageButton buttonSwitch = profileView.findViewById(R.id.switch_btn);
         ImageButton buttonSwitch1 = profileView.findViewById(R.id.switch_btn1);
         final ViewSwitcher viewSwitcher = profileView.findViewById(R.id.profile_switcher);
@@ -132,6 +135,7 @@ public class ProfileFragment extends Fragment {
         viewSwitcher.setOutAnimation(out);
 
         progressBar = new ProgressDialog(getActivity());
+        saveProgressBar = profileView.findViewById(R.id.saveProgressBar);
         img_path = "";
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +166,8 @@ public class ProfileFragment extends Fragment {
     }
 
     public void saveUser(){
+        buttonSave.setVisibility(View.INVISIBLE);
+        saveProgressBar.setVisibility(View.VISIBLE);
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
@@ -200,6 +206,8 @@ public class ProfileFragment extends Fragment {
         User user = new User(user_id, name, surname, email, phone_number, img_path);
         databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, user_id, img_path);
         databaseHelper.SaveUserToDatabase(user);
+        buttonSave.setVisibility(View.VISIBLE);
+        saveProgressBar.setVisibility(View.INVISIBLE);
         // Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
