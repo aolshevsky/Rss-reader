@@ -1,6 +1,5 @@
 package com.example.user.myapplication.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,10 +11,8 @@ import com.example.user.myapplication.R;
 import com.example.user.myapplication.utils.DatabaseHelper;
 import com.example.user.myapplication.utils.DeepLinksHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
+import com.example.user.myapplication.utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     PermissionsHelper permissionsHelper;
 
     private DatabaseHelper databaseHelper;
+    private SharedPref sharedPref;
 
 
     @Override
@@ -50,10 +48,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initializeNavigation();
-        initializeTheme();
 
         databaseHelper = new DatabaseHelper();
         permissionsHelper = new PermissionsHelper();
+        sharedPref = new SharedPref(this);
+        initializeTheme();
 
         DeepLinksHelper.uriNavigate(navController, this);
         // adb shell am start -W -a android.intent.action.VIEW -d "sdapp://by.myapp/page"
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeTheme(){
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (sharedPref.loadNightModeState()){
             setTheme(R.style.darktheme);
         }
     }
