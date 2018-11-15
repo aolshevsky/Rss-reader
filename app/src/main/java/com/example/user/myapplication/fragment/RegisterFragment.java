@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -52,7 +53,8 @@ public class RegisterFragment extends Fragment {
 
     private void initializeView(){
         navController =  Navigation.findNavController(getActivity(), R.id.nav_log_reg_fragment);
-        Button to_register_btn = registerView.findViewById(R.id.switch_to_reg);
+        Button to_login_btn = registerView.findViewById(R.id.switch_to_login);
+        Button register_btn = registerView.findViewById(R.id.register_btn);
         editTextName = registerView.findViewById(R.id.reg_name_txtEdit);
         editTextSurname = registerView.findViewById(R.id.reg_surname_txtEdit);
         editTextEmail = registerView.findViewById(R.id.reg_email_txtEdit);
@@ -60,7 +62,13 @@ public class RegisterFragment extends Fragment {
         editTextPassword = registerView.findViewById(R.id.reg_password);
         editTextConfirmPassword = registerView.findViewById(R.id.reg_confirm_password);
 
-        to_register_btn.setOnClickListener(new View.OnClickListener() {
+        register_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerUser();
+            }
+        });
+        to_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onLoginSwitchClick();
@@ -70,12 +78,13 @@ public class RegisterFragment extends Fragment {
 
     private void onLoginSwitchClick() {
         navController.popBackStack();
-        navController.navigate(R.id.registerFragment);
+        navController.navigate(R.id.loginFragment);
     }
 
     private void registerUser(){
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        String con_password = editTextConfirmPassword.getText().toString().trim();
 
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
@@ -105,8 +114,18 @@ public class RegisterFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(password)){
-            editTextEmail.setError("Please enter password");
-            editTextEmail.requestFocus();
+            editTextPassword.setError("Please enter password");
+            editTextPassword.requestFocus();
+            return;
+        }
+        if (password.length() < 6){
+            editTextPassword.setError("Password must be at least 6 characters");
+            editTextPassword.requestFocus();
+            return;
+        }
+        if (!password.equals(con_password)){
+            editTextConfirmPassword.setError("Password not matching");
+            editTextConfirmPassword.requestFocus();
             return;
         }
 
@@ -116,7 +135,7 @@ public class RegisterFragment extends Fragment {
                 if(task.isSuccessful()){
                     Toast.makeText(getActivity(), "Registered Successfully", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity(), "Could not register.. please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Could not register.." + task.getException(), Toast.LENGTH_LONG).show();
                 }
             }
         });
