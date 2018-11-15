@@ -1,5 +1,6 @@
 package com.example.user.myapplication.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,8 +10,12 @@ import android.widget.LinearLayout;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.utils.DatabaseHelper;
+import com.example.user.myapplication.utils.DeepLinksHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper();
         permissionsHelper = new PermissionsHelper();
+
+        DeepLinksHelper.uriNavigate(navController, this);
+        // adb shell am start -W -a android.intent.action.VIEW -d "sdapp://by.myapp/page"
 
         if(!permissionsHelper.hasAllPermissions(this))
             permissionsHelper.requestAllPerms(this);
@@ -108,9 +116,4 @@ public class MainActivity extends AppCompatActivity {
         navController.navigate(R.id.profileFragment);
         drawerLayout.closeDrawers();
     }
-
-
-
-
-
 }
