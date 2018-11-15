@@ -1,5 +1,6 @@
 package com.example.user.myapplication.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,7 +70,6 @@ public class ProfileFragment extends Fragment {
     private String img_path;
     private String user_id = "local_user";
     private ProgressDialog progressBar;
-    private ProgressBar saveProgressBar;
     private Button buttonSave;
 
     private DatabaseHelper databaseHelper;
@@ -84,8 +84,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        databaseHelper = new DatabaseHelper();
-        permissionsHelper = new PermissionsHelper();
+        databaseHelper = DatabaseHelper.getInstance();
+        permissionsHelper = PermissionsHelper.getInstance();
         imageHelper = new ImageHelper();
 
         initializeView();
@@ -135,7 +135,6 @@ public class ProfileFragment extends Fragment {
         viewSwitcher.setOutAnimation(out);
 
         progressBar = new ProgressDialog(getActivity());
-        saveProgressBar = profileView.findViewById(R.id.saveProgressBar);
         img_path = "";
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +158,13 @@ public class ProfileFragment extends Fragment {
         imageview_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageHelper.showPictureDialog(getActivity(), permissionsHelper);
+                imageHelper.showPictureDialog(profileFragment, permissionsHelper);
             }
         });
 
     }
 
     public void saveUser(){
-        buttonSave.setVisibility(View.INVISIBLE);
-        saveProgressBar.setVisibility(View.VISIBLE);
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
@@ -206,8 +203,6 @@ public class ProfileFragment extends Fragment {
         User user = new User(user_id, name, surname, email, phone_number, img_path);
         databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, user_id, img_path);
         databaseHelper.SaveUserToDatabase(user);
-        buttonSave.setVisibility(View.VISIBLE);
-        saveProgressBar.setVisibility(View.INVISIBLE);
         // Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
@@ -255,11 +250,46 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
+    public void choosePhotoFromGallary() {
+        Log.d("myLogs", "Image from galary");
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(galleryIntent, GALLERY);
+    }
+
+    public void takePhotoFromCamera() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-        imageHelper.onActivityResult(this, requestCode, resultCode, data);
+        Log.d("myLogs", "Boom");
+        if (resultCode == RESULT_CANCELED) {
+            return;
+        }
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                Uri contentURI = data.getData();
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
+                    profileFragment.SetProfileImg(bmp);
+                    Toast.makeText(profileFragment.getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            Bitmap bmp = (Bitmap) data.getExtras().get("data");
+            profileFragment.SetProfileImg(bmp);
+            Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

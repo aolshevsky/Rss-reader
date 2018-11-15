@@ -34,6 +34,8 @@ import androidx.annotation.NonNull;
 
 public class DatabaseHelper {
 
+    private static DatabaseHelper instance = new DatabaseHelper();
+
     private DatabaseReference databaseUsers;
     private StorageReference storageRef;
 
@@ -42,6 +44,11 @@ public class DatabaseHelper {
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
         storageRef = FirebaseStorage.getInstance().getReference();
     }
+
+    public static DatabaseHelper getInstance(){
+        return instance;
+    }
+
 
     public DatabaseReference getDatabaseUsers(){
         return databaseUsers;
@@ -63,7 +70,7 @@ public class DatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //Toast.makeText(getActivity(), "Upload image success", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(activity, "Upload image success", Toast.LENGTH_LONG).show();
                         //progressBar.dismiss();
                     }
                 })

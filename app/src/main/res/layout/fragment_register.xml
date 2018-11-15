@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,9 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="?attr/backgroundcolor"
-        android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="29dp">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,7 +15,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/avatarImgView"
+                android:id="@+id/reg_avatarImgView"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
@@ -26,7 +23,7 @@
                 android:src="@drawable/userphoto" />
 
             <EditText
-                android:id="@+id/name_txtEdit"
+                android:id="@+id/reg_name_txtEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -39,7 +36,7 @@
                 android:textColor="?attr/textcolor" />
 
             <EditText
-                android:id="@+id/surname_txtEdit"
+                android:id="@+id/reg_surname_txtEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -52,7 +49,7 @@
                 android:textColor="?attr/textcolor" />
 
             <EditText
-                android:id="@+id/phone_txtEdit"
+                android:id="@+id/reg_phone_txtEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -65,7 +62,7 @@
                 android:textColor="?attr/textcolor" />
 
             <EditText
-                android:id="@+id/email_txtEdit"
+                android:id="@+id/reg_email_txtEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -78,7 +75,7 @@
                 android:textColor="?attr/textcolor" />
 
             <EditText
-                android:id="@+id/password_reg"
+                android:id="@+id/reg_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -91,7 +88,7 @@
                 android:textColor="?attr/textcolor" />
 
             <EditText
-                android:id="@+id/confirm_password_reg"
+                android:id="@+id/reg_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
@@ -110,7 +107,7 @@
                 android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/save_btn"
+                    android:id="@+id/register_btn"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -127,7 +124,6 @@
                     android:layout_alignTop="@+id/save_btn"
                     android:layout_alignEnd="@+id/save_btn"
                     android:layout_marginTop="45dp"
-                    android:layout_marginBottom="80dp"
                     android:background="@null"
                     android:text="Already register! Login Me."
                     android:textAllCaps="false"

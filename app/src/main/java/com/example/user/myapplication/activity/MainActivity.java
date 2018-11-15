@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         initializeNavigation();
 
-        databaseHelper = new DatabaseHelper();
-        permissionsHelper = new PermissionsHelper();
+        databaseHelper = DatabaseHelper.getInstance();
+        permissionsHelper = PermissionsHelper.getInstance();
         sharedPref = new SharedPref(this);
         initializeTheme();
 

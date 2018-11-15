@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
@@ -20,6 +19,12 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 
 public class PermissionsHelper {
+
+    private static PermissionsHelper instance = new PermissionsHelper();
+
+    public static PermissionsHelper getInstance(){
+        return instance;
+    }
 
     public boolean hasAllPermissions(Activity activity){
         int res = 0;
