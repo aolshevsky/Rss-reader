@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor">
 
     <TextView
         android:id="@+id/version_name"
@@ -9,6 +10,7 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:text="Hello World!"
+        android:textColor="?attr/textcolor"
         android:textAlignment="center" />
 
     <TextView
@@ -18,6 +20,7 @@
         android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="@string/imei_txt"
+        android:textColor="?attr/textcolor"
         android:textAlignment="center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,27 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary1</item>
+        <item name="toolbar">@color/colorPrimary1</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark1</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundcolor">@color/background</item>
+        <item name="background_2">@color/background_2</item>
+        <item name="textcolor">@color/textcolor</item>
+        <item name="button_txt">@color/button_txt</item>
+    </style>
+
+    <!-- Night / dark Mode theme. -->
+    <style name="darktheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryDT</item>
+        <item name="toolbar">@color/colorPrimaryDT</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDT</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundcolor">@color/backgroundDT</item>
+        <item name="background_2">@color/background_2DT</item>
+        <item name="textcolor">@color/textcolorDT</item>
+        <item name="button_txt">@color/button_txt</item>
     </style>
 
 </resources>

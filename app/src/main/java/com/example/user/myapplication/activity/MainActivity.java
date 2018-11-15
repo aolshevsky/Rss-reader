@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initializeNavigation();
+        initializeTheme();
 
         databaseHelper = new DatabaseHelper();
         permissionsHelper = new PermissionsHelper();
@@ -59,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
         if(!permissionsHelper.hasAllPermissions(this))
             permissionsHelper.requestAllPerms(this);
 
+    }
+
+    private void initializeTheme(){
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darktheme);
+        }
     }
 
     private void initializeNavigation(){

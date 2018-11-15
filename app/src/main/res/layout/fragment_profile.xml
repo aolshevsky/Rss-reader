@@ -8,11 +8,11 @@
         android:id="@+id/profile_switcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/white">
+        android:background="?attr/backgroundcolor">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/backgroundcolor"
             android:orientation="vertical">
             <ImageView
                 android:id="@+id/avatarImgView1"
@@ -29,7 +29,7 @@
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="40sp"
                 android:text="Name"
-                android:textColor="@color/darkgray"
+                android:textColor="?attr/textcolor"
                 android:textSize="16sp"
                 android:textStyle="italic" />
             <TextView
@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
+                android:textColor="?attr/textcolor"
                 android:background="@drawable/reg_edittext_style"
                 android:textSize="18sp" />
 
@@ -48,7 +49,7 @@
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="40sp"
                 android:text="Surname"
-                android:textColor="@color/darkgray"
+                android:textColor="?attr/textcolor"
                 android:textSize="16sp"
                 android:textStyle="italic" />
             <TextView
@@ -57,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
+                android:textColor="?attr/textcolor"
                 android:background="@drawable/reg_edittext_style"
                 android:textSize="18sp" />
 
@@ -67,7 +69,7 @@
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="40sp"
                 android:text="Email"
-                android:textColor="@color/darkgray"
+                android:textColor="?attr/textcolor"
                 android:textSize="16sp"
                 android:textStyle="italic" />
             <TextView
@@ -76,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
+                android:textColor="?attr/textcolor"
                 android:background="@drawable/reg_edittext_style"
                 android:textSize="18sp" />
 
@@ -86,7 +89,7 @@
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="40sp"
                 android:text="Phone number"
-                android:textColor="@color/darkgray"
+                android:textColor="?attr/textcolor"
                 android:textSize="16sp"
                 android:textStyle="italic" />
             <TextView
@@ -95,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
+                android:textColor="?attr/textcolor"
                 android:background="@drawable/reg_edittext_style"
                 android:textSize="18sp" />
             <RelativeLayout
@@ -113,13 +117,13 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
                     android:src="@drawable/change"
-                    android:background="@color/white"/>
+                    android:background="?attr/backgroundcolor"/>
             </RelativeLayout>
         </LinearLayout>
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/white"
+            android:background="?attr/backgroundcolor"
             android:fillViewport="true">
 
             <LinearLayout
@@ -142,6 +146,7 @@
                     android:layout_marginLeft="40sp"
                     android:layout_marginTop="20sp"
                     android:layout_marginRight="40sp"
+                    android:textColor="?attr/textcolor"
                     android:background="@drawable/reg_edittext_style"
                     android:ems="10"
                     android:hint="Name"
@@ -154,6 +159,7 @@
                     android:layout_marginLeft="40sp"
                     android:layout_marginTop="20sp"
                     android:layout_marginRight="40sp"
+                    android:textColor="?attr/textcolor"
                     android:background="@drawable/reg_edittext_style"
                     android:ems="10"
                     android:hint="Surname"
@@ -166,6 +172,7 @@
                     android:layout_marginLeft="40sp"
                     android:layout_marginTop="20sp"
                     android:layout_marginRight="40sp"
+                    android:textColor="?attr/textcolor"
                     android:background="@drawable/reg_edittext_style"
                     android:ems="10"
                     android:hint="Phone number"
@@ -178,6 +185,7 @@
                     android:layout_marginLeft="40sp"
                     android:layout_marginTop="20sp"
                     android:layout_marginRight="40sp"
+                    android:textColor="?attr/textcolor"
                     android:background="@drawable/reg_edittext_style"
                     android:ems="10"
                     android:hint="Email"
@@ -196,7 +204,7 @@
                     android:layout_marginBottom="40dp"
                     android:background="@drawable/reg_btn_style"
                     android:text="Save"
-                    android:textColor="@color/white_2" />
+                    android:textColor="?attr/button_txt" />
                     <ImageButton
                         android:id="@+id/switch_btn"
                         android:layout_width="40dp"
@@ -208,7 +216,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginRight="10dp"
                         android:src="@drawable/change_back"
-                        android:background="@color/white"/>
+                        android:background="?attr/backgroundcolor"/>
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>

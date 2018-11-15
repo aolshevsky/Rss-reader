@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Aleksey Olshevski"
-            android:textColor="@color/white"
+            android:textColor="?attr/backgroundcolor"
             android:textStyle="bold" />
 
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="aleksey.olshevski@gmail.com"
-            android:textColor="@color/white" />
+            android:textColor="?attr/backgroundcolor" />
     </LinearLayout>
 
 
