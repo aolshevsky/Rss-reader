@@ -60,7 +60,6 @@ public class ProfileFragment extends Fragment {
     private ImageView imageview_show;
     private View profileView;
 
-    private EditText editTextEmail;
     private EditText editTextName;
     private EditText editTextSurname;
     private EditText editTextPhone;
@@ -117,7 +116,6 @@ public class ProfileFragment extends Fragment {
 
         editTextName = profileView.findViewById(R.id.name_txtEdit);
         editTextSurname = profileView.findViewById(R.id.surname_txtEdit);
-        editTextEmail = profileView.findViewById(R.id.email_txtEdit);
         editTextPhone = profileView.findViewById(R.id.phone_txtEdit);
         nameTextView = profileView.findViewById(R.id.name_txtView);
         surnameTextView = profileView.findViewById(R.id.surname_txtView);
@@ -135,6 +133,20 @@ public class ProfileFragment extends Fragment {
 
         progressBar = new ProgressDialog(getActivity());
         img_path = "";
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        saveUser();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+                viewSwitcher.showNext();
+            }
+        };
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +157,9 @@ public class ProfileFragment extends Fragment {
         buttonSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewSwitcher.showNext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Save user information?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
         buttonSwitch1.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +168,7 @@ public class ProfileFragment extends Fragment {
                 viewSwitcher.showNext();
             }
         });
-        imageview_edit.setOnClickListener(new View.OnClickListener() {
+        profileView.findViewById(R.id.edit_image_touch_place).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageHelper.showPictureDialog(profileFragment, permissionsHelper);
@@ -167,7 +181,6 @@ public class ProfileFragment extends Fragment {
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
-        String email = editTextEmail.getText().toString();
 
         if (TextUtils.isEmpty(name)){
             editTextName.setError("Please enter your Name");
@@ -181,28 +194,19 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-
         if (TextUtils.isEmpty(phone_number)){
             editTextPhone.setError("Please enter your Phone number");
             editTextPhone.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(img_path)){
-            Toast.makeText(getActivity(), "Please load or create image", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // String id = databaseUsers.push().getKey();
-        User userInfo = new User(name, surname, email, phone_number, img_path);
-        databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, img_path);
+        final FirebaseUser user = databaseHelper.getFirebaseAuth().getCurrentUser();
+        User userInfo = new User(name, surname,user.getEmail(), phone_number, img_path);
+        if(!img_path.equals(""))
+            databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, img_path);
         databaseHelper.SaveUserToDatabase(userInfo);
-        // Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
+        databaseHelper.loadUserInformationMenu(getActivity());
+        //Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
 
@@ -222,7 +226,6 @@ public class ProfileFragment extends Fragment {
                 if(userInfo != null) {
                     editTextName.setText(userInfo.getName());
                     editTextSurname.setText(userInfo.getSurname());
-                    editTextEmail.setText(userInfo.getEmail());
                     editTextPhone.setText(userInfo.getPhone_number());
 
                     nameTextView.setText(userInfo.getName());

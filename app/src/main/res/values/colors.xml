@@ -12,4 +12,5 @@
     <color name="background_2">#fafafa</color>
     <color name="background_2DT">#424242</color>
     <color name="button_txt">#fafafa</color>
+    <color name="button_color">#b2bec3</color>
 </resources>

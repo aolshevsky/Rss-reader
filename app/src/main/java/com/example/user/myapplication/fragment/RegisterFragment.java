@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
+import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.utils.DatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,6 +40,7 @@ public class RegisterFragment extends Fragment {
     private EditText editTextConfirmPassword;
 
     private FirebaseAuth firebaseAuth;
+    private DatabaseHelper databaseHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,7 +49,7 @@ public class RegisterFragment extends Fragment {
         registerView = inflater.inflate(R.layout.fragment_register, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
+        databaseHelper = DatabaseHelper.getInstance();
         initializeView();
         getActivity().setTitle("Register");
 
@@ -84,13 +87,13 @@ public class RegisterFragment extends Fragment {
     }
 
     private void registerUser(){
-        String email = editTextEmail.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String con_password = editTextConfirmPassword.getText().toString().trim();
 
-        String name = editTextName.getText().toString();
-        String surname = editTextSurname.getText().toString();
-        String phone_number = editTextPhone.getText().toString();
+        final String name = editTextName.getText().toString();
+        final String surname = editTextSurname.getText().toString();
+        final String phone_number = editTextPhone.getText().toString();
         if (TextUtils.isEmpty(name)){
             editTextName.setError("Please enter your Name");
             editTextName.requestFocus();
@@ -135,6 +138,8 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    User userInfo = new User(name, surname,email, phone_number, "");
+                    databaseHelper.SaveUserToDatabase(userInfo);
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
                 } else {

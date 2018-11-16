@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeFirebase(){
         firebaseAuth = FirebaseAuth.getInstance();
-        Log.d(LOG_TAG, "Logout");
+        Log.d(LOG_TAG, "LogoutFragment");
         if(firebaseAuth.getCurrentUser() == null){
             Log.d(LOG_TAG, "Logout1");
             finish();
@@ -93,21 +93,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = findViewById(R.id.activity_view);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                switch (id) {
-                    case R.id.logout_item:
-                        firebaseAuth.signOut();
-                        finish();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        return true;
-                }
-                return false;
-            }
-        });
-
         View headerview = navigationView.getHeaderView(0);
         LinearLayout profile_click_place = headerview.findViewById(R.id.profile_click_place);
         initialToggle();
@@ -125,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.about_toolbar_button:
                 navController.navigate(R.id.aboutFragment);
+                return true;
+            case R.id.logout_item:
+                firebaseAuth.signOut();
+                finish();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 return true;
         }
         if (toggle.onOptionsItemSelected(item)){

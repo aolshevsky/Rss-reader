@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ public class DatabaseHelper {
 
 
     private DatabaseHelper(){
-        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
+        databaseUsers = FirebaseDatabase.getInstance().getReference();
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -64,6 +65,7 @@ public class DatabaseHelper {
     public void SaveUserToDatabase(User userInfo){
         FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseUsers.child(user.getUid()).setValue(userInfo);
+        Log.d("myLogs", "Save user" + user.getEmail());
     }
 
 
@@ -160,7 +162,7 @@ public class DatabaseHelper {
                     TextView textViewEmail = activity.findViewById(R.id.email_txt);
                     if (textViewFullName != null)
                         textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
-                    textViewEmail.setText(userInfo.getEmail());
+                    textViewEmail.setText(user.getEmail());
 
                     File imgFile = new  File(userInfo.getImg_path());
 

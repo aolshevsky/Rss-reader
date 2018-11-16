@@ -6,4 +6,9 @@
         android:icon="@drawable/about_icon1"
         app:showAsAction="ifRoom"
         android:title="" />
+    <item
+        android:id="@+id/logout_item"
+        android:icon="@drawable/logout"
+        app:showAsAction="ifRoom"
+        android:title="" />
 </menu>
