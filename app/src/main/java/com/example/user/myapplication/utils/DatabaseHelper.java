@@ -15,6 +15,8 @@ import com.example.user.myapplication.fragment.ProfileFragment;
 import com.example.user.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,13 +38,15 @@ public class DatabaseHelper {
 
     private static DatabaseHelper instance = new DatabaseHelper();
 
+    private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUsers;
     private StorageReference storageRef;
 
 
-    public DatabaseHelper(){
+    private DatabaseHelper(){
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
         storageRef = FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     public static DatabaseHelper getInstance(){
@@ -53,17 +57,22 @@ public class DatabaseHelper {
     public DatabaseReference getDatabaseUsers(){
         return databaseUsers;
     }
+    public FirebaseAuth getFirebaseAuth(){
+        return firebaseAuth;
+    }
 
-    public void SaveUserToDatabase(User user){
-        databaseUsers.child(user.getId()).setValue(user);
+    public void SaveUserToDatabase(User userInfo){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        databaseUsers.child(user.getUid()).setValue(userInfo);
     }
 
 
-    public void uploadImageToFirebaseStorage(final Activity activity, final ProgressDialog progressBar, String user_id, String img_path){
+    public void uploadImageToFirebaseStorage(final Activity activity, final ProgressDialog progressBar, String img_path){
         //progressBar.setMessage("Uploading...");
         //progressBar.show();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
         Uri file = Uri.fromFile(new File(img_path));
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
+        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
         StorageReference image_storage = storageRef.child(new_file_path);
 
         image_storage.putFile(file)
@@ -97,9 +106,10 @@ public class DatabaseHelper {
                 });
     }
 
-    public void downloadFromFirebaseStorage(final ProgressDialog progressBar, final ProfileFragment profileFragment, String user_id) {
+    public void downloadFromFirebaseStorage(final ProgressDialog progressBar, final ProfileFragment profileFragment) {
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
         final Activity activity = profileFragment.getActivity();
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user_id);
+        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
         StorageReference image_storage = storageRef.child(new_file_path);
         if (image_storage != null) {
             progressBar.setTitle("Downloading...");
@@ -139,20 +149,20 @@ public class DatabaseHelper {
     }
 
 
-    public void loadUserInformationMenu(final Activity activity, final String user_id){
-
+    public void loadUserInformationMenu(final Activity activity){
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.child(user_id).getValue(User.class);
-                if(user != null) {
+                User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
+                if(userInfo != null) {
                     TextView textViewFullName = activity.findViewById(R.id.full_name_txt);
                     TextView textViewEmail = activity.findViewById(R.id.email_txt);
                     if (textViewFullName != null)
-                        textViewFullName.setText(String.format("%s %s", user.getName(), user.getSurname()));
-                    textViewEmail.setText(user.getEmail());
+                        textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
+                    textViewEmail.setText(userInfo.getEmail());
 
-                    File imgFile = new  File(user.getImg_path());
+                    File imgFile = new  File(userInfo.getImg_path());
 
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());

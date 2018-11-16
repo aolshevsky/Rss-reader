@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        databaseHelper.loadUserInformationMenu(this, "local_user");
+        databaseHelper.loadUserInformationMenu(this);
         Log.d(LOG_TAG, "onStart");
     }
 

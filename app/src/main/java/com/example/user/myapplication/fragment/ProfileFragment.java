@@ -33,6 +33,7 @@ import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
 import com.example.user.myapplication.utils.ImageHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -68,9 +69,7 @@ public class ProfileFragment extends Fragment {
     private TextView emailTextView;
     private TextView phoneTextView;
     private String img_path;
-    private String user_id = "local_user";
     private ProgressDialog progressBar;
-    private Button buttonSave;
 
     private DatabaseHelper databaseHelper;
     private PermissionsHelper permissionsHelper;
@@ -124,7 +123,7 @@ public class ProfileFragment extends Fragment {
         surnameTextView = profileView.findViewById(R.id.surname_txtView);
         emailTextView = profileView.findViewById(R.id.email_txtView);
         phoneTextView = profileView.findViewById(R.id.phone_txtView);
-        buttonSave = profileView.findViewById(R.id.save_btn);
+        Button buttonSave = profileView.findViewById(R.id.save_btn);
         ImageButton buttonSwitch = profileView.findViewById(R.id.switch_btn);
         ImageButton buttonSwitch1 = profileView.findViewById(R.id.switch_btn1);
         final ViewSwitcher viewSwitcher = profileView.findViewById(R.id.profile_switcher);
@@ -200,9 +199,9 @@ public class ProfileFragment extends Fragment {
         }
 
         // String id = databaseUsers.push().getKey();
-        User user = new User(user_id, name, surname, email, phone_number, img_path);
-        databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, user_id, img_path);
-        databaseHelper.SaveUserToDatabase(user);
+        User userInfo = new User(name, surname, email, phone_number, img_path);
+        databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, img_path);
+        databaseHelper.SaveUserToDatabase(userInfo);
         // Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
@@ -215,30 +214,31 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadUserInformation(){
+        final FirebaseUser user = databaseHelper.getFirebaseAuth().getCurrentUser();
         databaseHelper.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.child(user_id).getValue(User.class);
-                if(user != null) {
-                    editTextName.setText(user.getName());
-                    editTextSurname.setText(user.getSurname());
-                    editTextEmail.setText(user.getEmail());
-                    editTextPhone.setText(user.getPhone_number());
+                User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
+                if(userInfo != null) {
+                    editTextName.setText(userInfo.getName());
+                    editTextSurname.setText(userInfo.getSurname());
+                    editTextEmail.setText(userInfo.getEmail());
+                    editTextPhone.setText(userInfo.getPhone_number());
 
-                    nameTextView.setText(user.getName());
-                    surnameTextView.setText(user.getSurname());
-                    emailTextView.setText(user.getEmail());
-                    phoneTextView.setText(user.getPhone_number());
+                    nameTextView.setText(userInfo.getName());
+                    surnameTextView.setText(userInfo.getSurname());
+                    emailTextView.setText(userInfo.getEmail());
+                    phoneTextView.setText(userInfo.getPhone_number());
 
 
-                    File imgFile = new  File(user.getImg_path());
+                    File imgFile = new  File(userInfo.getImg_path());
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         imageview_show.setImageBitmap(iconBitmap);
                         imageview_edit.setImageBitmap(iconBitmap);
-                        img_path = user.getImg_path();
+                        img_path = userInfo.getImg_path();
                     } else {
-                        databaseHelper.downloadFromFirebaseStorage(progressBar, profileFragment, user_id);
+                        databaseHelper.downloadFromFirebaseStorage(progressBar, profileFragment);
                     }
                 }
             }
