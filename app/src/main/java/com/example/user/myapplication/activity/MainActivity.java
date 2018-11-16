@@ -1,11 +1,13 @@
 package com.example.user.myapplication.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.utils.DatabaseHelper;
@@ -13,8 +15,10 @@ import com.example.user.myapplication.utils.DeepLinksHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -30,11 +34,14 @@ public class MainActivity extends AppCompatActivity {
 
     public NavController navController;
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
     PermissionsHelper permissionsHelper;
 
     private DatabaseHelper databaseHelper;
     private SharedPref sharedPref;
+
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -52,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         permissionsHelper = PermissionsHelper.getInstance();
         sharedPref = new SharedPref(this);
         initializeTheme();
+        initializeFirebase();
 
         DeepLinksHelper.uriNavigate(navController, this);
         // adb shell am start -W -a android.intent.action.VIEW -d "sdapp://by.myapp/page"
@@ -59,6 +67,17 @@ public class MainActivity extends AppCompatActivity {
         if(!permissionsHelper.hasAllPermissions(this))
             permissionsHelper.requestAllPerms(this);
 
+    }
+
+
+    private void initializeFirebase(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        Log.d(LOG_TAG, "Logout");
+        if(firebaseAuth.getCurrentUser() == null){
+            Log.d(LOG_TAG, "Logout1");
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+        }
     }
 
     private void initializeTheme(){
@@ -74,8 +93,24 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         drawerLayout = findViewById(R.id.activity_view);
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id) {
+                    case R.id.logout_item:
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        return true;
+                }
+                return false;
+            }
+        });
+
         View headerview = navigationView.getHeaderView(0);
         LinearLayout profile_click_place = headerview.findViewById(R.id.profile_click_place);
+        initialToggle();
         profile_click_place.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -92,10 +127,19 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.aboutFragment);
                 return true;
         }
+        if (toggle.onOptionsItemSelected(item)){
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void initialToggle(){
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){

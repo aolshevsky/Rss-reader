@@ -1,5 +1,6 @@
 package com.example.user.myapplication.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,7 +30,6 @@ public class RegisterFragment extends Fragment {
     private View registerView;
     private NavController navController;
 
-    private Button register_btn;
     private EditText editTextEmail;
     private EditText editTextName;
     private EditText editTextSurname;
@@ -47,6 +48,7 @@ public class RegisterFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
 
         initializeView();
+        getActivity().setTitle("Register");
 
         return registerView;
     }
@@ -133,7 +135,8 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(getActivity(), "Registered Successfully", Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 } else {
                     Toast.makeText(getActivity(), "Could not register.." + task.getException(), Toast.LENGTH_LONG).show();
                 }
