@@ -19,7 +19,6 @@ import com.example.user.myapplication.utils.SharedPref;
 
 public class SettingsFragment extends Fragment {
 
-    private Switch theme_switch;
     private SharedPref sharedPref;
     private View settingsFragment;
 
@@ -35,7 +34,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initializeView(){
-        theme_switch = settingsFragment.findViewById(R.id.theme_switch);
+        Switch theme_switch = settingsFragment.findViewById(R.id.theme_switch);
 
         if (sharedPref.loadNightModeState()){
             theme_switch.setChecked(true);

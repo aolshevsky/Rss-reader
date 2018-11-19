@@ -23,10 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.user.myapplication.Presenter.ImagePresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.IImageView;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
-import com.example.user.myapplication.utils.ImageHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +46,7 @@ import static com.example.user.myapplication.utils.RequestCode.CAMERA;
 import static com.example.user.myapplication.utils.RequestCode.GALLERY;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements IImageView {
 
 
     private ImageView imageview_edit;
@@ -64,7 +65,7 @@ public class ProfileFragment extends Fragment {
 
     private DatabaseHelper databaseHelper;
     private PermissionsHelper permissionsHelper;
-    private ImageHelper imageHelper;
+    private ImagePresenter imagePresenter;
 
     private ProfileFragment profileFragment;
 
@@ -76,7 +77,8 @@ public class ProfileFragment extends Fragment {
 
         databaseHelper = DatabaseHelper.getInstance();
         permissionsHelper = PermissionsHelper.getInstance();
-        imageHelper = new ImageHelper();
+        imagePresenter = new ImagePresenter();
+        imagePresenter.attachView(this);
 
         initializeView();
 
@@ -168,7 +170,7 @@ public class ProfileFragment extends Fragment {
         profileView.findViewById(R.id.edit_image_touch_place).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageHelper.showPictureDialog(profileFragment, permissionsHelper);
+                imagePresenter.showPictureDialog();
             }
         });
 
@@ -211,7 +213,7 @@ public class ProfileFragment extends Fragment {
     public void SetProfileImg(Bitmap bmp){
         imageview_show.setImageBitmap(bmp);
         imageview_edit.setImageBitmap(bmp);
-        img_path = imageHelper.saveImage(bmp);
+        img_path = imagePresenter.saveImage(bmp);
     }
 
     private void loadUserInformation(){
@@ -263,6 +265,22 @@ public class ProfileFragment extends Fragment {
                 !cur_user.getSurname().equals(surname);
     }
 
+    @Override
+    public AlertDialog.Builder createPictureDialog() {
+        return new AlertDialog.Builder(getContext());
+    }
+
+    @Override
+    public boolean hasNeedPermissions(int per_ind) {
+        return permissionsHelper.hasNeedPermissions(getActivity(), per_ind);
+    }
+
+    @Override
+    public void requestNeedPerms(int per_ind) {
+        permissionsHelper.requestNeedPerms(getActivity(), per_ind);
+    }
+
+    @Override
     public void choosePhotoFromGallary() {
         Log.d("myLogs", "Image from galary");
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
@@ -271,6 +289,7 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(galleryIntent, GALLERY);
     }
 
+    @Override
     public void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);

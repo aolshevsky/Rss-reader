@@ -1,12 +1,11 @@
-package com.example.user.myapplication.utils;
+package com.example.user.myapplication.Presenter;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.View.IImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,11 +16,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import static com.example.user.myapplication.utils.RequestCode.IMAGE_DIRECTORY;
 
-public class ImageHelper {
+public class ImagePresenter extends BasePresenter<IImageView> {
 
-    public void showPictureDialog(final ProfileFragment profileFragment, final PermissionsHelper permissionsHelper){
-        final Activity activity = profileFragment.getActivity();
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(activity);
+    public void showPictureDialog(){
+        AlertDialog.Builder pictureDialog = view.createPictureDialog();
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
                 "Select photo from gallery",
@@ -32,19 +30,19 @@ public class ImageHelper {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                if (permissionsHelper.hasNeedPermissions(activity, 1)) {
-                                    profileFragment.choosePhotoFromGallary();
+                                if (view.hasNeedPermissions(1)) {
+                                    view.choosePhotoFromGallary();
                                 }
                                 else {
-                                    permissionsHelper.requestNeedPerms(activity, 1);
+                                    view.requestNeedPerms(1);
                                 }
                                 break;
                             case 1:
-                                if (permissionsHelper.hasNeedPermissions(activity, 2)) {
-                                    profileFragment.takePhotoFromCamera();
+                                if (view.hasNeedPermissions(2)) {
+                                    view.takePhotoFromCamera();
                                 }
                                 else {
-                                    permissionsHelper.requestNeedPerms(activity, 2);
+                                    view.requestNeedPerms(2);
                                 }
                                 break;
                         }
