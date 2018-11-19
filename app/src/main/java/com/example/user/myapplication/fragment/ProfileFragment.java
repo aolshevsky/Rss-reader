@@ -1,19 +1,15 @@
 package com.example.user.myapplication.fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -38,9 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
@@ -50,7 +43,6 @@ import androidx.fragment.app.Fragment;
 import static android.app.Activity.RESULT_CANCELED;
 import static com.example.user.myapplication.utils.RequestCode.CAMERA;
 import static com.example.user.myapplication.utils.RequestCode.GALLERY;
-import static com.example.user.myapplication.utils.RequestCode.IMAGE_DIRECTORY;
 
 
 public class ProfileFragment extends Fragment {
@@ -157,9 +149,14 @@ public class ProfileFragment extends Fragment {
         buttonSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Save user information?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                if (checkNeedToUpdateUser()){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Save user information?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                } else {
+                    viewSwitcher.showNext();
+                }
+
             }
         });
         buttonSwitch1.setOnClickListener(new View.OnClickListener() {
@@ -225,8 +222,11 @@ public class ProfileFragment extends Fragment {
                 User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
                 if(userInfo != null) {
                     editTextName.setText(userInfo.getName());
+                    editTextName.setSelection(editTextName.getText().length());
                     editTextSurname.setText(userInfo.getSurname());
+                    editTextSurname.setSelection(editTextSurname.getText().length());
                     editTextPhone.setText(userInfo.getPhone_number());
+                    editTextPhone.setSelection(editTextPhone.getText().length());
 
                     nameTextView.setText(userInfo.getName());
                     surnameTextView.setText(userInfo.getSurname());
@@ -253,6 +253,15 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public boolean checkNeedToUpdateUser(){
+        User cur_user = databaseHelper.getCurrentUser();
+        String name = editTextName.getText().toString();
+        String surname = editTextSurname.getText().toString();
+        String phone_number = editTextPhone.getText().toString();
+        return !cur_user.getName().equals(name) ||
+                !cur_user.getPhone_number().equals(phone_number) ||
+                !cur_user.getSurname().equals(surname);
+    }
 
     public void choosePhotoFromGallary() {
         Log.d("myLogs", "Image from galary");

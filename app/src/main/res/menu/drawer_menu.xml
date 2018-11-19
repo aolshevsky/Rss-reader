@@ -9,6 +9,7 @@
         android:id="@+id/menu_bottom"
         android:checkableBehavior="none">
         <item android:id="@id/settingsFragment" android:title="Settings"/>
+        <item android:id="@+id/logout_item" android:title="Logout"/>
     </group>
 
 

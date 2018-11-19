@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.LoginActivity;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.DatabaseHelper;
@@ -30,7 +31,6 @@ import androidx.navigation.Navigation;
 public class RegisterFragment extends Fragment {
 
     private View registerView;
-    private NavController navController;
 
     private EditText editTextEmail;
     private EditText editTextName;
@@ -57,7 +57,6 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initializeView(){
-        navController =  Navigation.findNavController(getActivity(), R.id.nav_log_reg_fragment);
         Button to_login_btn = registerView.findViewById(R.id.switch_to_login);
         Button register_btn = registerView.findViewById(R.id.register_btn);
         editTextName = registerView.findViewById(R.id.reg_name_txtEdit);
@@ -76,15 +75,11 @@ public class RegisterFragment extends Fragment {
         to_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginSwitchClick();
+                ((LoginActivity)getActivity()).onLoginSwitchClick();
             }
         });
     }
 
-    private void onLoginSwitchClick() {
-        navController.popBackStack();
-        navController.navigate(R.id.loginFragment);
-    }
 
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.LoginActivity;
 import com.example.user.myapplication.activity.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +28,7 @@ import androidx.navigation.Navigation;
 public class LoginFragment extends Fragment {
 
     private View loginView;
-    private NavController navController;
+
 
     private EditText editTextEmail;
     private EditText editTextPassword;
@@ -57,7 +58,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void initializeView(){
-        navController =  Navigation.findNavController(getActivity(), R.id.nav_log_reg_fragment);
         Button to_register_btn = loginView.findViewById(R.id.switch_to_reg);
         Button login_btn = loginView.findViewById(R.id.login_btn);
         editTextEmail = loginView.findViewById(R.id.login_email);
@@ -71,7 +71,7 @@ public class LoginFragment extends Fragment {
         to_register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRegisterSwitchClick();
+                ((LoginActivity)getActivity()).onRegisterSwitchClick();
             }
         });
     }
@@ -113,9 +113,6 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    private void onRegisterSwitchClick() {
-        navController.popBackStack();
-        navController.navigate(R.id.registerFragment);
-    }
+
 
 }

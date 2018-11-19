@@ -1,5 +1,7 @@
 package com.example.user.myapplication.activity;
 
+import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.fragment.ProfileFragment;
 import com.example.user.myapplication.utils.DatabaseHelper;
 import com.example.user.myapplication.utils.DeepLinksHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void initializeFirebase(){
         firebaseAuth = FirebaseAuth.getInstance();
         Log.d(LOG_TAG, "LogoutFragment");
@@ -88,9 +90,36 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
 
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id) {
+                    case R.id.logout_item:
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        return true;
+                    case R.id.settingsFragment:
+                        navController.popBackStack();
+                        navController.navigate(R.id.settingsFragment);
+                        drawerLayout.closeDrawers();
+                        return true;
+                    case R.id.homeFragment:
+                        navController.popBackStack();
+                        navController.navigate(R.id.homeFragment);
+                        drawerLayout.closeDrawers();
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
         drawerLayout = findViewById(R.id.activity_view);
 
         View headerview = navigationView.getHeaderView(0);

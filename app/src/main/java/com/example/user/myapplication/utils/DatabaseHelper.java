@@ -43,6 +43,7 @@ public class DatabaseHelper {
     private DatabaseReference databaseUsers;
     private StorageReference storageRef;
 
+    private User currentUser;
 
     private DatabaseHelper(){
         databaseUsers = FirebaseDatabase.getInstance().getReference();
@@ -61,6 +62,10 @@ public class DatabaseHelper {
     public FirebaseAuth getFirebaseAuth(){
         return firebaseAuth;
     }
+    public User getCurrentUser(){
+        return currentUser;
+    }
+
 
     public void SaveUserToDatabase(User userInfo){
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -157,12 +162,14 @@ public class DatabaseHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
+                currentUser = userInfo;
                 if(userInfo != null) {
                     TextView textViewFullName = activity.findViewById(R.id.full_name_txt);
                     TextView textViewEmail = activity.findViewById(R.id.email_txt);
                     if (textViewFullName != null)
                         textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
-                    textViewEmail.setText(user.getEmail());
+                    if (textViewEmail != null)
+                        textViewEmail.setText(user.getEmail());
 
                     File imgFile = new  File(userInfo.getImg_path());
 
