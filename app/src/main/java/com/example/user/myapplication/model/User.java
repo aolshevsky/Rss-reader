@@ -60,7 +60,7 @@ public class User {
     public int isValidLoginData(){
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return 0;
-        if(TextUtils.isEmpty(password) && password.length() < 6)
+        if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
             return 1;
         else
             return -1;
@@ -75,9 +75,9 @@ public class User {
             return 2;
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return 3;
-        if(TextUtils.isEmpty(password) && password.length() < 6)
+        if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
             return 4;
-        if(!password.equals(confirm_password))
+        if(password != null && password.equals(confirm_password))
             return 5;
         else
             return -1;

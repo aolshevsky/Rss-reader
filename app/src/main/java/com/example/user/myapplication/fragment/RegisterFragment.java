@@ -1,6 +1,8 @@
 package com.example.user.myapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.RegisterPresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IRegisterView;
 import com.example.user.myapplication.activity.LoginActivity;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.DatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,7 +29,7 @@ import androidx.fragment.app.Fragment;
 import es.dmoral.toasty.Toasty;
 
 
-public class RegisterFragment extends Fragment implements IRegisterView {
+public class RegisterFragment extends Fragment implements IRegisterView, IDatabaseView {
 
     private View registerView;
 
@@ -38,7 +41,7 @@ public class RegisterFragment extends Fragment implements IRegisterView {
     private EditText editTextConfirmPassword;
 
     private FirebaseAuth firebaseAuth;
-    private DatabaseHelper databaseHelper;
+    private DatabasePresenter databasePresenter;
 
     private RegisterPresenter registerPresenter;
 
@@ -49,7 +52,8 @@ public class RegisterFragment extends Fragment implements IRegisterView {
         registerView = inflater.inflate(R.layout.fragment_register, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseHelper = DatabaseHelper.getInstance();
+        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter.attachView(this);
         registerPresenter = RegisterPresenter.getInstance();
         registerPresenter.attachView(this);
 
@@ -143,7 +147,7 @@ public class RegisterFragment extends Fragment implements IRegisterView {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     User userInfo = new User(name, surname,email, phone_number, "");
-                    databaseHelper.SaveUserToDatabase(userInfo);
+                    databasePresenter.saveUserToDatabase(userInfo);
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
                 } else {
@@ -155,5 +159,31 @@ public class RegisterFragment extends Fragment implements IRegisterView {
 
     }
 
+    //<editor-fold desc="Empty implement methods">
+    @Override
+    public ProgressDialog getProgressDialog() {
+        return null;
+    }
+    @Override
+    public void onSuccessMessage(String message) {
+
+    }
+    @Override
+    public void onErrorMessage(String message) {
+
+    }
+    @Override
+    public void setProfileImg(Bitmap bmp) {
+
+    }
+    @Override
+    public void saveUser() {
+
+    }
+    @Override
+    public void setUserInfo(User userInfo) {
+
+    }
+    //</editor-fold>
 }
 

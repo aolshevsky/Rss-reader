@@ -1,22 +1,32 @@
 package com.example.user.myapplication.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IDeepLinksView;
-import com.example.user.myapplication.utils.DatabaseHelper;
+import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -26,9 +36,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import es.dmoral.toasty.Toasty;
 
 
-public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
+public class MainActivity extends AppCompatActivity  implements IDeepLinksView, IDatabaseView {
 
 
     final String LOG_TAG = "myLogs";
@@ -39,7 +50,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
 
     PermissionsHelper permissionsHelper;
 
-    private DatabaseHelper databaseHelper;
+    private DatabasePresenter databasePresenter;
     private SharedPref sharedPref;
     private DeepLinksPresenter deepLinksPresenter;
 
@@ -57,7 +68,8 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
 
         initializeNavigation();
 
-        databaseHelper = DatabaseHelper.getInstance();
+        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter.attachView(this);
         permissionsHelper = PermissionsHelper.getInstance();
         sharedPref = new SharedPref(this);
         initializeTheme();
@@ -167,11 +179,39 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
         return true;
     }
 
+    @Override
+    public void onSuccessMessage(String message) {
+        Toasty.success(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onErrorMessage(String message) {
+        Toasty.error(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setUserInfo(User userInfo) {
+        TextView textViewFullName = findViewById(R.id.full_name_txt);
+        TextView textViewEmail = findViewById(R.id.email_txt);
+        if (textViewFullName != null)
+            textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
+        if (textViewEmail != null)
+            textViewEmail.setText(userInfo.getEmail());
+
+        File imgFile = new File(userInfo.getImg_path());
+
+        if (imgFile.exists()) {
+            Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            ImageView profileImgView = findViewById(R.id.profileImgView);
+            if (profileImgView != null)
+                profileImgView.setImageBitmap(iconBitmap);
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        databaseHelper.loadUserInformationMenu(this);
+        databasePresenter.loadUserInformationMenu();
         Log.d(LOG_TAG, "onStart");
     }
 
@@ -196,4 +236,15 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
     public void navigateTo(int fragment_id) {
         navController.navigate(fragment_id);
     }
+
+    //<editor-fold desc="Empty implement methods">
+    @Override
+    public ProgressDialog getProgressDialog() {
+        return null;
+    }
+    @Override
+    public void setProfileImg(Bitmap bmp) {}
+    @Override
+    public void saveUser() {}
+    //</editor-fold">
 }

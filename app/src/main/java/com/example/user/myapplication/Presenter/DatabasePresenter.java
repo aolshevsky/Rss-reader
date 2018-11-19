@@ -1,18 +1,13 @@
-package com.example.user.myapplication.utils;
+package com.example.user.myapplication.Presenter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.user.myapplication.R;
-import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.Presenter.Interface.IDatabasePresenter;
+import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,9 +30,9 @@ import java.io.IOException;
 
 import androidx.annotation.NonNull;
 
-public class DatabaseHelper {
+public class DatabasePresenter extends BasePresenter<IDatabaseView> implements IDatabasePresenter{
 
-    private static DatabaseHelper instance = new DatabaseHelper();
+    private static DatabasePresenter instance = new DatabasePresenter();
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUsers;
@@ -45,36 +40,41 @@ public class DatabaseHelper {
 
     private User currentUser;
 
-    private DatabaseHelper(){
+    private DatabasePresenter(){
         databaseUsers = FirebaseDatabase.getInstance().getReference();
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    public static DatabaseHelper getInstance(){
+    public static DatabasePresenter getInstance(){
         return instance;
     }
 
-
+    @Override
     public DatabaseReference getDatabaseUsers(){
         return databaseUsers;
     }
+    @Override
     public FirebaseAuth getFirebaseAuth(){
         return firebaseAuth;
     }
+    @Override
     public User getCurrentUser(){
         return currentUser;
     }
 
-
-    public void SaveUserToDatabase(User userInfo){
+    @Override
+    public void saveUserToDatabase(User userInfo){
         FirebaseUser user = firebaseAuth.getCurrentUser();
+        Log.d("myLogs", "Save user" + user.getUid());
+        Log.d("myLogs", "User" + userInfo.getEmail());
         databaseUsers.child(user.getUid()).setValue(userInfo);
         Log.d("myLogs", "Save user" + user.getEmail());
     }
 
-
-    public void uploadImageToFirebaseStorage(final Activity activity, final ProgressDialog progressBar, String img_path){
+    @Override
+    public void uploadImageToFirebaseStorage(String img_path){
+        ProgressDialog progressBar = view.getProgressDialog();
         //progressBar.setMessage("Uploading...");
         //progressBar.show();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -86,14 +86,14 @@ public class DatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //Toast.makeText(activity, "Upload image success", Toast.LENGTH_LONG).show();
+                        view.onSuccessMessage("Upload image success");
                         //progressBar.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(activity, "Upload image failed", Toast.LENGTH_LONG).show();
+                        view.onErrorMessage("Upload image failed");
                         //progressBar.dismiss();
                     }
                 })
@@ -101,7 +101,6 @@ public class DatabaseHelper {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
                         //progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
                     }
                 })
@@ -113,9 +112,10 @@ public class DatabaseHelper {
                 });
     }
 
-    public void downloadFromFirebaseStorage(final ProgressDialog progressBar, final ProfileFragment profileFragment) {
+    @Override
+    public void downloadFromFirebaseStorage() {
+        final ProgressDialog progressBar = view.getProgressDialog();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        final Activity activity = profileFragment.getActivity();
         String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
         StorageReference image_storage = storageRef.child(new_file_path);
         if (image_storage != null) {
@@ -129,15 +129,15 @@ public class DatabaseHelper {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        profileFragment.SetProfileImg(bmp);
-                        profileFragment.saveUser();
+                        view.setProfileImg(bmp);
+                        view.saveUser();
                         progressBar.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         progressBar.dismiss();
-                        Toast.makeText(activity, "Download failed. Check internet connection", Toast.LENGTH_LONG).show();
+                        view.onErrorMessage("Download failed. Check internet connection");
                     }
                 }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
@@ -151,12 +151,12 @@ public class DatabaseHelper {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(activity, "Upload file before downloading", Toast.LENGTH_LONG).show();
+            view.onErrorMessage("Upload file before downloading");
         }
     }
 
-
-    public void loadUserInformationMenu(final Activity activity){
+    @Override
+    public void loadUserInformationMenu(){
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -164,28 +164,14 @@ public class DatabaseHelper {
                 User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
                 currentUser = userInfo;
                 if(userInfo != null) {
-                    TextView textViewFullName = activity.findViewById(R.id.full_name_txt);
-                    TextView textViewEmail = activity.findViewById(R.id.email_txt);
-                    if (textViewFullName != null)
-                        textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
-                    if (textViewEmail != null)
-                        textViewEmail.setText(user.getEmail());
-
-                    File imgFile = new  File(userInfo.getImg_path());
-
-                    if(imgFile.exists()){
-                        Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        ImageView profileImgView = activity.findViewById(R.id.profileImgView);
-                        if (profileImgView != null)
-                            profileImgView.setImageBitmap(iconBitmap);
-                    }
+                    view.setUserInfo(userInfo);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                view.onErrorMessage("Load user information failed");
             }
         });
     }
+
 }

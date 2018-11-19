@@ -23,11 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.ImagePresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IImageView;
 import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.DatabaseHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,13 +41,14 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static com.example.user.myapplication.utils.RequestCode.CAMERA;
 import static com.example.user.myapplication.utils.RequestCode.GALLERY;
 
 
-public class ProfileFragment extends Fragment implements IImageView {
+public class ProfileFragment extends Fragment implements IImageView, IDatabaseView {
 
 
     private ImageView imageview_edit;
@@ -63,9 +65,9 @@ public class ProfileFragment extends Fragment implements IImageView {
     private String img_path;
     private ProgressDialog progressBar;
 
-    private DatabaseHelper databaseHelper;
     private PermissionsHelper permissionsHelper;
     private ImagePresenter imagePresenter;
+    private DatabasePresenter databasePresenter;
 
     private ProfileFragment profileFragment;
 
@@ -75,10 +77,11 @@ public class ProfileFragment extends Fragment implements IImageView {
                              Bundle savedInstanceState) {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        databaseHelper = DatabaseHelper.getInstance();
         permissionsHelper = PermissionsHelper.getInstance();
         imagePresenter = ImagePresenter.getInstance();
         imagePresenter.attachView(this);
+        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter.attachView(this);
 
         initializeView();
 
@@ -176,6 +179,25 @@ public class ProfileFragment extends Fragment implements IImageView {
 
     }
 
+    @Override
+    public void setUserInfo(User userInfo) {
+        TextView textViewFullName = getActivity().findViewById(R.id.full_name_txt);
+        TextView textViewEmail = getActivity().findViewById(R.id.email_txt);
+        if (textViewFullName != null)
+            textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
+        if (textViewEmail != null)
+            textViewEmail.setText(userInfo.getEmail());
+
+        File imgFile = new File(userInfo.getImg_path());
+
+        if (imgFile.exists()) {
+            Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            ImageView profileImgView = getActivity().findViewById(R.id.profileImgView);
+            if (profileImgView != null)
+                profileImgView.setImageBitmap(iconBitmap);
+        }
+    }
+
     public void saveUser(){
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
@@ -199,26 +221,26 @@ public class ProfileFragment extends Fragment implements IImageView {
             return;
         }
 
-        final FirebaseUser user = databaseHelper.getFirebaseAuth().getCurrentUser();
+        final FirebaseUser user = databasePresenter.getFirebaseAuth().getCurrentUser();
         User userInfo = new User(name, surname,user.getEmail(), phone_number, img_path);
         if(!img_path.equals(""))
-            databaseHelper.uploadImageToFirebaseStorage(getActivity(), progressBar, img_path);
-        databaseHelper.SaveUserToDatabase(userInfo);
-        databaseHelper.loadUserInformationMenu(getActivity());
+            databasePresenter.uploadImageToFirebaseStorage(img_path);
+        databasePresenter.saveUserToDatabase(userInfo);
+        databasePresenter.loadUserInformationMenu();
         //Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
 
-
-    public void SetProfileImg(Bitmap bmp){
+    @Override
+    public void setProfileImg(Bitmap bmp){
         imageview_show.setImageBitmap(bmp);
         imageview_edit.setImageBitmap(bmp);
         img_path = imagePresenter.saveImage(bmp);
     }
 
     private void loadUserInformation(){
-        final FirebaseUser user = databaseHelper.getFirebaseAuth().getCurrentUser();
-        databaseHelper.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
+        final FirebaseUser user = databasePresenter.getFirebaseAuth().getCurrentUser();
+        databasePresenter.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
@@ -243,7 +265,7 @@ public class ProfileFragment extends Fragment implements IImageView {
                         imageview_edit.setImageBitmap(iconBitmap);
                         img_path = userInfo.getImg_path();
                     } else {
-                        databaseHelper.downloadFromFirebaseStorage(progressBar, profileFragment);
+                        databasePresenter.downloadFromFirebaseStorage();
                     }
                 }
             }
@@ -256,7 +278,7 @@ public class ProfileFragment extends Fragment implements IImageView {
     }
 
     private boolean checkNeedToUpdateUser(){
-        User cur_user = databaseHelper.getCurrentUser();
+        User cur_user = databasePresenter.getCurrentUser();
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
@@ -307,7 +329,7 @@ public class ProfileFragment extends Fragment implements IImageView {
                 Uri contentURI = data.getData();
                 try {
                     Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
-                    profileFragment.SetProfileImg(bmp);
+                    setProfileImg(bmp);
                     Toast.makeText(profileFragment.getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
 
                 } catch (IOException e) {
@@ -318,9 +340,23 @@ public class ProfileFragment extends Fragment implements IImageView {
 
         } else if (requestCode == CAMERA) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
-            profileFragment.SetProfileImg(bmp);
+            setProfileImg(bmp);
             Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public ProgressDialog getProgressDialog() {
+        return progressBar;
+    }
+
+    @Override
+    public void onSuccessMessage(String message) {
+        Toasty.success(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onErrorMessage(String message) {
+        Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
 }
