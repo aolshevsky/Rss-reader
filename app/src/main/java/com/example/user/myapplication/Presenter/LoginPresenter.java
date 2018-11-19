@@ -6,6 +6,13 @@ import com.example.user.myapplication.model.User;
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginPresenter {
 
+    private static LoginPresenter instance = new LoginPresenter();
+
+
+    public static LoginPresenter getInstance(){
+        return instance;
+    }
+
     @Override
     public int onLogin(String email, String password) {
        User user = new User(email, password);

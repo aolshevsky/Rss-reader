@@ -50,7 +50,7 @@ public class RegisterFragment extends Fragment implements IRegisterView {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseHelper = DatabaseHelper.getInstance();
-        registerPresenter = new RegisterPresenter();
+        registerPresenter = RegisterPresenter.getInstance();
         registerPresenter.attachView(this);
 
         initializeView();

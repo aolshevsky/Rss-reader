@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment implements IImageView {
 
         databaseHelper = DatabaseHelper.getInstance();
         permissionsHelper = PermissionsHelper.getInstance();
-        imagePresenter = new ImagePresenter();
+        imagePresenter = ImagePresenter.getInstance();
         imagePresenter.attachView(this);
 
         initializeView();

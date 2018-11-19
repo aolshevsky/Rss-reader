@@ -42,7 +42,7 @@ public class LoginFragment extends Fragment implements ILoginView {
 
         loginView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        loginPresenter = new LoginPresenter();
+        loginPresenter = LoginPresenter.getInstance();
         loginPresenter.attachView(this);
         initializeFirebase();
 

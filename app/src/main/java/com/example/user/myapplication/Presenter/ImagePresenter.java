@@ -19,6 +19,13 @@ import static com.example.user.myapplication.utils.RequestCode.IMAGE_DIRECTORY;
 
 public class ImagePresenter extends BasePresenter<IImageView> implements IImagePresenter {
 
+    private static ImagePresenter instance = new ImagePresenter();
+
+
+    public static ImagePresenter getInstance(){
+        return instance;
+    }
+
     @Override
     public void showPictureDialog(){
         AlertDialog.Builder pictureDialog = view.createPictureDialog();
