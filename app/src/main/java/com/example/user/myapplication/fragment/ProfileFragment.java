@@ -253,7 +253,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public boolean checkNeedToUpdateUser(){
+    private boolean checkNeedToUpdateUser(){
         User cur_user = databaseHelper.getCurrentUser();
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();

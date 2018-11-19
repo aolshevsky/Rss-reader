@@ -11,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Presenter.IRegisterPresenter;
+import com.example.user.myapplication.Presenter.RegisterPresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.IRegisterView;
 import com.example.user.myapplication.activity.LoginActivity;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.User;
@@ -26,9 +29,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import es.dmoral.toasty.Toasty;
 
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements IRegisterView {
 
     private View registerView;
 
@@ -42,6 +46,8 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private DatabaseHelper databaseHelper;
 
+    private RegisterPresenter registerPresenter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +56,9 @@ public class RegisterFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseHelper = DatabaseHelper.getInstance();
+        registerPresenter = new RegisterPresenter();
+        registerPresenter.attachView(this);
+
         initializeView();
         getActivity().setTitle("Register");
 
@@ -80,6 +89,15 @@ public class RegisterFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onRegisterSuccess(String message) {
+        Toasty.success(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRegisterError(String message) {
+        Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
 
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();
@@ -89,41 +107,38 @@ public class RegisterFragment extends Fragment {
         final String name = editTextName.getText().toString();
         final String surname = editTextSurname.getText().toString();
         final String phone_number = editTextPhone.getText().toString();
-        if (TextUtils.isEmpty(name)){
+
+        int registerCode = registerPresenter.onRegister(name, surname, phone_number, email, password, con_password);
+        if (registerCode == 0){
             editTextName.setError("Please enter your Name");
             editTextName.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(surname)){
+        if (registerCode == 1){
             editTextSurname.setError("Please enter your Surname");
             editTextSurname.requestFocus();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (registerCode == 2){
             editTextEmail.setError("Please enter a valid email");
             editTextEmail.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(phone_number)){
+        if (registerCode == 3){
             editTextPhone.setError("Please enter your Phone number");
             editTextPhone.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(password)){
-            editTextPassword.setError("Please enter password");
-            editTextPassword.requestFocus();
-            return;
-        }
-        if (password.length() < 6){
+        if (registerCode == 4){
             editTextPassword.setError("Password must be at least 6 characters");
             editTextPassword.requestFocus();
             return;
         }
-        if (!password.equals(con_password)){
+        if (registerCode == 5){
             editTextConfirmPassword.setError("Password not matching");
             editTextConfirmPassword.requestFocus();
             return;
@@ -138,7 +153,7 @@ public class RegisterFragment extends Fragment {
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
                 } else {
-                    Toast.makeText(getActivity(), "Could not register.." + task.getException(), Toast.LENGTH_LONG).show();
+                    onRegisterError("Could not register.." + task.getException());
                 }
             }
         });

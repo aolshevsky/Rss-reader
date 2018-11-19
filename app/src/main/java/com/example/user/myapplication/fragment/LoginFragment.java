@@ -11,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Presenter.ILoginPresenter;
+import com.example.user.myapplication.Presenter.LoginPresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.View.ILoginView;
 import com.example.user.myapplication.activity.LoginActivity;
 import com.example.user.myapplication.activity.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,9 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import es.dmoral.toasty.Toasty;
 
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements ILoginView {
 
     private View loginView;
 
@@ -35,18 +39,32 @@ public class LoginFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
 
+    private LoginPresenter loginPresenter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         loginView = inflater.inflate(R.layout.fragment_login, container, false);
 
+        loginPresenter = new LoginPresenter();
+        loginPresenter.attachView(this);
         initializeFirebase();
 
         initializeView();
         getActivity().setTitle("Login");
 
         return loginView;
+    }
+
+    @Override
+    public void onLoginSuccess(String message) {
+        Toasty.success(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoginError(String message) {
+        Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void initializeFirebase(){
@@ -81,18 +99,14 @@ public class LoginFragment extends Fragment {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
+        int loginCode = loginPresenter.onLogin(email, password);
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (loginCode == 0){
             editTextEmail.setError("Please enter a valid email");
             editTextEmail.requestFocus();
             return;
         }
-        if (TextUtils.isEmpty(password)){
-            editTextPassword.setError("Please enter password");
-            editTextPassword.requestFocus();
-            return;
-        }
-        if (password.length() < 6){
+        if (loginCode == 1){
             editTextPassword.setError("Password must be at least 6 characters");
             editTextPassword.requestFocus();
             return;
@@ -107,12 +121,9 @@ public class LoginFragment extends Fragment {
                             startActivity(new Intent(getContext(), MainActivity.class));
 
                         } else {
-                            Toast.makeText(getActivity(), "Could not register.." + task.getException(), Toast.LENGTH_LONG).show();
+                            onLoginError("Could not register.." + task.getException());
                         }
                     }
                 });
     }
-
-
-
 }

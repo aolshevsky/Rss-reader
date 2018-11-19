@@ -176,7 +176,8 @@ public class DatabaseHelper {
                     if(imgFile.exists()){
                         Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         ImageView profileImgView = activity.findViewById(R.id.profileImgView);
-                        profileImgView.setImageBitmap(iconBitmap);
+                        if (profileImgView != null)
+                            profileImgView.setImageBitmap(iconBitmap);
                     }
                 }
             }

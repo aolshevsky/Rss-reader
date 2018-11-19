@@ -1,5 +1,8 @@
 package com.example.user.myapplication.model;
 
+import android.text.TextUtils;
+import android.util.Patterns;
+
 public class User {
 
     private String name;
@@ -7,6 +10,8 @@ public class User {
     private String email;
     private String phone_number;
     private String img_path;
+    private String password;
+    private String confirm_password;
 
     public User(){}
 
@@ -16,6 +21,20 @@ public class User {
         this.email = email;
         this.phone_number = phone_number;
         this.img_path = img_path;
+    }
+
+    public User(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String name, String surname, String email, String phone_number, String password, String confirm_password) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.password = password;
+        this.confirm_password = confirm_password;
     }
 
     public String getName() {
@@ -36,5 +55,31 @@ public class User {
 
     public String getImg_path() {
         return img_path;
+    }
+
+    public int isValidLoginData(){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return 0;
+        if(TextUtils.isEmpty(password) && password.length() < 6)
+            return 1;
+        else
+            return -1;
+    }
+
+    public int isValidRegisterData(){
+        if(TextUtils.isEmpty(name))
+            return 0;
+        if(TextUtils.isEmpty(surname))
+            return 1;
+        if(TextUtils.isEmpty(phone_number))
+            return 2;
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return 3;
+        if(TextUtils.isEmpty(password) && password.length() < 6)
+            return 4;
+        if(!password.equals(confirm_password))
+            return 5;
+        else
+            return -1;
     }
 }
