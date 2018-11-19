@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.user.myapplication.Presenter.Interface.IImagePresenter;
 import com.example.user.myapplication.View.IImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -16,8 +17,9 @@ import androidx.appcompat.app.AlertDialog;
 
 import static com.example.user.myapplication.utils.RequestCode.IMAGE_DIRECTORY;
 
-public class ImagePresenter extends BasePresenter<IImageView> {
+public class ImagePresenter extends BasePresenter<IImageView> implements IImagePresenter {
 
+    @Override
     public void showPictureDialog(){
         AlertDialog.Builder pictureDialog = view.createPictureDialog();
         pictureDialog.setTitle("Select Action");
@@ -51,6 +53,7 @@ public class ImagePresenter extends BasePresenter<IImageView> {
         pictureDialog.show();
     }
 
+    @Override
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (myBitmap.getByteCount() > 200 * 1024) {

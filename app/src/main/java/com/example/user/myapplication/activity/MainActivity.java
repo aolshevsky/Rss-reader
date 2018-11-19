@@ -1,20 +1,18 @@
 package com.example.user.myapplication.activity;
 
-import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.View.IDeepLinksView;
 import com.example.user.myapplication.utils.DatabaseHelper;
-import com.example.user.myapplication.utils.DeepLinksHelper;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
@@ -30,7 +28,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements IDeepLinksView {
 
 
     final String LOG_TAG = "myLogs";
@@ -43,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private SharedPref sharedPref;
+    private DeepLinksPresenter deepLinksPresenter;
 
     private FirebaseAuth firebaseAuth;
 
@@ -64,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         initializeTheme();
         initializeFirebase();
 
-        DeepLinksHelper.uriNavigate(navController, this);
+        deepLinksPresenter = DeepLinksPresenter.getInstance();
+        deepLinksPresenter.attachView(this);
+        deepLinksPresenter.uriNavigate();
         // adb shell am start -W -a android.intent.action.VIEW -d "sdapp://by.myapp/page"
 
         if(!permissionsHelper.hasAllPermissions(this))
@@ -184,5 +185,15 @@ public class MainActivity extends AppCompatActivity {
         navController.popBackStack();
         navController.navigate(R.id.profileFragment);
         drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public Uri getUri() {
+        return getIntent().getData();
+    }
+
+    @Override
+    public void navigateTo(int fragment_id) {
+        navController.navigate(fragment_id);
     }
 }
