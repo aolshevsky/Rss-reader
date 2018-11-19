@@ -37,6 +37,12 @@ public class User {
         this.confirm_password = confirm_password;
     }
 
+    public User(String name, String surname, String phone_number){
+        this.name = name;
+        this.surname = surname;
+        this.phone_number = phone_number;
+    }
+
     public String getName() {
         return name;
     }
@@ -79,6 +85,17 @@ public class User {
             return 4;
         if(password != null && password.equals(confirm_password))
             return 5;
+        else
+            return -1;
+    }
+
+    public int isValidEditData() {
+        if (TextUtils.isEmpty(name))
+            return 0;
+        if (TextUtils.isEmpty(surname))
+            return 1;
+        if (TextUtils.isEmpty(phone_number))
+            return 2;
         else
             return -1;
     }

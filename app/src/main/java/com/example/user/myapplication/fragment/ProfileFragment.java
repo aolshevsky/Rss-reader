@@ -203,30 +203,27 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
 
-        if (TextUtils.isEmpty(name)){
+        int editCode = databasePresenter.validEditData(name, surname, phone_number);
+
+        if (editCode == 0){
             editTextName.setError("Please enter your Name");
             editTextName.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(surname)){
+        if (editCode == 1){
             editTextSurname.setError("Please enter your Surname");
             editTextSurname.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(phone_number)){
+        if (editCode == 2){
             editTextPhone.setError("Please enter your Phone number");
             editTextPhone.requestFocus();
             return;
         }
 
-        final FirebaseUser user = databasePresenter.getFirebaseAuth().getCurrentUser();
-        User userInfo = new User(name, surname,user.getEmail(), phone_number, img_path);
-        if(!img_path.equals(""))
-            databasePresenter.uploadImageToFirebaseStorage(img_path);
-        databasePresenter.saveUserToDatabase(userInfo);
-        databasePresenter.loadUserInformationMenu();
+        databasePresenter.saveUser(name, surname, phone_number, img_path);
         //Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
 
     }
@@ -269,10 +266,9 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                onErrorMessage("Failed load user information");
             }
         });
     }

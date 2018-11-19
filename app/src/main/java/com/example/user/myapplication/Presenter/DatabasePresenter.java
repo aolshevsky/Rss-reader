@@ -174,4 +174,26 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
         });
     }
 
+    @Override
+    public void saveUser(String name, String surname, String phone_number, String img_path){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        String email = user.getEmail();
+        User userInfo = new User(name, surname, email, phone_number, img_path);
+        if(!img_path.equals(""))
+            uploadImageToFirebaseStorage(img_path);
+        saveUserToDatabase(userInfo);
+        loadUserInformationMenu();
+    }
+
+    @Override
+    public int validEditData(String name, String surname, String phone_number){
+        User user = new User(name, surname, phone_number);
+        int editCode = user.isValidEditData();
+        /*
+        if(editCode == -1)
+            view.onSuccessMessage("Save Success");
+        */
+        return editCode;
+    }
+
 }
