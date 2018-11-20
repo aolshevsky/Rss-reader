@@ -50,17 +50,12 @@ import static com.example.user.myapplication.utils.RequestCode.GALLERY;
 public class ProfileFragment extends Fragment implements IImageView, IDatabaseView {
 
 
-    private ImageView imageview_edit;
-    private ImageView imageview_show;
+    private ImageView imageview_edit, imageview_show;
     private View profileView;
 
-    private EditText editTextName;
-    private EditText editTextSurname;
-    private EditText editTextPhone;
-    private TextView nameTextView;
-    private TextView surnameTextView;
-    private TextView emailTextView;
-    private TextView phoneTextView;
+    private EditText editTextName, editTextSurname, editTextPhone;
+    private TextView nameTextView, surnameTextView, emailTextView, phoneTextView;
+
     private String img_path;
     private ProgressDialog progressBar;
 

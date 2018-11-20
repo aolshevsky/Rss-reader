@@ -25,4 +25,9 @@
         android:name="com.example.user.myapplication.fragment.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.example.user.myapplication.fragment.NewsFragment"
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" />
 </navigation>

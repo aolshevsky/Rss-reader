@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 Fragment fragment = getCurrentFragment();
                 fragment.getView().clearFocus();
                 switch (id) {
+                    case R.id.newsFragment:
+                        navigateTo(id);
+                        return true;
                     case R.id.logout_item:
                         firebaseAuth.signOut();
                         finish();

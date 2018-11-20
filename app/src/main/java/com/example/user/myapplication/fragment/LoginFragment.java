@@ -29,8 +29,7 @@ public class LoginFragment extends Fragment implements ILoginView {
     private View loginView;
 
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
+    private EditText editTextEmail, editTextPassword;
 
     private FirebaseAuth firebaseAuth;
 

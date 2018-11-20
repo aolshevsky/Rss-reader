@@ -33,12 +33,8 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
 
     private View registerView;
 
-    private EditText editTextEmail;
-    private EditText editTextName;
-    private EditText editTextSurname;
-    private EditText editTextPhone;
-    private EditText editTextPassword;
-    private EditText editTextConfirmPassword;
+    private EditText editTextEmail, editTextName, editTextSurname,
+            editTextPhone, editTextPassword, editTextConfirmPassword;
 
     private FirebaseAuth firebaseAuth;
     private DatabasePresenter databasePresenter;
