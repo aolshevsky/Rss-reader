@@ -1,6 +1,7 @@
 package com.example.user.myapplication.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.activity.NewsDetailsActivity;
 import com.example.user.myapplication.model.NewsItemModel;
 import com.squareup.picasso.Picasso;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ListAdapter extends RecyclerView.Adapter {
@@ -46,12 +49,20 @@ public class ListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        NewsItemModel currentItem = newsItemModels.get(position);
+        final NewsItemModel currentItem = newsItemModels.get(position);
         ItemHolder itemHolder = (ItemHolder)holder;
         itemHolder.titleTextView.setText(currentItem.getTitle());
         itemHolder.descriptionTextView.setText(currentItem.getDescription());
         itemHolder.dateTextView.setText(currentItem.getPubDate());
         Picasso.with(context).load(currentItem.getImageUrl()).resize(450, 150).into(itemHolder.imageView);
+        itemHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NewsDetailsActivity.class);
+                intent.putExtra("Link", currentItem.getLink());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -61,6 +72,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 
         private TextView titleTextView, descriptionTextView, dateTextView;
         private ImageView imageView;
+        CardView cardView;
 
         private ItemHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +80,7 @@ public class ListAdapter extends RecyclerView.Adapter {
             descriptionTextView = itemView.findViewById(R.id.newsDescriptionTextView);
             dateTextView = itemView.findViewById(R.id.newsDateTextView);
             imageView = itemView.findViewById(R.id.newsImageView);
+            cardView = itemView.findViewById(R.id.newsCardView);
         }
     }
 }
