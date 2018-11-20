@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.user.myapplication.Adapter.ListAdapter;
-import com.example.user.myapplication.Adapter.VerticalSpace;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.model.NewsItemModel;
 
@@ -21,8 +19,6 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 
 public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
