@@ -36,9 +36,11 @@ public class ListAdapter extends RecyclerView.Adapter {
     }
 
     public void addModels(List<NewsItemModel> itemModels){
-        int pos = this.newsItemModels.size();
-        this.newsItemModels.addAll(itemModels);
-        notifyItemRangeChanged(pos, itemModels.size());
+        if(itemModels != null){
+            int pos = this.newsItemModels.size();
+            this.newsItemModels.addAll(itemModels);
+            notifyItemRangeChanged(pos, itemModels.size());
+        }
     }
 
 
@@ -48,6 +50,7 @@ public class ListAdapter extends RecyclerView.Adapter {
         ItemHolder itemHolder = (ItemHolder)holder;
         itemHolder.titleTextView.setText(currentItem.getTitle());
         itemHolder.descriptionTextView.setText(currentItem.getDescription());
+        itemHolder.dateTextView.setText(currentItem.getPubDate());
         Picasso.with(context).load(currentItem.getImageUrl()).resize(450, 150).into(itemHolder.imageView);
     }
 
@@ -56,13 +59,14 @@ public class ListAdapter extends RecyclerView.Adapter {
 
     private class ItemHolder extends RecyclerView.ViewHolder{
 
-        private TextView titleTextView, descriptionTextView;
+        private TextView titleTextView, descriptionTextView, dateTextView;
         private ImageView imageView;
 
         private ItemHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.newsTitleTextView);
             descriptionTextView = itemView.findViewById(R.id.newsDescriptionTextView);
+            dateTextView = itemView.findViewById(R.id.newsDateTextView);
             imageView = itemView.findViewById(R.id.newsImageView);
         }
     }
