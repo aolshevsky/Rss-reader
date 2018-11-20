@@ -66,8 +66,6 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
     @Override
     public void saveUserToDatabase(User userInfo){
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        Log.d("myLogs", "Save user" + user.getUid());
-        Log.d("myLogs", "User" + userInfo.getEmail());
         databaseUsers.child(user.getUid()).setValue(userInfo);
         Log.d("myLogs", "Save user" + user.getEmail());
     }

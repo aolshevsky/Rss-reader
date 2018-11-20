@@ -1,6 +1,7 @@
 package com.example.user.myapplication.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IDeepLinksView;
+import com.example.user.myapplication.fragment.ProfileFragment;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
@@ -30,11 +32,14 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import es.dmoral.toasty.Toasty;
 
@@ -47,12 +52,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     public NavController navController;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private DialogInterface.OnClickListener dialogClickListener;
 
     PermissionsHelper permissionsHelper;
 
     private DatabasePresenter databasePresenter;
     private SharedPref sharedPref;
-    private DeepLinksPresenter deepLinksPresenter;
 
     private FirebaseAuth firebaseAuth;
 
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         initializeTheme();
         initializeFirebase();
 
-        deepLinksPresenter = DeepLinksPresenter.getInstance();
+        DeepLinksPresenter deepLinksPresenter = DeepLinksPresenter.getInstance();
         deepLinksPresenter.attachView(this);
         deepLinksPresenter.uriNavigate();
         // adb shell am start -W -a android.intent.action.VIEW -d "sdapp://by.myapp/page"
@@ -101,6 +106,32 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         }
     }
 
+    private void validNeedToSaveUser(final int fragment_id){
+        dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        ((ProfileFragment)getCurrentFragment()).saveUser();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+                navigateTo(fragment_id);
+            }
+        };
+        drawerLayout.closeDrawers();
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Save user information?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private Fragment getCurrentFragment(){
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        return (Fragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+    }
+
     private void initializeNavigation(){
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         final NavigationView navigationView = findViewById(R.id.nav_view);
@@ -111,6 +142,8 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
+                Fragment fragment = getCurrentFragment();
+                fragment.getView().clearFocus();
                 switch (id) {
                     case R.id.logout_item:
                         firebaseAuth.signOut();
@@ -118,17 +151,19 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         return true;
                     case R.id.settingsFragment:
-                        navController.popBackStack();
-                        navController.navigate(R.id.settingsFragment);
-                        drawerLayout.closeDrawers();
+                        if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
+                            validNeedToSaveUser(id);
+                        else
+                            navigateTo(R.id.settingsFragment);
                         return true;
                     case R.id.homeFragment:
-                        navController.popBackStack();
-                        navController.navigate(R.id.homeFragment);
-                        drawerLayout.closeDrawers();
+                        if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
+                            validNeedToSaveUser(id);
+                        else
+                            navigateTo(R.id.homeFragment);
                         return true;
                 }
-                return false;
+                return true;
             }
         });
 
@@ -149,9 +184,14 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
+        Fragment fragment = getCurrentFragment();
+        fragment.getView().clearFocus();
         switch (id) {
             case R.id.about_toolbar_button:
-                navController.navigate(R.id.aboutFragment);
+                if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
+                    validNeedToSaveUser(R.id.aboutFragment);
+                else
+                    navigateTo(R.id.aboutFragment);
                 return true;
             case R.id.logout_item:
                 firebaseAuth.signOut();
@@ -235,6 +275,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     @Override
     public void navigateTo(int fragment_id) {
         navController.navigate(fragment_id);
+        drawerLayout.closeDrawers();
     }
 
     //<editor-fold desc="Empty implement methods">

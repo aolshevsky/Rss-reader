@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,7 +175,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                 imagePresenter.showPictureDialog();
             }
         });
-
     }
 
     @Override
@@ -273,7 +271,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         });
     }
 
-    private boolean checkNeedToUpdateUser(){
+    public boolean checkNeedToUpdateUser(){
         User cur_user = databasePresenter.getCurrentUser();
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
