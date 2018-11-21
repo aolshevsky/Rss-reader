@@ -38,6 +38,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
     private MenuItem logout_item;
     private MenuItem about_item;
+    private MenuItem add_site_item;
 
     PermissionsHelper permissionsHelper;
 
@@ -148,10 +150,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 fragment.getView().clearFocus();
                 logout_item.setVisible(true);
                 about_item.setVisible(true);
+                add_site_item.setVisible(false);
                 switch (id) {
                     case R.id.rssItemListFragment:
                         logout_item.setVisible(false);
                         about_item.setVisible(false);
+                        add_site_item.setVisible(true);
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
         logout_item = menu.findItem(R.id.logout_item);
         about_item = menu.findItem(R.id.about_toolbar_button);
+        add_site_item = menu.findItem(R.id.add_new_site_item);
         return true;
     }
 
@@ -290,6 +295,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     public void navigateTo(int fragment_id) {
         navController.navigate(fragment_id);
         drawerLayout.closeDrawers();
+    }
+
+    public void onSubmitSiteClick(){
+        NavOptions.Builder builder = new NavOptions.Builder();
+        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).setExitAnim(android.R.anim.slide_in_left).build();
+        navController.navigate(R.id.rssItemListFragment, null, navOptions);
     }
 
     //<editor-fold desc="Empty implement methods">

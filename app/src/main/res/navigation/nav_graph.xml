@@ -35,4 +35,9 @@
         android:name="com.example.user.myapplication.fragment.RssItemListFragment"
         android:label="fragment_rss_item_list"
         tools:layout="@layout/fragment_rss_item_list" />
+    <fragment
+        android:id="@+id/addNewSiteFragment"
+        android:name="com.example.user.myapplication.fragment.AddNewSiteFragment"
+        android:label="fragment_add_new_site"
+        tools:layout="@layout/fragment_add_new_site" />
 </navigation>

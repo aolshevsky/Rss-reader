@@ -11,4 +11,10 @@
         android:icon="@drawable/logout"
         app:showAsAction="ifRoom"
         android:title="" />
+    <item
+        android:id="@+id/add_new_site_item"
+        android:icon="@drawable/plus"
+        app:showAsAction="ifRoom"
+        android:title="" />
+
 </menu>
