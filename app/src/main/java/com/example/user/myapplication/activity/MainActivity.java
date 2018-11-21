@@ -209,6 +209,13 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 else
                     navigateTo(R.id.aboutFragment);
                 return true;
+            case R.id.add_new_site_item:
+                add_site_item.setVisible(false);
+                if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
+                    validNeedToSaveUser(R.id.addNewSiteFragment);
+                else
+                    navigateTo(R.id.addNewSiteFragment);
+                return true;
             case R.id.logout_item:
                 firebaseAuth.signOut();
                 finish();
@@ -235,6 +242,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         logout_item = menu.findItem(R.id.logout_item);
         about_item = menu.findItem(R.id.about_toolbar_button);
         add_site_item = menu.findItem(R.id.add_new_site_item);
+        add_site_item.setVisible(false);
         return true;
     }
 
@@ -299,8 +307,9 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
     public void onSubmitSiteClick(){
         NavOptions.Builder builder = new NavOptions.Builder();
-        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).setExitAnim(android.R.anim.slide_in_left).build();
+        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).build();
         navController.navigate(R.id.rssItemListFragment, null, navOptions);
+        add_site_item.setVisible(true);
     }
 
     //<editor-fold desc="Empty implement methods">
