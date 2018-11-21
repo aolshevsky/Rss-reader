@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dip" >
 
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/rss_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="1dip"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#303030"
+        android:maxLines="1"
+        android:text="Tut.by" />
+
+    <TextView
+        android:id="@+id/rss_pubDate"
+        android:layout_below="@id/rss_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:textSize="14sp"
+        android:textColor="#8d8d8d"
+        android:text="12.12.2018" />
+
+    <TextView android:id="@+id/link"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingBottom="6dip"
+        android:textSize="15sp"
+        android:textColor="?attr/colorPrimary"
+        android:text="https://www.tut.by"
+        android:maxLines="1"
+        android:layout_below="@id/rss_pubDate"/>
+</RelativeLayout>
