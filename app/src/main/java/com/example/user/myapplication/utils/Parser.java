@@ -21,4 +21,17 @@ public class Parser {
         }
         return currentDate;
     }
+
+    public static int ValidUrl(String url){
+        if (url.length() > 0) {
+            String urlPattern = "^http(s?)://[a-zA-Z0-9_/\\-\\.]+\\.([A-Za-z/]{2,5})[a-zA-Z0-9_/\\&\\?\\=\\-\\.\\~\\%]*";
+            if (url.matches(urlPattern)) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 2;
+        }
+    }
 }
