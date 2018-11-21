@@ -1,6 +1,6 @@
 package com.example.user.myapplication.model;
 
-public class NewsItemModel {
+public class RSSItem {
 
     private String imageUrl;
     private String title;
@@ -8,7 +8,7 @@ public class NewsItemModel {
     private String link;
     private String pubDate;
 
-    public NewsItemModel(String imageUrl, String title, String description, String link, String pubDate) {
+    public RSSItem(String imageUrl, String title, String description, String link, String pubDate) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.description = description;
@@ -16,9 +16,11 @@ public class NewsItemModel {
         this.pubDate = pubDate;
     }
 
-    public NewsItemModel() {}
+    public RSSItem() {}
 
     public String getImageUrl() {
+        if (imageUrl.equals(""))
+            return null;
         return imageUrl;
     }
     public String getTitle() {
@@ -33,6 +35,7 @@ public class NewsItemModel {
     public String getPubDate() {
         return pubDate;
     }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }

@@ -21,7 +21,7 @@ import com.example.user.myapplication.Adapter.ListAdapter;
 import com.example.user.myapplication.Adapter.VerticalSpace;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
-import com.example.user.myapplication.model.NewsItemModel;
+import com.example.user.myapplication.model.RSSItem;
 import com.example.user.myapplication.Presenter.ReadRssPresenter;
 
 import java.util.ArrayList;
@@ -60,24 +60,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
         adapter = new ListAdapter(getContext());
     }
 
-    private void feedData(){
-        String[] imageUrls = {"https://www.livemint.com/rf/Image-621x414/LiveMint/Period2/2018/11/21/Photos/Processed/bitcoin-price-k64G--621x414@LiveMint.jpg"};
-        String[] titles = {"Cryptocurrency 'bloodbath' as Bitcoin falls 30% in a week"};
-        String[] descriptions = {"Market analysts see digital currency values falling further as the sector faces renewed regulatory scrutiny in the United States."};
-        String[] link = {"Market analysts see digital currency values falling further as the sector faces renewed regulatory scrutiny in the United States."};
-        String[] date = {"22.09.2018"};
-
-        List<NewsItemModel> itemModels = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j < titles.length; j++){
-                NewsItemModel itemModel = new NewsItemModel(imageUrls[j], titles[j], descriptions[j], link[j], date[j]);
-                itemModels.add(itemModel);
-            }
-        }
-        //mAdapter.addModels(itemModels);
-    }
-
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -97,8 +80,8 @@ public class NewsFragment extends Fragment implements IReadRssView {
     }
 
     @Override
-    public void setListAdapter(ArrayList<NewsItemModel> newsItemModels) {
-        adapter.addModels(newsItemModels);
+    public void setListAdapter(ArrayList<RSSItem> RSSItems) {
+        adapter.addModels(RSSItems);
         newsRecyclerView.setAdapter(adapter);
     }
 }

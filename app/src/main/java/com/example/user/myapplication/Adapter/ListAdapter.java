@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.NewsDetailsActivity;
-import com.example.user.myapplication.model.NewsItemModel;
+import com.example.user.myapplication.model.RSSItem;
 import com.example.user.myapplication.utils.Parser;
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ListAdapter extends RecyclerView.Adapter {
 
-    private List<NewsItemModel> newsItemModels;
+    private List<RSSItem> RSSItems;
     private Context context;
 
     public ListAdapter(Context context) {
         this.context = context;
-        newsItemModels = new ArrayList<>();
+        RSSItems = new ArrayList<>();
     }
 
     @NonNull
@@ -39,10 +39,10 @@ public class ListAdapter extends RecyclerView.Adapter {
         return new ItemHolder(row);
     }
 
-    public void addModels(List<NewsItemModel> itemModels){
+    public void addModels(List<RSSItem> itemModels){
         if(itemModels != null){
-            int pos = this.newsItemModels.size();
-            this.newsItemModels.addAll(itemModels);
+            int pos = this.RSSItems.size();
+            this.RSSItems.addAll(itemModels);
             notifyItemRangeChanged(pos, itemModels.size());
         }
     }
@@ -50,7 +50,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final NewsItemModel currentItem = newsItemModels.get(position);
+        final RSSItem currentItem = RSSItems.get(position);
         ItemHolder itemHolder = (ItemHolder)holder;
         itemHolder.titleTextView.setText(currentItem.getTitle());
         itemHolder.descriptionTextView.setText(currentItem.getDescription());
@@ -67,7 +67,7 @@ public class ListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemCount() { return newsItemModels.size();}
+    public int getItemCount() { return RSSItems.size();}
 
     private class ItemHolder extends RecyclerView.ViewHolder{
 
