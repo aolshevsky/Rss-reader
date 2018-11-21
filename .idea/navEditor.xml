@@ -66,18 +66,6 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="newsDetailsFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="342" />
-                            <option name="y" value="276" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="newsFragment">
                     <value>
                       <LayoutPositions>
@@ -97,6 +85,18 @@
                           <Point>
                             <option name="x" value="177" />
                             <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="rssItemListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="341" />
+                            <option name="y" value="276" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 Fragment fragment = getCurrentFragment();
                 fragment.getView().clearFocus();
                 switch (id) {
-                    case R.id.newsFragment:
+                    case R.id.rssItemListFragment:
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else

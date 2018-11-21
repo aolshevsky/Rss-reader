@@ -30,4 +30,9 @@
         android:name="com.example.user.myapplication.fragment.NewsFragment"
         android:label="fragment_news"
         tools:layout="@layout/fragment_news" />
+    <fragment
+        android:id="@+id/rssItemListFragment"
+        android:name="com.example.user.myapplication.fragment.RssItemListFragment"
+        android:label="fragment_rss_item_list"
+        tools:layout="@layout/fragment_rss_item_list" />
 </navigation>
