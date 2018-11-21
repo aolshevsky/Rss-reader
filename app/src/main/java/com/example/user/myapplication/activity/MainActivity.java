@@ -146,7 +146,10 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 fragment.getView().clearFocus();
                 switch (id) {
                     case R.id.newsFragment:
-                        navigateTo(id);
+                        if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
+                            validNeedToSaveUser(id);
+                        else
+                            navigateTo(id);
                         return true;
                     case R.id.logout_item:
                         firebaseAuth.signOut();
@@ -157,13 +160,13 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
-                            navigateTo(R.id.settingsFragment);
+                            navigateTo(id);
                         return true;
                     case R.id.homeFragment:
                         if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
-                            navigateTo(R.id.homeFragment);
+                            navigateTo(id);
                         return true;
                 }
                 return true;

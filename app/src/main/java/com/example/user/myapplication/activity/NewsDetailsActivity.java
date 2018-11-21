@@ -3,6 +3,7 @@ package com.example.user.myapplication.activity;
 
 import android.os.Bundle;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.example.user.myapplication.R;
 
@@ -22,7 +23,18 @@ public class NewsDetailsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         newsDetailsView = findViewById(R.id.newsDetailsView);
+        newsDetailsView.getSettings().setJavaScriptEnabled(true);
+        newsDetailsView.setWebViewClient(new WebViewClient());
         newsDetailsView.loadUrl(bundle.getString("Link"));
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        if (newsDetailsView != null){
+            newsDetailsView.destroy();
+        }
     }
 
 }

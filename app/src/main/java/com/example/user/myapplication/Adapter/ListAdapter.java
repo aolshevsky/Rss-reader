@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.NewsDetailsActivity;
 import com.example.user.myapplication.model.NewsItemModel;
+import com.example.user.myapplication.utils.Parser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public class ListAdapter extends RecyclerView.Adapter {
         ItemHolder itemHolder = (ItemHolder)holder;
         itemHolder.titleTextView.setText(currentItem.getTitle());
         itemHolder.descriptionTextView.setText(currentItem.getDescription());
-        itemHolder.dateTextView.setText(currentItem.getPubDate());
-        Picasso.with(context).load(currentItem.getImageUrl()).resize(450, 150).into(itemHolder.imageView);
+        itemHolder.dateTextView.setText(Parser.formatDate(currentItem.getPubDate()));
+        Picasso.with(context).load(currentItem.getImageUrl()).resize(360, 180).into(itemHolder.imageView);
         itemHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

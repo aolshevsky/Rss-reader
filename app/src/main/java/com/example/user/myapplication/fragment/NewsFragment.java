@@ -2,15 +2,20 @@ package com.example.user.myapplication.fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import es.dmoral.toasty.Toasty;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.ListAdapter;
 import com.example.user.myapplication.Adapter.VerticalSpace;
@@ -36,9 +41,15 @@ public class NewsFragment extends Fragment implements IReadRssView {
         newsView = inflater.inflate(R.layout.fragment_news, container, false);
 
         initializeView();
-        ReadRssPresenter readRss = ReadRssPresenter.getInstance();
-        readRss.attachView(this);
-        readRss.execute();
+        if(isOnline())
+        {
+            ReadRssPresenter readRss = new ReadRssPresenter();
+            readRss.attachView(this);
+            readRss.execute();
+        }else{
+            Toasty.error(getContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        }
+
 
         getActivity().setTitle("News");
         return newsView;
@@ -64,6 +75,13 @@ public class NewsFragment extends Fragment implements IReadRssView {
             }
         }
         //mAdapter.addModels(itemModels);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override

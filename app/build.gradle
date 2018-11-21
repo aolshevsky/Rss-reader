@@ -86,4 +86,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     implementation 'com.github.GrenderG:Toasty:1.2.8'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
 }

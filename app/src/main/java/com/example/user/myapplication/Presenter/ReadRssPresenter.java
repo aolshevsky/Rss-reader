@@ -25,14 +25,17 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
 
     private IReadRssView view;
 
-    private static ReadRssPresenter instance = new ReadRssPresenter();
-
-
-    public static ReadRssPresenter getInstance(){
-        return instance;
-    }
-
-    private String address = "http://www.sciencemag.org/rss/news_current.xml";
+// gazeta, lenta, scincemag, vesti
+    private String[] address = {"https://www.nasa.gov/rss/dyn/ames_news.rss",
+            "http://www.sciencemag.org/rss/news_current.xml",
+            "http://www.zrpress.ru/rss/sport.xml",
+            "https://lenta.ru/rss",
+            "https://news.yandex.ru/society.rss",
+            "http://news.yandex.ru/Pskov/index.rss",
+            "https://www.gazeta.ru/export/rss/social_more.xml",
+            "http://www.vesti.ru/vesti.rss",
+            "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/news.rss",
+            "https://news.tut.by/rss/all.rss"};
     private ProgressDialog progressDialog;
     private ArrayList<NewsItemModel> newsItemModels;
     private URL url;
@@ -43,7 +46,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
         progressDialog.setMessage("Loading...");
     }
 
-    private ReadRssPresenter() {}
+    public ReadRssPresenter() {}
 
     @Override
     protected void onPreExecute() {
@@ -95,6 +98,9 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
                             item.setLink(cureent.getTextContent());
                         } else if (cureent.getNodeName().equalsIgnoreCase("media:thumbnail")) {
                             String url = cureent.getAttributes().item(0).getTextContent();
+                            item.setImageUrl(correctProtocol(url));
+                        }else if (cureent.getNodeName().equalsIgnoreCase("enclosure")) {
+                            String url = cureent.getAttributes().item(0).getTextContent();
                             item.setImageUrl(url);
                         }
                     }
@@ -104,9 +110,13 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
         }
     }
 
+    private String correctProtocol(String url){
+        return "https:" + url.split(":")[1];
+    }
+
     private Document getdata() {
         try {
-            url = new URL(address);
+            url = new URL(address[9]);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream inputStream = connection.getInputStream();
