@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     public NavController navController;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private DialogInterface.OnClickListener dialogClickListener;
+
+    private MenuItem logout_item;
+    private MenuItem about_item;
 
     PermissionsHelper permissionsHelper;
 
@@ -107,12 +109,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     }
 
     private void validNeedToSaveUser(final int fragment_id){
-        dialogClickListener = new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        ((ProfileFragment)getCurrentFragment()).saveUser();
+                        ((ProfileFragment) getCurrentFragment()).saveUser();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -144,8 +146,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 int id = menuItem.getItemId();
                 Fragment fragment = getCurrentFragment();
                 fragment.getView().clearFocus();
+                logout_item.setVisible(true);
+                about_item.setVisible(true);
                 switch (id) {
                     case R.id.rssItemListFragment:
+                        logout_item.setVisible(false);
+                        about_item.setVisible(false);
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
@@ -222,6 +228,8 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+        logout_item = menu.findItem(R.id.logout_item);
+        about_item = menu.findItem(R.id.about_toolbar_button);
         return true;
     }
 
