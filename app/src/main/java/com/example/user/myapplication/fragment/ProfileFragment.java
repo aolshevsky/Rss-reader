@@ -271,9 +271,12 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
-        return !cur_user.getName().equals(name) ||
-                !cur_user.getPhone_number().equals(phone_number) ||
-                !cur_user.getSurname().equals(surname);
+        if (cur_user != null)
+            return !cur_user.getName().equals(name) ||
+                    !cur_user.getPhone_number().equals(phone_number) ||
+                    !cur_user.getSurname().equals(surname);
+        else
+            return false;
     }
 
     @Override

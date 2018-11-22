@@ -58,7 +58,6 @@ public class AddNewSiteFragment extends Fragment {
                 valid_val = 0;
                 if(valid_val == 0){
                     new loadRSSFeed().execute(url);
-                    ((MainActivity) getActivity()).onSubmitSiteClick();
                 } else if(valid_val == 1){
                     onErrorMessage("Please enter a valid url");
                 } else {
@@ -96,7 +95,7 @@ public class AddNewSiteFragment extends Fragment {
         @Override
         protected String doInBackground(String... args) {
             String url = args[0];
-            url = "https://news.tut.by/rss/index.rss";
+            //url = "https://news.tut.by/rss/index.rss";
             rssFeed = RSSParser.getInstance().getRSSFeed(url);
             Log.d("rssFeed", " "+ rssFeed);
             if (rssFeed != null) {
@@ -118,6 +117,7 @@ public class AddNewSiteFragment extends Fragment {
                 if (rssFeeds.size() == 0)
                     rssFeed.save();
             }
+            ((MainActivity) getActivity()).onSubmitSiteClick();
             pDialog.dismiss();
         }
 
