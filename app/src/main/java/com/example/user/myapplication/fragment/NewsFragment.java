@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,9 @@ import java.util.List;
 public class NewsFragment extends Fragment implements IReadRssView {
 
     private RecyclerView newsRecyclerView;
-    ListAdapter adapter;
+    private ListAdapter adapter;
+
+    private String rssLink;
 
     private View newsView;
 
@@ -39,15 +42,23 @@ public class NewsFragment extends Fragment implements IReadRssView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         newsView = inflater.inflate(R.layout.fragment_news, container, false);
+        Bundle bundle = getActivity().getIntent().getExtras();
+        rssLink = bundle.getString("RssLink");
+
 
         initializeView();
         if(isOnline())
         {
-            ReadRssPresenter readRss = new ReadRssPresenter();
+            ReadRssPresenter readRss = new ReadRssPresenter(rssLink);
             readRss.attachView(this);
             readRss.execute();
-        }else{
-            Toasty.error(getContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        } else{
+            initializeRecyclerView();
+            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+
+            adapter.addModels(new ArrayList<>(rssItems));
+            newsRecyclerView.setAdapter(adapter);
+            Toasty.error(getContext(), "No Internet Connection. See last saving news.", Toast.LENGTH_LONG).show();
         }
 
 
@@ -80,8 +91,20 @@ public class NewsFragment extends Fragment implements IReadRssView {
     }
 
     @Override
-    public void setListAdapter(ArrayList<RSSItem> RSSItems) {
-        adapter.addModels(RSSItems);
+    public void setListAdapter(ArrayList<RSSItem> rssItems) {
+        //RSSItem.deleteAll(RSSItem.class);
+
+        List<RSSItem> rssItemsDelete = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+        Log.d("DB", "Items: " + String.valueOf(rssItemsDelete.size()));
+        for (RSSItem item:rssItemsDelete) {
+            item.delete();
+        }
+        //List<RSSItem> rssItemsDelete1 = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+        //Log.d("DB", "Items after delete: " + String.valueOf(rssItemsDelete1.size()));
+        for (RSSItem item:rssItems) {
+            item.save();
+        }
+        adapter.addModels(rssItems);
         newsRecyclerView.setAdapter(adapter);
     }
 }

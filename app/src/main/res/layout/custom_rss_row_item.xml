@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rss_item_click"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -18,16 +19,17 @@
         android:text="Tut.by" />
 
     <TextView
-        android:id="@+id/rss_pubDate"
+        android:id="@+id/rss_description"
         android:layout_below="@id/rss_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="3dp"
         android:textSize="14sp"
+        android:maxLines="1"
         android:textColor="#8d8d8d"
-        android:text="12.12.2018" />
+        android:text="Самые горячие новости" />
 
-    <TextView android:id="@+id/link"
+    <TextView android:id="@+id/rss_link"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:paddingBottom="6dip"
@@ -35,5 +37,5 @@
         android:textColor="?attr/colorPrimary"
         android:text="https://www.tut.by"
         android:maxLines="1"
-        android:layout_below="@id/rss_pubDate"/>
+        android:layout_below="@id/rss_description"/>
 </RelativeLayout>

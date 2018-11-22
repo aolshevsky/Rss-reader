@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
 
     private IReadRssView view;
-
+/*
 // gazeta, lenta, scincemag, vesti
     private String[] address = {"https://www.nasa.gov/rss/dyn/ames_news.rss",
             "http://www.sciencemag.org/rss/news_current.xml",
@@ -26,6 +26,9 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
             "http://www.vesti.ru/vesti.rss",
             "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/news.rss",
             "https://news.tut.by/rss/all.rss"};
+            */
+    private String address;
+
     private ProgressDialog progressDialog;
     private ArrayList<RSSItem> rssItems;
     private RSSParser rssParser;
@@ -38,7 +41,9 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
         rssItems = new ArrayList<>();
     }
 
-    public ReadRssPresenter() {}
+    public ReadRssPresenter(String address) {
+        this.address = address;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -60,7 +65,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         Log.d("myLog", "doInBackground");
-        rssItems.addAll(rssParser.getRSSFeedItems(address[6]));
+        rssItems.addAll(rssParser.getRSSFeedItems(address));
         return null;
     }
 

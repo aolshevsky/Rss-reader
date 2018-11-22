@@ -58,13 +58,12 @@ public class AddNewSiteFragment extends Fragment {
                 valid_val = 0;
                 if(valid_val == 0){
                     new loadRSSFeed().execute(url);
+                    ((MainActivity) getActivity()).onSubmitSiteClick();
                 } else if(valid_val == 1){
                     onErrorMessage("Please enter a valid url");
                 } else {
                     onErrorMessage("Please enter website url");
                 }
-
-                ((MainActivity) getActivity()).onSubmitSiteClick();
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {

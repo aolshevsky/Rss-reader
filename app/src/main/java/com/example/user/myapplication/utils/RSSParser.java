@@ -84,7 +84,7 @@ public class RSSParser {
                         String description = getVal(nodes, TAG_DESRIPTION, false);
                         String pubDate = getVal(nodes, TAG_PUB_DATE, false);
 
-                        RSSItem rssItem = new RSSItem(image, title, description, link, pubDate);
+                        RSSItem rssItem = new RSSItem(image, title, description, link, pubDate, url);
 
                         itemsList.add(rssItem);
                     }

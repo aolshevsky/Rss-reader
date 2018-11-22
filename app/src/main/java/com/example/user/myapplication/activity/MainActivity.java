@@ -312,6 +312,18 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         add_site_item.setVisible(true);
     }
 
+    public void onRssItemClick(){
+        NavOptions.Builder builder = new NavOptions.Builder();
+        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).build();
+        navController.navigate(R.id.newsFragment, null, navOptions);
+        add_site_item.setVisible(true);
+    }
+
+    public void putExtra(String tag, String message){
+        Intent intent = getIntent();
+        intent.putExtra(tag, message);
+    }
+
     //<editor-fold desc="Empty implement methods">
     @Override
     public ProgressDialog getProgressDialog() {
