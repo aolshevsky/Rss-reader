@@ -1,19 +1,22 @@
 package com.example.user.myapplication.model;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
 import java.util.List;
 
-/**
- This class handle rss xml
- **/
-public class RSSFeed {
+
+public class RSSFeed extends SugarRecord {
 
     private String title;
     private String description;
     private String link;
     private String rss_link;
     private String language;
+    @Ignore
     List<RSSItem> items;
 
+    public RSSFeed() {}
 
     public RSSFeed(String title, String description, String link,
                    String rss_link, String language) {
@@ -53,5 +56,17 @@ public class RSSFeed {
 
     public String getLanguage() {
         return this.language;
+    }
+
+    @Override
+    public String toString() {
+        return "RSSFeed{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", link='" + link + '\'' +
+                ", rss_link='" + rss_link + '\'' +
+                ", language='" + language + '\'' +
+                ", items=" + items +
+                '}';
     }
 }

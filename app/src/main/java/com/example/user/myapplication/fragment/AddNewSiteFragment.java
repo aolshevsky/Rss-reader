@@ -18,6 +18,8 @@ import com.example.user.myapplication.model.WebSiteModel;
 import com.example.user.myapplication.utils.Parser;
 import com.example.user.myapplication.utils.RSSParser;
 
+import java.util.List;
+
 import androidx.fragment.app.Fragment;
 import es.dmoral.toasty.Toasty;
 
@@ -100,12 +102,9 @@ public class AddNewSiteFragment extends Fragment {
             Log.d("rssFeed", " "+ rssFeed);
             if (rssFeed != null) {
                 Log.d("url",
-                        "Pid" + rssFeed.getTitle() + " " + rssFeed.getLink() + " "
+                        "" + rssFeed.getTitle() + " " + rssFeed.getLink() + " "
                                 + rssFeed.getDescription() + " "
                                 + rssFeed.getLanguage());
-                ////
-                WebSiteModel site = new WebSiteModel(rssFeed.getTitle(), rssFeed.getLink(), rssFeed.getRSSLink(),
-                        rssFeed.getDescription());
             } else {
                 onErrorMessage("Rss url not found. Please check the url or try again");
             }
@@ -114,6 +113,12 @@ public class AddNewSiteFragment extends Fragment {
 
 
         protected void onPostExecute(String args) {
+            if (rssFeed != null) {
+                List<RSSFeed> rssFeeds = RSSFeed.find(RSSFeed.class, "rsslink = ?", rssFeed.getRSSLink());
+
+                if (rssFeeds.size() == 0)
+                    rssFeed.save();
+            }
             pDialog.dismiss();
         }
 
