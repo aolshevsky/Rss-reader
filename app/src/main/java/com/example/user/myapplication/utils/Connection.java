@@ -1,6 +1,10 @@
 package com.example.user.myapplication.utils;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -28,5 +32,11 @@ public class Connection {
             Log.d("myLog",  e.getMessage());
             return null;
         }
+    }
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

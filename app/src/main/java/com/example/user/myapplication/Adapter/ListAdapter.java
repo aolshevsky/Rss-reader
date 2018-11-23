@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.NewsDetailsActivity;
+import com.example.user.myapplication.fragment.NewsFragment;
 import com.example.user.myapplication.model.RSSItem;
+import com.example.user.myapplication.utils.Connection;
 import com.example.user.myapplication.utils.Parser;
 import com.squareup.picasso.Picasso;
 
@@ -20,6 +23,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import es.dmoral.toasty.Toasty;
 
 public class ListAdapter extends RecyclerView.Adapter {
 
@@ -65,9 +69,13 @@ public class ListAdapter extends RecyclerView.Adapter {
         itemHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NewsDetailsActivity.class);
-                intent.putExtra("Link", currentItem.getLink());
-                context.startActivity(intent);
+                if (Connection.isOnline(context)) {
+                    Intent intent = new Intent(context, NewsDetailsActivity.class);
+                    intent.putExtra("Link", currentItem.getLink());
+                    context.startActivity(intent);
+                } else {
+                    Toasty.error(context, "Check internet connection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

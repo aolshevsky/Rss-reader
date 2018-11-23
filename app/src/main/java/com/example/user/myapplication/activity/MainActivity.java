@@ -322,18 +322,14 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     }
 
     public void onSubmitSiteClick(){
-        NavOptions.Builder builder = new NavOptions.Builder();
-        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).build();
-        navController.navigate(R.id.rssItemListFragment, null, navOptions);
+        navController.navigate(R.id.rssItemListFragment);
         add_site_item.setVisible(true);
         Fragment fragment = getCurrentFragment();
         fragment.getView().clearFocus();
     }
 
     public void onRssItemClick(){
-        NavOptions.Builder builder = new NavOptions.Builder();
-        NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).build();
-        navController.navigate(R.id.newsFragment, null, navOptions);
+        navController.navigate(R.id.newsFragment);
         add_site_item.setVisible(true);
     }
 

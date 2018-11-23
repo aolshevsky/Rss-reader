@@ -26,6 +26,7 @@ import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.model.RSSItem;
 import com.example.user.myapplication.Presenter.ReadRssPresenter;
+import com.example.user.myapplication.utils.Connection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +50,16 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
 
         initializeView();
-        if(isOnline())
+        if(Connection.isOnline(getActivity()))
         {
+            initializeRecyclerView();
+            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+
+            adapter.addModels(new ArrayList<>(rssItems));
+            newsRecyclerView.setAdapter(adapter);
             ReadRssPresenter readRss = new ReadRssPresenter(rssLink);
             readRss.attachView(this);
-            readRss.execute();
+            //readRss.execute();
         } else{
             initializeRecyclerView();
             List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
@@ -72,12 +78,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
         newsRecyclerView = newsView.findViewById(R.id.newsRecyclerView);
     }
 
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
+
 
     @Override
     public ProgressDialog getProgressDialog() {
@@ -102,15 +103,12 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
     @Override
     public void setListAdapter(ArrayList<RSSItem> rssItems) {
-        //RSSItem.deleteAll(RSSItem.class);
 
         List<RSSItem> rssItemsDelete = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
         Log.d("DB", "Items: " + String.valueOf(rssItemsDelete.size()));
         for (RSSItem item:rssItemsDelete) {
             item.delete();
         }
-        //List<RSSItem> rssItemsDelete1 = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-        //Log.d("DB", "Items after delete: " + String.valueOf(rssItemsDelete1.size()));
         for (RSSItem item:rssItems) {
             item.save();
         }
