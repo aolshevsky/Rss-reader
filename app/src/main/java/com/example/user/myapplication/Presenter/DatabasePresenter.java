@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.user.myapplication.Presenter.Interface.IDatabasePresenter;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -123,7 +124,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         view.setProfileImg(bmp);
-                        view.saveUser();
+                        saveUser();
                         progressBar.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -168,12 +169,31 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
     }
 
     @Override
-    public void saveUser(String name, String surname, String phone_number, String img_path){
+    public void saveUser(){
+        User userInfo = view.getUserInfo();
+
+        int editCode = validEditData(userInfo.getName(), userInfo.getSurname(), userInfo.getPhone_number());
+
+        if (editCode == Constants.EMPTY_NAME){
+            view.validUserName("Please enter your Name");
+            return;
+        }
+
+        if (editCode == Constants.EMPTY_SURNAME){
+            view.validUserSurname("Please enter your Surname");
+            return;
+        }
+
+        if (editCode == Constants.EMPTY_PHONE_NUMBER){
+            view.validUserPhone("Please enter your Phone number");
+            return;
+        }
+
         FirebaseUser user = firebaseAuth.getCurrentUser();
         String email = user.getEmail();
-        User userInfo = new User(name, surname, email, phone_number, img_path);
-        if(!img_path.equals(""))
-            uploadImageToFirebaseStorage(img_path);
+        userInfo.setEmail(email);
+        if(!userInfo.getImg_path().equals(""))
+            uploadImageToFirebaseStorage(userInfo.getImg_path());
         saveUserToDatabase(userInfo);
         loadUserInformationMenu();
     }

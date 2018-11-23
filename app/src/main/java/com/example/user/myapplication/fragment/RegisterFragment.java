@@ -178,10 +178,12 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
     public void setProfileImg(Bitmap bmp) {
 
     }
-    @Override
-    public void saveUser() {
 
+    @Override
+    public User getUserInfo() {
+        return null;
     }
+
     @Override
     public void setUserInfo(User userInfo) {
 

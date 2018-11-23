@@ -349,7 +349,25 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     }
     @Override
     public void setProfileImg(Bitmap bmp) {}
+
     @Override
-    public void saveUser() {}
+    public User getUserInfo() {
+        return null;
+    }
+
+    @Override
+    public void validUserName(String message) {
+
+    }
+
+    @Override
+    public void validUserSurname(String message) {
+
+    }
+
+    @Override
+    public void validUserPhone(String message) {
+
+    }
     //</editor-fold">
 }

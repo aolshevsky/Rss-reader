@@ -45,6 +45,13 @@ public class User {
         this.phone_number = phone_number;
     }
 
+    public User(String name, String surname, String phone_number, String img_path){
+        this.name = name;
+        this.surname = surname;
+        this.phone_number = phone_number;
+        this.img_path = img_path;
+    }
+
     public String getName() {
         return name;
     }
@@ -67,6 +74,10 @@ public class User {
 
     public String getImg_path() {
         return img_path;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int isValidLoginData(){

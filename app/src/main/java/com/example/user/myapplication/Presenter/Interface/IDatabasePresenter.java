@@ -12,6 +12,6 @@ public interface IDatabasePresenter {
     void uploadImageToFirebaseStorage(String img_path);
     void downloadFromFirebaseStorage();
     void loadUserInformationMenu();
-    void saveUser(String name, String surname, String phone_number, String img_path);
+    void saveUser();
     int validEditData(String name, String surname, String phone_number);
 }

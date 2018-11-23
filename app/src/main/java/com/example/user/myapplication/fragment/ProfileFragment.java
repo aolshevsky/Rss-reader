@@ -129,7 +129,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        saveUser();
+                        databasePresenter.saveUser();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -142,7 +142,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveUser();
+                databasePresenter.saveUser();
             }
         });
         buttonSwitch.setOnClickListener(new View.OnClickListener() {
@@ -191,35 +191,14 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         }
     }
 
-    public void saveUser(){
+    @Override
+    public User getUserInfo() {
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
-
-        int editCode = databasePresenter.validEditData(name, surname, phone_number);
-
-        if (editCode == Constants.EMPTY_NAME){
-            editTextName.setError("Please enter your Name");
-            editTextName.requestFocus();
-            return;
-        }
-
-        if (editCode == Constants.EMPTY_SURNAME){
-            editTextSurname.setError("Please enter your Surname");
-            editTextSurname.requestFocus();
-            return;
-        }
-
-        if (editCode == Constants.EMPTY_PHONE_NUMBER){
-            editTextPhone.setError("Please enter your Phone number");
-            editTextPhone.requestFocus();
-            return;
-        }
-
-        databasePresenter.saveUser(name, surname, phone_number, img_path);
-        //Toast.makeText(getActivity(), "Save User", Toast.LENGTH_LONG).show();
-
+        return new User(name, surname, phone_number, img_path);
     }
+
 
     @Override
     public void setProfileImg(Bitmap bmp){
@@ -277,6 +256,28 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                     !cur_user.getSurname().equals(surname);
         else
             return false;
+    }
+
+    public void saveUser(){
+        databasePresenter.saveUser();
+    }
+
+    @Override
+    public void validUserName(String message) {
+        editTextName.setError(message);
+        editTextName.requestFocus();
+    }
+
+    @Override
+    public void validUserSurname(String message) {
+        editTextSurname.setError(message);
+        editTextSurname.requestFocus();
+    }
+
+    @Override
+    public void validUserPhone(String message) {
+        editTextPhone.setError(message);
+        editTextPhone.requestFocus();
     }
 
     @Override
