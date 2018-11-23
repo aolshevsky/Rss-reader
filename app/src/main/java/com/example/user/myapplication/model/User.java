@@ -3,6 +3,8 @@ package com.example.user.myapplication.model;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import com.example.user.myapplication.utils.Constants;
+
 public class User {
 
     private String name;
@@ -69,38 +71,38 @@ public class User {
 
     public int isValidLoginData(){
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-            return 0;
+            return Constants.VALID_EMAIL;
         if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
-            return 1;
+            return Constants.VALID_PASSWORD;
         else
-            return -1;
+            return Constants.LOGIN_SUCCESS;
     }
 
     public int isValidRegisterData(){
         if(TextUtils.isEmpty(name))
-            return 0;
+            return Constants.EMPTY_NAME;
         if(TextUtils.isEmpty(surname))
-            return 1;
+            return Constants.EMPTY_SURNAME;
         if(TextUtils.isEmpty(phone_number))
-            return 2;
+            return Constants.EMPTY_PHONE_NUMBER;
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-            return 3;
+            return Constants.VALID_EMAIL;
         if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
-            return 4;
+            return Constants.VALID_PASSWORD;
         if(password != null && password.equals(confirm_password))
-            return 5;
+            return Constants.VALID_CONF_PASSWORD;
         else
-            return -1;
+            return Constants.REGISTER_SUCCESS;
     }
 
     public int isValidEditData() {
         if (TextUtils.isEmpty(name))
-            return 0;
+            return Constants.EMPTY_NAME;
         if (TextUtils.isEmpty(surname))
-            return 1;
+            return Constants.EMPTY_SURNAME;
         if (TextUtils.isEmpty(phone_number))
-            return 2;
+            return Constants.EMPTY_PHONE_NUMBER;
         else
-            return -1;
+            return Constants.EDIT_SUCCESS;
     }
 }

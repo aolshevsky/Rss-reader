@@ -3,6 +3,7 @@ package com.example.user.myapplication.Presenter;
 import com.example.user.myapplication.Presenter.Interface.IRegisterPresenter;
 import com.example.user.myapplication.View.IRegisterView;
 import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterPresenter extends BasePresenter<IRegisterView> implements IRegisterPresenter {
@@ -20,35 +21,35 @@ public class RegisterPresenter extends BasePresenter<IRegisterView> implements I
         int registerCode = user.isValidRegisterData();
 
 
-        if (registerCode == 0){
+        if (registerCode == Constants.EMPTY_NAME){
             view.validUserName("Please enter your Name");
             return;
         }
 
-        if (registerCode == 1){
+        if (registerCode == Constants.EMPTY_SURNAME){
             view.validUserSurname("Please enter your Surname");
             return;
         }
 
-        if (registerCode == 2){
+        if (registerCode == Constants.VALID_EMAIL){
             view.validUserEmail("Please enter a valid email");
             return;
         }
 
-        if (registerCode == 3){
+        if (registerCode == Constants.EMPTY_PHONE_NUMBER){
             view.validUserPhone("Please enter your Phone number");
             return;
         }
 
-        if (registerCode == 4){
+        if (registerCode == Constants.VALID_PASSWORD){
             view.validUserPassord("Password must be at least 6 characters");
             return;
         }
-        if (registerCode == 5){
+        if (registerCode == Constants.VALID_CONF_PASSWORD){
             view.validUserConfPassord("Password not matching");
             return;
         }
-        if(registerCode == -1) {
+        if(registerCode == Constants.REGISTER_SUCCESS) {
             view.onRegisterSuccess("Register Success");
         }
 

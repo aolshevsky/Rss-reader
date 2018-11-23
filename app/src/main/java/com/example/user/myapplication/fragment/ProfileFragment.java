@@ -66,8 +66,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     private ImagePresenter imagePresenter;
     private DatabasePresenter databasePresenter;
 
-    private ProfileFragment profileFragment;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -324,7 +322,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                 try {
                     Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
                     setProfileImg(bmp);
-                    Toast.makeText(profileFragment.getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
 
                 } catch (IOException e) {
                     e.printStackTrace();
