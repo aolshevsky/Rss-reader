@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 int id = menuItem.getItemId();
                 Fragment fragment = getCurrentFragment();
                 fragment.getView().clearFocus();
-                onNewsFragment(false);
                 switch (id) {
                     case R.id.rssItemListFragment:
                         onNewsFragment(true);
@@ -160,17 +159,20 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                             navigateTo(id);
                         return true;
                     case R.id.logout_item:
-                        firebaseAuth.signOut();
+                        onNewsFragment(false);
+                        databasePresenter.getFirebaseAuth().signOut();
                         finish();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         return true;
                     case R.id.settingsFragment:
+                        onNewsFragment(false);
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
                             navigateTo(id);
                         return true;
                     case R.id.homeFragment:
+                        onNewsFragment(false);
                         if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
@@ -190,6 +192,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         profile_click_place.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                onNewsFragment(false);
                 onProfileClick(v);
             }
         });
