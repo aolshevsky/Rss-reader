@@ -1,5 +1,7 @@
 package com.example.user.myapplication.Presenter.Interface;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public interface IRegisterPresenter {
-    int onRegister(String name, String surname, String phone_number, String email, String password, String con_password);
+    void registerUser(FirebaseAuth firebaseAuth);
 }

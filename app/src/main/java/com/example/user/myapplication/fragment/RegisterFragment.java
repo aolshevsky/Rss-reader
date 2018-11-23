@@ -41,6 +41,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
 
     private RegisterPresenter registerPresenter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser();
+                registerPresenter.registerUser(firebaseAuth);
             }
         });
         to_login_btn.setOnClickListener(new View.OnClickListener() {
@@ -93,56 +94,27 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void registerUser(){
-        final String email = editTextEmail.getText().toString().trim();
+    @Override
+    public User getUserRegInfo() {
+        String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String con_password = editTextConfirmPassword.getText().toString().trim();
 
-        final String name = editTextName.getText().toString();
-        final String surname = editTextSurname.getText().toString();
-        final String phone_number = editTextPhone.getText().toString();
+        String name = editTextName.getText().toString();
+        String surname = editTextSurname.getText().toString();
+        String phone_number = editTextPhone.getText().toString();
 
-        int registerCode = registerPresenter.onRegister(name, surname, phone_number, email, password, con_password);
-        if (registerCode == 0){
-            editTextName.setError("Please enter your Name");
-            editTextName.requestFocus();
-            return;
-        }
+        return new User(name, surname, phone_number, email, password, con_password);
+    }
 
-        if (registerCode == 1){
-            editTextSurname.setError("Please enter your Surname");
-            editTextSurname.requestFocus();
-            return;
-        }
 
-        if (registerCode == 2){
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-
-        if (registerCode == 3){
-            editTextPhone.setError("Please enter your Phone number");
-            editTextPhone.requestFocus();
-            return;
-        }
-
-        if (registerCode == 4){
-            editTextPassword.setError("Password must be at least 6 characters");
-            editTextPassword.requestFocus();
-            return;
-        }
-        if (registerCode == 5){
-            editTextConfirmPassword.setError("Password not matching");
-            editTextConfirmPassword.requestFocus();
-            return;
-        }
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+    @Override
+    public void addListenerToFirebaseAuth(Task<AuthResult> authResultTask, final User user) {
+        authResultTask.addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    User userInfo = new User(name, surname,email, phone_number, "");
+                    User userInfo = new User(user.getName(), user.getSurname(), user.getEmail(), user.getPhone_number(), "");
                     databasePresenter.saveUserToDatabase(userInfo);
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
@@ -151,8 +123,42 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
                 }
             }
         });
+    }
 
+    @Override
+    public void validUserName(String message) {
+        editTextName.setError(message);
+        editTextName.requestFocus();
+    }
 
+    @Override
+    public void validUserSurname(String message) {
+        editTextSurname.setError(message);
+        editTextSurname.requestFocus();
+    }
+
+    @Override
+    public void validUserEmail(String message) {
+        editTextEmail.setError(message);
+        editTextEmail.requestFocus();
+    }
+
+    @Override
+    public void validUserPhone(String message) {
+        editTextPhone.setError(message);
+        editTextPhone.requestFocus();
+    }
+
+    @Override
+    public void validUserPassord(String message) {
+        editTextPassword.setError(message);
+        editTextPassword.requestFocus();
+    }
+
+    @Override
+    public void validUserConfPassord(String message) {
+        editTextConfirmPassword.setError(message);
+        editTextConfirmPassword.requestFocus();
     }
 
     //<editor-fold desc="Empty implement methods">

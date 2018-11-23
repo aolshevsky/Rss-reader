@@ -3,6 +3,7 @@ package com.example.user.myapplication.Presenter;
 import com.example.user.myapplication.Presenter.Interface.IRegisterPresenter;
 import com.example.user.myapplication.View.IRegisterView;
 import com.example.user.myapplication.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterPresenter extends BasePresenter<IRegisterView> implements IRegisterPresenter {
 
@@ -14,12 +15,45 @@ public class RegisterPresenter extends BasePresenter<IRegisterView> implements I
     }
 
     @Override
-    public int onRegister(String name, String surname, String phone_number, String email, String password, String con_password) {
-        User user = new User(name, surname, phone_number, email, password, con_password);
+    public void registerUser(FirebaseAuth firebaseAuth) {
+        User user = view.getUserRegInfo();
         int registerCode = user.isValidRegisterData();
 
-        if(registerCode == -1)
+
+        if (registerCode == 0){
+            view.validUserName("Please enter your Name");
+            return;
+        }
+
+        if (registerCode == 1){
+            view.validUserSurname("Please enter your Surname");
+            return;
+        }
+
+        if (registerCode == 2){
+            view.validUserEmail("Please enter a valid email");
+            return;
+        }
+
+        if (registerCode == 3){
+            view.validUserPhone("Please enter your Phone number");
+            return;
+        }
+
+        if (registerCode == 4){
+            view.validUserPassord("Password must be at least 6 characters");
+            return;
+        }
+        if (registerCode == 5){
+            view.validUserConfPassord("Password not matching");
+            return;
+        }
+        if(registerCode == -1) {
             view.onRegisterSuccess("Register Success");
-        return registerCode;
+        }
+
+        view.addListenerToFirebaseAuth(
+                firebaseAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()),
+                user);
     }
 }
