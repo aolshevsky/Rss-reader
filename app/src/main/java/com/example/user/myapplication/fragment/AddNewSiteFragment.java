@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.activity.MainActivity;
 import com.example.user.myapplication.model.RSSFeed;
-import com.example.user.myapplication.model.WebSiteModel;
 import com.example.user.myapplication.utils.Parser;
 import com.example.user.myapplication.utils.RSSParser;
 
