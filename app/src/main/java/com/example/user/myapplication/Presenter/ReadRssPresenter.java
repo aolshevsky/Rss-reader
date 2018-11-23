@@ -46,7 +46,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         Log.d("myLog", "PreExecute");
-        progressDialog.show();
+       // progressDialog.show();
         super.onPreExecute();
     }
 
@@ -54,9 +54,8 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         Log.d("myLog", "onPostExecute");
-        progressDialog.dismiss();
-        view.initializeRecyclerView();
-        view.setListAdapter(rssItems);
+        //progressDialog.dismiss();
+        view.checkNeedToUpdateNews(rssItems);
     }
 
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.Visibility;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.ListAdapter;
@@ -36,6 +39,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
     private RecyclerView newsRecyclerView;
     private ListAdapter adapter;
+    private ImageButton reload_news_btn;
 
     private String rssLink;
 
@@ -50,24 +54,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
 
         initializeView();
-        if(Connection.isOnline(getActivity()))
-        {
-            initializeRecyclerView();
-            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-
-            adapter.addModels(new ArrayList<>(rssItems));
-            newsRecyclerView.setAdapter(adapter);
-            ReadRssPresenter readRss = new ReadRssPresenter(rssLink);
-            readRss.attachView(this);
-            //readRss.execute();
-        } else{
-            initializeRecyclerView();
-            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-
-            adapter.addModels(new ArrayList<>(rssItems));
-            newsRecyclerView.setAdapter(adapter);
-            Toasty.error(getContext(), "No Internet Connection. See last saving news.", Toast.LENGTH_LONG).show();
-        }
+        loadNews();
 
 
         getActivity().setTitle("News");
@@ -75,10 +62,50 @@ public class NewsFragment extends Fragment implements IReadRssView {
     }
 
     private void initializeView(){
+        reload_news_btn = newsView.findViewById(R.id.reload_news_btn);
+        reload_news_btn.setVisibility(View.INVISIBLE);
         newsRecyclerView = newsView.findViewById(R.id.newsRecyclerView);
     }
 
 
+    private void loadNews(){
+        if(Connection.isOnline(getContext())) {
+            initializeRecyclerView();
+            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+
+            adapter.addModels(new ArrayList<>(rssItems));
+            newsRecyclerView.setAdapter(adapter);
+            ReadRssPresenter readRss = new ReadRssPresenter(rssLink);
+            readRss.attachView(this);
+            readRss.execute();
+        } else {
+            initializeRecyclerView();
+            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+
+            adapter.addModels(new ArrayList<>(rssItems));
+            newsRecyclerView.setAdapter(adapter);
+            Toasty.error(getContext(), "No Internet Connection. See last saving news.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void checkNeedToUpdateNews(final ArrayList<RSSItem> newRssItems) {
+        List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+        if (newRssItems != null){
+            if (!newRssItems.get(0).getTitle().equals(rssItems.get(0).getTitle())){
+                reload_news_btn.setVisibility(View.VISIBLE);
+                Toasty.info(getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
+                reload_news_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        initializeRecyclerView();
+                        setListAdapter(newRssItems);
+                        reload_news_btn.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public ProgressDialog getProgressDialog() {
