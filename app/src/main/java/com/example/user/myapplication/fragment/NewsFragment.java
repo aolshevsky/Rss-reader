@@ -70,7 +70,6 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
     private void initializeView(){
         newsRecyclerView = newsView.findViewById(R.id.newsRecyclerView);
-        adapter = new ListAdapter(getContext());
     }
 
     private boolean isOnline() {
@@ -88,14 +87,17 @@ public class NewsFragment extends Fragment implements IReadRssView {
     @Override
     public void initializeRecyclerView() {
         int orientation = this.getResources().getConfiguration().orientation;
+        Boolean isHorizontal;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            isHorizontal = false;
             newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
+            isHorizontal = true;
             newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         }
 
         newsRecyclerView.addItemDecoration(new VerticalSpace(20));
-        adapter = new ListAdapter(getContext());
+        adapter = new ListAdapter(getContext(), isHorizontal);
     }
 
     @Override

@@ -25,9 +25,11 @@ public class ListAdapter extends RecyclerView.Adapter {
 
     private List<RSSItem> RSSItems;
     private Context context;
+    private Boolean isHorizontal;
 
-    public ListAdapter(Context context) {
+    public ListAdapter(Context context, Boolean isHorizontal) {
         this.context = context;
+        this.isHorizontal = isHorizontal;
         RSSItems = new ArrayList<>();
     }
 
@@ -35,7 +37,11 @@ public class ListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View row = inflater.inflate(R.layout.custom_row_item, parent, false);
+        View row;
+        if (!isHorizontal)
+            row = inflater.inflate(R.layout.custom_row_item, parent, false);
+        else
+            row = inflater.inflate(R.layout.custom_hor_row_item, parent, false);
         return new ItemHolder(row);
     }
 
