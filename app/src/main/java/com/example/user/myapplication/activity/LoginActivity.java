@@ -22,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
         initializeView();
     }
 
-
     private void initializeView() {
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);

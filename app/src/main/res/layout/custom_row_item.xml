@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="380dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/newsCardView"
     app:cardElevation="5dp"
     app:cardCornerRadius="6dp"
     cardUseCompatPadding="true"
+    android:layout_marginTop="10dp"
     android:layout_height="wrap_content">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/newsTitleTextView"
+        <ImageView
+            android:scaleType="fitXY"
+            android:id="@+id/newsImageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="Алеша продал почку или две..."
-            android:maxLines="1"
-            android:textSize="18sp"
-            android:textColor="#000"/>
+            android:layout_height="180dp"
+            android:background="@color/city_lights"
+            android:src="@drawable/profile_icon"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/newsTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Алеша продал почку или две..."
+                android:maxLines="1"
+                android:textSize="18sp"
+                android:textColor="#000"/>
+
             <TextView
                 android:id="@+id/newsDateTextView"
                 android:layout_width="wrap_content"
@@ -33,26 +43,13 @@
                 style="@style/date"
                 android:text="21.09.2018"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
-
-        <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/newsImageView"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:src="@drawable/profile_icon"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="5dp">
 
             <TextView
                 android:id="@+id/newsDescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Алеша продал почку или две... Больше информации в статье Алеша продал почку или две... Больше информации в статье"
+                android:layout_marginTop="4dp"
+                android:text="Алеша продал почку или две больше информации в статье Алеша продалпоч почку или две больше информации... статье"
                 android:maxLines="3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         </LinearLayout>

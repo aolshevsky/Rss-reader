@@ -56,7 +56,7 @@ public class PermissionsHelper {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            activity.requestPermissions(permissions,RequestCode.PERMISSION_REQUEST_CODE);
+            activity.requestPermissions(permissions,Constants.PERMISSION_REQUEST_CODE);
         }
     }
     public void requestNeedPerms(Activity activity, int per_ind){
@@ -64,7 +64,7 @@ public class PermissionsHelper {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            activity.requestPermissions(new String[]{permissions[per_ind]},RequestCode.PERMISSION_REQUEST_CODE);
+            activity.requestPermissions(new String[]{permissions[per_ind]},Constants.PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -73,7 +73,7 @@ public class PermissionsHelper {
         Boolean is_any_perms = false;
         Boolean val;
         switch (requestCode) {
-            case RequestCode.PERMISSION_REQUEST_CODE: {
+            case Constants.PERMISSION_REQUEST_CODE: {
                 for (int i = 0, len = grantResults.length; i < len; i++) {
                     allowed.put(permissions[i] ,(grantResults[i] == PackageManager.PERMISSION_GRANTED));
                 }
@@ -164,6 +164,6 @@ public class PermissionsHelper {
     private void openApplicationSettings(Activity activity) {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.parse("package:" + activity.getPackageName()));
-        activity.startActivityForResult(appSettingsIntent, RequestCode.PERMISSION_REQUEST_CODE);
+        activity.startActivityForResult(appSettingsIntent, Constants.PERMISSION_REQUEST_CODE);
     }
 }

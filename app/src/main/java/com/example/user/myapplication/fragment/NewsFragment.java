@@ -3,11 +3,13 @@ package com.example.user.myapplication.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
@@ -85,7 +87,13 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
     @Override
     public void initializeRecyclerView() {
-        newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        } else {
+            newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+        }
+
         newsRecyclerView.addItemDecoration(new VerticalSpace(20));
         adapter = new ListAdapter(getContext());
     }

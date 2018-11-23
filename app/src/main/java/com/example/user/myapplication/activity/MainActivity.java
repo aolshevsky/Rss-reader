@@ -21,7 +21,9 @@ import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IDeepLinksView;
+import com.example.user.myapplication.fragment.NewsFragment;
 import com.example.user.myapplication.fragment.ProfileFragment;
+import com.example.user.myapplication.fragment.RssItemListFragment;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
         initializeNavigation();
 
-        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter =  new DatabasePresenter();
         databasePresenter.attachView(this);
         permissionsHelper = PermissionsHelper.getInstance();
         sharedPref = new SharedPref(this);
@@ -148,14 +150,10 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                 int id = menuItem.getItemId();
                 Fragment fragment = getCurrentFragment();
                 fragment.getView().clearFocus();
-                logout_item.setVisible(true);
-                about_item.setVisible(true);
-                add_site_item.setVisible(false);
+                onNewsFragment(false);
                 switch (id) {
                     case R.id.rssItemListFragment:
-                        logout_item.setVisible(false);
-                        about_item.setVisible(false);
-                        add_site_item.setVisible(true);
+                        onNewsFragment(true);
                         if(fragment instanceof ProfileFragment && ((ProfileFragment)fragment).checkNeedToUpdateUser())
                             validNeedToSaveUser(id);
                         else
@@ -236,6 +234,18 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void onNewsFragment(Boolean isOnNews){
+        if (isOnNews){
+            logout_item.setVisible(false);
+            about_item.setVisible(false);
+            add_site_item.setVisible(true);
+        } else {
+            logout_item.setVisible(true);
+            about_item.setVisible(true);
+            add_site_item.setVisible(false);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
@@ -243,6 +253,12 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         about_item = menu.findItem(R.id.about_toolbar_button);
         add_site_item = menu.findItem(R.id.add_new_site_item);
         add_site_item.setVisible(false);
+
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof RssItemListFragment || fragment instanceof NewsFragment){
+            onNewsFragment(true);
+        }
+
         return true;
     }
 
@@ -310,6 +326,8 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         NavOptions navOptions = builder.setEnterAnim(android.R.anim.slide_out_right).build();
         navController.navigate(R.id.rssItemListFragment, null, navOptions);
         add_site_item.setVisible(true);
+        Fragment fragment = getCurrentFragment();
+        fragment.getView().clearFocus();
     }
 
     public void onRssItemClick(){

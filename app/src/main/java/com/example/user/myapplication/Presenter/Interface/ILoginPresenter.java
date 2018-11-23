@@ -1,5 +1,7 @@
 package com.example.user.myapplication.Presenter.Interface;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public interface ILoginPresenter {
-    int onLogin(String email, String password);
+    void userLogin(FirebaseAuth firebaseAuth);
 }

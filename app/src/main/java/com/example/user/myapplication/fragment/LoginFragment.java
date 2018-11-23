@@ -34,6 +34,11 @@ public class LoginFragment extends Fragment implements ILoginView {
     private FirebaseAuth firebaseAuth;
 
     private LoginPresenter loginPresenter;
+    private IListener switchViewListener;
+
+    public interface IListener {
+        void onSwitchView();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,47 +82,54 @@ public class LoginFragment extends Fragment implements ILoginView {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userLogin();
+                loginPresenter.userLogin(firebaseAuth);
             }
         });
         to_register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((LoginActivity)getActivity()).onRegisterSwitchClick();
+                //switchViewListener.onSwitchView();
             }
         });
     }
 
 
-    private void userLogin(){
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-        int loginCode = loginPresenter.onLogin(email, password);
-
-        if (loginCode == 0){
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-        if (loginCode == 1){
-            editTextPassword.setError("Password must be at least 6 characters");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            getActivity().finish();
-                            startActivity(new Intent(getContext(), MainActivity.class));
-
-                        } else {
-                            onLoginError("Could not register.." + task.getException());
-                        }
-                    }
-                });
+    @Override
+    public String getUserLogin() {
+        return editTextEmail.getText().toString().trim();
     }
+
+    @Override
+    public String getUserPassword() {
+        return editTextPassword.getText().toString().trim();
+    }
+
+    @Override
+    public void validUserEmail(String message) {
+        editTextEmail.setError(message);
+        editTextEmail.requestFocus();
+    }
+
+    @Override
+    public void validUserPassord(String message) {
+        editTextPassword.setError(message);
+        editTextPassword.requestFocus();
+    }
+
+    @Override
+    public void addListenerToFirebaseAuth(Task<AuthResult> authResultTask) {
+        authResultTask.addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    getActivity().finish();
+                } else {
+                    onLoginError("Could not register.." + task.getException());
+                }
+            }
+        });
+    }
+
 }

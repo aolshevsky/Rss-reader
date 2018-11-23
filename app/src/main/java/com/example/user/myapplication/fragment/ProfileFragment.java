@@ -28,6 +28,7 @@ import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IImageView;
 import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.utils.Constants;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,8 +44,8 @@ import androidx.fragment.app.Fragment;
 import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static com.example.user.myapplication.utils.RequestCode.CAMERA;
-import static com.example.user.myapplication.utils.RequestCode.GALLERY;
+import static com.example.user.myapplication.utils.Constants.CAMERA;
+import static com.example.user.myapplication.utils.Constants.GALLERY;
 
 
 public class ProfileFragment extends Fragment implements IImageView, IDatabaseView {
@@ -53,7 +54,9 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     private ImageView imageview_edit, imageview_show;
     private View profileView;
 
-    private EditText editTextName, editTextSurname, editTextPhone;
+    private EditText editTextName;
+    private EditText editTextSurname;
+    private EditText editTextPhone;
     private TextView nameTextView, surnameTextView, emailTextView, phoneTextView;
 
     private String img_path;
@@ -74,14 +77,13 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         permissionsHelper = PermissionsHelper.getInstance();
         imagePresenter = ImagePresenter.getInstance();
         imagePresenter.attachView(this);
-        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
 
         initializeView();
 
         loadUserInformation();
 
-        profileFragment = this;
         getActivity().setTitle("Profile");
 
         return profileView;
@@ -198,19 +200,19 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
         int editCode = databasePresenter.validEditData(name, surname, phone_number);
 
-        if (editCode == 0){
+        if (editCode == Constants.EMPTY_NAME){
             editTextName.setError("Please enter your Name");
             editTextName.requestFocus();
             return;
         }
 
-        if (editCode == 1){
+        if (editCode == Constants.EMPTY_SURNAME){
             editTextSurname.setError("Please enter your Surname");
             editTextSurname.requestFocus();
             return;
         }
 
-        if (editCode == 2){
+        if (editCode == Constants.EMPTY_PHONE_NUMBER){
             editTextPhone.setError("Please enter your Phone number");
             editTextPhone.requestFocus();
             return;

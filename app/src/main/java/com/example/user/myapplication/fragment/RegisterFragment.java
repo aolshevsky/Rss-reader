@@ -48,7 +48,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         registerView = inflater.inflate(R.layout.fragment_register, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        databasePresenter = DatabasePresenter.getInstance();
+        databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
         registerPresenter = RegisterPresenter.getInstance();
         registerPresenter.attachView(this);

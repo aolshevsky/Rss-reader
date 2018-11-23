@@ -18,10 +18,10 @@ public class VerticalSpace extends RecyclerView.ItemDecoration {
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         if(parent.getChildLayoutPosition(view) == 0){
-            outRect.top = space;
+           // outRect.top = space;
         }
         outRect.right = space;
         outRect.left = space;
-        outRect.bottom = space;
+        //outRect.bottom = space;
     }
 }

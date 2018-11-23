@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class Parser {
@@ -13,13 +14,20 @@ public class Parser {
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
         try {
             Date newDate = format.parse(currentDate);
-            format = new SimpleDateFormat("dd-MM-yyyy, h:mm a");
+            format = new SimpleDateFormat("dd-MM-yyyy, h:mm a", Locale.ENGLISH);
             format.setTimeZone(TimeZone.getTimeZone("GMT+3"));
             currentDate = format.format(newDate);
         } catch (ParseException e) {
             Log.e("Adapter", "Problem with parsing the date format");
         }
         return currentDate;
+    }
+
+    public static String transformDescription(String description){
+        if(description.length() > 100){
+            description = description.substring(0, 96).trim() + "...";
+        }
+        return description;
     }
 
     public static int ValidUrl(String url){

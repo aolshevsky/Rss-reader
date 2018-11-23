@@ -55,7 +55,6 @@ public class AddNewSiteFragment extends Fragment {
 
                 int valid_val = Parser.ValidUrl(url);
 
-                valid_val = 0;
                 if(valid_val == 0){
                     new loadRSSFeed().execute(url);
                 } else if(valid_val == 1){
@@ -96,7 +95,7 @@ public class AddNewSiteFragment extends Fragment {
         protected String doInBackground(String... args) {
             String url = args[0];
             //url = "https://news.tut.by/rss/index.rss";
-            rssFeed = RSSParser.getInstance().getRSSFeed(url);
+            rssFeed = RSSParser.getRSSFeed(url);
             Log.d("rssFeed", " "+ rssFeed);
             if (rssFeed != null) {
                 Log.d("url",

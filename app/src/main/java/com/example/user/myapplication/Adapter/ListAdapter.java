@@ -53,7 +53,7 @@ public class ListAdapter extends RecyclerView.Adapter {
         final RSSItem currentItem = RSSItems.get(position);
         ItemHolder itemHolder = (ItemHolder)holder;
         itemHolder.titleTextView.setText(currentItem.getTitle());
-        itemHolder.descriptionTextView.setText(currentItem.getDescription());
+        itemHolder.descriptionTextView.setText(Parser.transformDescription(currentItem.getDescription()));
         itemHolder.dateTextView.setText(Parser.formatDate(currentItem.getPubDate()));
         Picasso.with(context).load(currentItem.getImageUrl()).resize(360, 180).into(itemHolder.imageView);
         itemHolder.cardView.setOnClickListener(new View.OnClickListener() {

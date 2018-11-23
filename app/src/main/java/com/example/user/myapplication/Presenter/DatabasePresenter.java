@@ -32,23 +32,18 @@ import androidx.annotation.NonNull;
 
 public class DatabasePresenter extends BasePresenter<IDatabaseView> implements IDatabasePresenter{
 
-    private static DatabasePresenter instance = new DatabasePresenter();
-
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUsers;
     private StorageReference storageRef;
 
     private User currentUser;
 
-    private DatabasePresenter(){
+    public DatabasePresenter(){
         databaseUsers = FirebaseDatabase.getInstance().getReference();
         storageRef = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    public static DatabasePresenter getInstance(){
-        return instance;
-    }
 
     @Override
     public DatabaseReference getDatabaseUsers(){
