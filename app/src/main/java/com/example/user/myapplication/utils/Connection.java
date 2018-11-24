@@ -1,7 +1,6 @@
 package com.example.user.myapplication.utils;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,8 +8,6 @@ import android.util.Log;
 
 import org.w3c.dom.Document;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,18 +18,16 @@ public class Connection {
     public static Document getDoc(String link) {
         try {
             URL url = new URL(link);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            InputStream inputStream = connection.getInputStream();
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            return builder.parse(inputStream);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            return db.parse(url.openStream());
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("myLog",  e.getMessage());
             return null;
         }
     }
+
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

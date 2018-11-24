@@ -1,7 +1,11 @@
 package com.example.user.myapplication.utils;
 
+import android.util.Log;
+
 import com.example.user.myapplication.model.RSSFeed;
 import com.example.user.myapplication.model.RSSItem;
+import com.orm.query.Select;
+import com.orm.util.Collection;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,7 +44,7 @@ public class RSSParser {
     }
 
 
-    public static ArrayList<RSSItem> getRSSFeedItems(String url){
+    public static ArrayList<RSSItem> getRSSFeedItems(String url, RSSItem lastRssItem){
         ArrayList<RSSItem> itemsList = new ArrayList<>();
 
         Document doc = Connection.getDoc(url);
@@ -49,6 +53,7 @@ public class RSSParser {
                 Element root = doc.getDocumentElement();
                 Node channel = root.getChildNodes().item(1);
                 NodeList items = channel.getChildNodes();
+                Log.d("myDB", "ITEMS LENGTH: " + items.getLength() + url);
                 for (int i = 0; i < items.getLength(); i++) {
                     Node element = items.item(i);
                     if (element.getNodeName().equalsIgnoreCase("item")) {
@@ -62,6 +67,11 @@ public class RSSParser {
 
                         RSSItem rssItem = new RSSItem(image, title, description, link, pubDate, url);
 
+                        if (lastRssItem != null && equalsRssItems(rssItem)) {
+                            Log.d("myDB", "BREAK");
+                            break;
+                        }
+
                         itemsList.add(rssItem);
                     }
                 }
@@ -73,6 +83,15 @@ public class RSSParser {
     }
 
 
+    private static Boolean equalsRssItems(RSSItem item){
+        ArrayList<RSSItem> find_items = (ArrayList<RSSItem>)RSSItem.find(RSSItem.class, "link = ?", item.getLink());
+        if (find_items.size() != 0){
+            //Log.d("myDB", "CMP: " + item.getTitle());
+            return true;
+        }
+        //Log.d("myDB", "CMP: " + item.getTitle());
+        return false;
+    }
 
 
 
@@ -107,4 +126,13 @@ public class RSSParser {
         }
         return "";
     }
+
+    public static ArrayList<RSSItem> getRssItems(String rssLink){
+        return (ArrayList<RSSItem>) Select
+                .from(RSSItem.class)
+                .where("rsslink = ?", new String[]{rssLink})
+                .orderBy("pub_date Desc")
+                .list();
+    }
+
 }

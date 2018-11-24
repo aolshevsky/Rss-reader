@@ -2,37 +2,32 @@ package com.example.user.myapplication.fragment;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.opengl.Visibility;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import es.dmoral.toasty.Toasty;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.ListAdapter;
 import com.example.user.myapplication.Adapter.VerticalSpace;
+import com.example.user.myapplication.Presenter.ReadRssPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.model.RSSItem;
-import com.example.user.myapplication.Presenter.ReadRssPresenter;
 import com.example.user.myapplication.utils.Connection;
+import com.example.user.myapplication.utils.Parser;
+import com.example.user.myapplication.utils.RSSParser;
+import com.orm.query.Select;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import es.dmoral.toasty.Toasty;
 
 
 public class NewsFragment extends Fragment implements IReadRssView {
@@ -69,30 +64,36 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
 
     private void loadNews(){
-        if(Connection.isOnline(getContext())) {
-            initializeRecyclerView();
-            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
+        initializeRecyclerView();
 
-            adapter.addModels(new ArrayList<>(rssItems));
+        if(Connection.isOnline(getContext())) {
+            ArrayList<RSSItem> rssItems = RSSParser.getRssItems(rssLink);
+            //Log.d("myDB", "Items2: " + String.valueOf(rssItems.size()));
+            Parser.sortDates(rssItems);
+            adapter.addModels(rssItems);
             newsRecyclerView.setAdapter(adapter);
-            ReadRssPresenter readRss = new ReadRssPresenter(rssLink);
+            //Log.d("myDB", "Last item: " + rssItems.get(0).getTitle());
+            ReadRssPresenter readRss = new ReadRssPresenter(rssLink, rssItems.size() != 0 ? rssItems.get(0):  null);
             readRss.attachView(this);
             readRss.execute();
         } else {
-            initializeRecyclerView();
-            List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-
-            adapter.addModels(new ArrayList<>(rssItems));
+            ArrayList<RSSItem> rssItems = RSSParser.getRssItems(rssLink);
+            Parser.sortDates(rssItems);
+            //Log.d("myDB", "Items2: " + String.valueOf(rssItems.size()));
+            adapter.addModels(rssItems);
             newsRecyclerView.setAdapter(adapter);
             Toasty.error(getContext(), "No Internet Connection. See last saving news.", Toast.LENGTH_LONG).show();
         }
     }
 
+
+
     @Override
     public void checkNeedToUpdateNews(final ArrayList<RSSItem> newRssItems) {
-        List<RSSItem> rssItems = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-        if (newRssItems != null){
-            if (!newRssItems.get(0).getTitle().equals(rssItems.get(0).getTitle())){
+        ArrayList<RSSItem> rssItems = RSSParser.getRssItems(rssLink);
+        Parser.sortDates(rssItems);
+        if (newRssItems.size() != 0){
+            if (rssItems.size() == 0 || !newRssItems.get(0).getTitle().equals(rssItems.get(0).getTitle())){
                 reload_news_btn.setVisibility(View.VISIBLE);
                 Toasty.info(getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
                 reload_news_btn.setOnClickListener(new View.OnClickListener() {
@@ -131,14 +132,19 @@ public class NewsFragment extends Fragment implements IReadRssView {
     @Override
     public void setListAdapter(ArrayList<RSSItem> rssItems) {
 
-        List<RSSItem> rssItemsDelete = RSSItem.find(RSSItem.class, "rsslink = ?", rssLink);
-        Log.d("DB", "Items: " + String.valueOf(rssItemsDelete.size()));
+        ArrayList<RSSItem> rssItemsDelete = RSSParser.getRssItems(rssLink);
+        Parser.sortDates(rssItemsDelete);
+        //Log.d("myDB", "Items delete: " + String.valueOf(rssItemsDelete.size()));
+        //Log.d("myDB", "Items new: " + String.valueOf(rssItems.size()));
+        /*
         for (RSSItem item:rssItemsDelete) {
             item.delete();
         }
+        */
         for (RSSItem item:rssItems) {
             item.save();
         }
+        rssItems.addAll(rssItemsDelete);
         adapter.addModels(rssItems);
         newsRecyclerView.setAdapter(adapter);
     }

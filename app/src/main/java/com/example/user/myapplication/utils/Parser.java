@@ -2,8 +2,13 @@ package com.example.user.myapplication.utils;
 
 import android.util.Log;
 
+import com.example.user.myapplication.model.RSSItem;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -41,5 +46,19 @@ public class Parser {
         } else {
             return 2;
         }
+    }
+
+    public static void sortDates(ArrayList<RSSItem> rssItems){
+        Collections.sort(rssItems, new Comparator<RSSItem>() {
+            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+            @Override
+            public int compare(RSSItem o1, RSSItem o2) {
+                try {
+                    return format.parse(o2.getPubDate()).compareTo(format.parse(o1.getPubDate()));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
     }
 }

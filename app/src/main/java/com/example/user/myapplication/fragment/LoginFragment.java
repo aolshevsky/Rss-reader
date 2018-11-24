@@ -34,11 +34,7 @@ public class LoginFragment extends Fragment implements ILoginView {
     private FirebaseAuth firebaseAuth;
 
     private LoginPresenter loginPresenter;
-    private IListener switchViewListener;
 
-    public interface IListener {
-        void onSwitchView();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +85,6 @@ public class LoginFragment extends Fragment implements ILoginView {
             @Override
             public void onClick(View v) {
                 ((LoginActivity)getActivity()).onRegisterSwitchClick();
-                //switchViewListener.onSwitchView();
             }
         });
     }

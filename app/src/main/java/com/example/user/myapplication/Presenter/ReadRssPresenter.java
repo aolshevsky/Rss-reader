@@ -31,16 +31,22 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
 
     private ProgressDialog progressDialog;
     private ArrayList<RSSItem> rssItems;
+    private RSSItem lastRssItem;
 
     public void attachView(IReadRssView view){
         this.view = view;
-        progressDialog = view.getProgressDialog();
-        progressDialog.setMessage("Loading...");
+        initializePD();
+    }
+
+    public ReadRssPresenter(String address, RSSItem item) {
+        this.lastRssItem = item;
+        this.address = address;
         rssItems = new ArrayList<>();
     }
 
-    public ReadRssPresenter(String address) {
-        this.address = address;
+    private void initializePD(){
+        progressDialog = view.getProgressDialog();
+        progressDialog.setMessage("Loading...");
     }
 
     @Override
@@ -62,7 +68,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         Log.d("myLog", "doInBackground");
-        rssItems.addAll(RSSParser.getRSSFeedItems(address));
+        rssItems.addAll(RSSParser.getRSSFeedItems(address, lastRssItem));
         return null;
     }
 
