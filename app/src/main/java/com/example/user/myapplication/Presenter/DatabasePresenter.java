@@ -68,9 +68,11 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
 
     @Override
     public void uploadImageToFirebaseStorage(String img_path){
-        ProgressDialog progressBar = view.getProgressDialog();
-        //progressBar.setMessage("Uploading...");
-        //progressBar.show();
+        final ProgressDialog pDialog = view.getProgressDialog();
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.setMessage("Uploading...");
+        pDialog.show();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         Uri file = Uri.fromFile(new File(img_path));
         String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
@@ -81,21 +83,21 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         view.onSuccessMessage("Upload image success");
-                        //progressBar.dismiss();
+                        pDialog.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         view.onErrorMessage("Upload image failed");
-                        //progressBar.dismiss();
+                        pDialog.dismiss();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        //progressBar.setMessage("Uploaded " + ((int) progress) + "%...");
+                        pDialog.setMessage("Uploaded " + ((int) progress) + "%...");
                     }
                 })
                 .addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
@@ -108,14 +110,16 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
 
     @Override
     public void downloadFromFirebaseStorage() {
-        final ProgressDialog progressBar = view.getProgressDialog();
+        final ProgressDialog pDialog = view.getProgressDialog();
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
         StorageReference image_storage = storageRef.child(new_file_path);
         if (image_storage != null) {
-            progressBar.setTitle("Downloading...");
-            progressBar.setMessage(null);
-            progressBar.show();
+            pDialog.setTitle("Downloading...");
+            pDialog.setMessage(null);
+            pDialog.show();
             try {
                 final File localFile = File.createTempFile("images", ".jpg");
 
@@ -125,12 +129,12 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                         Bitmap bmp = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         view.setProfileImg(bmp);
                         saveUser();
-                        progressBar.dismiss();
+                        pDialog.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        progressBar.dismiss();
+                        pDialog.dismiss();
                         view.onErrorMessage("Download failed. Check internet connection");
                     }
                 }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
@@ -138,7 +142,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                     public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
-                        progressBar.setMessage("Downloaded " + ((int) progress) + "%...");
+                        pDialog.setMessage("Downloaded " + ((int) progress) + "%...");
                     }
                 });
             } catch (IOException e) {
