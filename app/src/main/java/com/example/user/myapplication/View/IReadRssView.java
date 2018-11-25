@@ -10,5 +10,5 @@ public interface IReadRssView {
     ProgressDialog getProgressDialog();
     void initializeRecyclerView();
     void setListAdapter(ArrayList<RSSItem> rssItems);
-    void checkNeedToUpdateNews(ArrayList<RSSItem> newRssItems);
+    void checkNeedToUpdateNews(ArrayList<RSSItem> newRssItems, Boolean isWithUpdateButton);
 }

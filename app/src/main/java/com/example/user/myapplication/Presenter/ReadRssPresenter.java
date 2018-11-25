@@ -32,15 +32,17 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
     private ProgressDialog progressDialog;
     private ArrayList<RSSItem> rssItems;
     private RSSItem lastRssItem;
+    private Boolean isWithUpdateButton;
 
     public void attachView(IReadRssView view){
         this.view = view;
         initializePD();
     }
 
-    public ReadRssPresenter(String address, RSSItem item) {
+    public ReadRssPresenter(String address, RSSItem item, Boolean isWithUpdateButton) {
         this.lastRssItem = item;
         this.address = address;
+        this.isWithUpdateButton = isWithUpdateButton;
         rssItems = new ArrayList<>();
     }
 
@@ -61,7 +63,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         Log.d("myLog", "onPostExecute");
         //progressDialog.dismiss();
-        view.checkNeedToUpdateNews(rssItems);
+        view.checkNeedToUpdateNews(rssItems, isWithUpdateButton);
     }
 
 
