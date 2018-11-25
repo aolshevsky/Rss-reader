@@ -16,7 +16,7 @@ import java.util.TimeZone;
 public class Parser {
 
     public static String formatDate(String currentDate){
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
         try {
             Date newDate = format.parse(currentDate);
             format = new SimpleDateFormat("dd-MM-yyyy, h:mm a", Locale.ENGLISH);
@@ -50,7 +50,7 @@ public class Parser {
 
     public static void sortDates(ArrayList<RSSItem> rssItems){
         Collections.sort(rssItems, new Comparator<RSSItem>() {
-            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
             @Override
             public int compare(RSSItem o1, RSSItem o2) {
                 try {
