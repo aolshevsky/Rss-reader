@@ -29,7 +29,6 @@ import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.PermissionsHelper;
 import com.example.user.myapplication.utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 
@@ -41,7 +40,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         databaseManager = DatabaseManager.getInstance();
         sharedPref = new SharedPref(this);
         initializeTheme();
-        initializeFirebase();
+        initializeDatabase();
 
         DeepLinksPresenter deepLinksPresenter = DeepLinksPresenter.getInstance();
         deepLinksPresenter.attachView(this);
@@ -99,9 +97,9 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
     }
 
-    private void initializeFirebase(){
+    private void initializeDatabase(){
         Log.d(LOG_TAG, "LogoutFragment");
-        if(databaseManager.getAuth().getCurrentUser() == null){
+        if(databaseManager.getAuthUser() == null){
             Log.d(LOG_TAG, "Logout1");
             finish();
             startActivity(new Intent(this, LoginActivity.class));
