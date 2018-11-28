@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
@@ -64,8 +65,9 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
     private DatabasePresenter databasePresenter;
     private SharedPref sharedPref;
+    private DatabaseManager databaseManager;
 
-    private FirebaseAuth firebaseAuth;
+
 
 
     @Override
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         databasePresenter =  new DatabasePresenter();
         databasePresenter.attachView(this);
         permissionsHelper = PermissionsHelper.getInstance();
+        databaseManager = DatabaseManager.getInstance();
         sharedPref = new SharedPref(this);
         initializeTheme();
         initializeFirebase();
@@ -97,9 +100,8 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     }
 
     private void initializeFirebase(){
-        firebaseAuth = FirebaseAuth.getInstance();
         Log.d(LOG_TAG, "LogoutFragment");
-        if(firebaseAuth.getCurrentUser() == null){
+        if(databaseManager.getAuth().getCurrentUser() == null){
             Log.d(LOG_TAG, "Logout1");
             finish();
             startActivity(new Intent(this, LoginActivity.class));
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                         return true;
                     case R.id.logout_item:
                         onNewsFragment(false);
-                        databasePresenter.getFirebaseAuth().signOut();
+                        databaseManager.getAuth().signOut();
                         finish();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         return true;
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
                     navigateTo(R.id.addNewSiteFragment);
                 return true;
             case R.id.logout_item:
-                firebaseAuth.signOut();
+                databaseManager.getAuth().signOut();
                 finish();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 return true;

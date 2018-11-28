@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.RegisterPresenter;
 import com.example.user.myapplication.R;
@@ -36,10 +37,9 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
     private EditText editTextEmail, editTextName, editTextSurname,
             editTextPhone, editTextPassword, editTextConfirmPassword;
 
-    private FirebaseAuth firebaseAuth;
     private DatabasePresenter databasePresenter;
-
     private RegisterPresenter registerPresenter;
+    private DatabaseManager databaseManager;
 
 
     @Override
@@ -48,7 +48,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
 
         registerView = inflater.inflate(R.layout.fragment_register, container, false);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        databaseManager = DatabaseManager.getInstance();
         databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
         registerPresenter = RegisterPresenter.getInstance();
@@ -73,7 +73,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerPresenter.registerUser(firebaseAuth);
+                registerPresenter.registerUser(databaseManager.getAuth());
             }
         });
         to_login_btn.setOnClickListener(new View.OnClickListener() {

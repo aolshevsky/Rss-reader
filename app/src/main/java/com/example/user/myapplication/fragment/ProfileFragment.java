@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.ImagePresenter;
 import com.example.user.myapplication.R;
@@ -65,6 +66,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     private PermissionsHelper permissionsHelper;
     private ImagePresenter imagePresenter;
     private DatabasePresenter databasePresenter;
+    private DatabaseManager databaseManager;
 
 
     @Override
@@ -77,6 +79,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         imagePresenter.attachView(this);
         databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
+        databaseManager = DatabaseManager.getInstance();
 
         initializeView();
 
@@ -208,11 +211,10 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     }
 
     private void loadUserInformation(){
-        final FirebaseUser user = databasePresenter.getFirebaseAuth().getCurrentUser();
-        databasePresenter.getDatabaseUsers().addValueEventListener(new ValueEventListener() {
+        databaseManager.getDatabaseRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
+                User userInfo = dataSnapshot.child(databaseManager.getAuthUserID()).getValue(User.class);
                 if(userInfo != null) {
                     editTextName.setText(userInfo.getName());
                     editTextName.setSelection(editTextName.getText().length());
@@ -246,7 +248,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     }
 
     public boolean checkNeedToUpdateUser(){
-        User cur_user = databasePresenter.getCurrentUser();
+        User cur_user = databaseManager.getCurrentUser();
         String name = editTextName.getText().toString();
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();

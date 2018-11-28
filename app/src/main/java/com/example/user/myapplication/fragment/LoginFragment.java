@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.LoginPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.ILoginView;
@@ -31,8 +32,6 @@ public class LoginFragment extends Fragment implements ILoginView {
 
     private EditText editTextEmail, editTextPassword;
 
-    private FirebaseAuth firebaseAuth;
-
     private LoginPresenter loginPresenter;
 
 
@@ -44,7 +43,7 @@ public class LoginFragment extends Fragment implements ILoginView {
 
         loginPresenter = LoginPresenter.getInstance();
         loginPresenter.attachView(this);
-        initializeFirebase();
+        initializeDatabase();
 
         initializeView();
         getActivity().setTitle("Login");
@@ -62,9 +61,9 @@ public class LoginFragment extends Fragment implements ILoginView {
         Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void initializeFirebase(){
-        firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null){
+    private void initializeDatabase(){
+        DatabaseManager databaseManager = DatabaseManager.getInstance();
+        if(databaseManager.getAuth().getCurrentUser() != null){
             getActivity().finish();
             startActivity(new Intent(getContext(), MainActivity.class));
         }
@@ -78,7 +77,7 @@ public class LoginFragment extends Fragment implements ILoginView {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginPresenter.userLogin(firebaseAuth);
+                loginPresenter.userLogin();
             }
         });
         to_register_btn.setOnClickListener(new View.OnClickListener() {

@@ -119,9 +119,9 @@ public class NewsFragment extends Fragment implements IReadRssView {
                     reload_news_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            reload_news_btn.setVisibility(View.INVISIBLE);
                             initializeRecyclerView();
                             setListAdapter(newRssItems);
-                            reload_news_btn.setVisibility(View.INVISIBLE);
                         }
                     });
                 } else {

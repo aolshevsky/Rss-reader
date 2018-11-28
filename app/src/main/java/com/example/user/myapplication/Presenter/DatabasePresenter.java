@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.Interface.IDatabasePresenter;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.model.User;
@@ -33,37 +34,17 @@ import androidx.annotation.NonNull;
 
 public class DatabasePresenter extends BasePresenter<IDatabaseView> implements IDatabasePresenter{
 
-    private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseUsers;
-    private StorageReference storageRef;
 
-    private User currentUser;
+
+    private DatabaseManager manager;
 
     public DatabasePresenter(){
-        databaseUsers = FirebaseDatabase.getInstance().getReference();
-        storageRef = FirebaseStorage.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-    }
-
-
-    @Override
-    public DatabaseReference getDatabaseUsers(){
-        return databaseUsers;
-    }
-    @Override
-    public FirebaseAuth getFirebaseAuth(){
-        return firebaseAuth;
-    }
-    @Override
-    public User getCurrentUser(){
-        return currentUser;
+        manager = DatabaseManager.getInstance();
     }
 
     @Override
     public void saveUserToDatabase(User userInfo){
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        databaseUsers.child(user.getUid()).setValue(userInfo);
-        Log.d("myLogs", "Save user" + user.getEmail());
+        manager.savaUser(userInfo);
     }
 
     @Override
@@ -73,10 +54,8 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
         pDialog.setCancelable(false);
         pDialog.setMessage("Uploading...");
         pDialog.show();
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
         Uri file = Uri.fromFile(new File(img_path));
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
-        StorageReference image_storage = storageRef.child(new_file_path);
+        StorageReference image_storage = manager.getImageStorage();
 
         image_storage.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -113,9 +92,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
         final ProgressDialog pDialog = view.getProgressDialog();
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-        String new_file_path =  String.format("profile_images/users/%s/profile_icon.jpg", user.getUid());
-        StorageReference image_storage = storageRef.child(new_file_path);
+        StorageReference image_storage = manager.getImageStorage();
         if (image_storage != null) {
             pDialog.setTitle("Downloading...");
             pDialog.setMessage(null);
@@ -155,21 +132,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
 
     @Override
     public void loadUserInformationMenu(){
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-        databaseUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User userInfo = dataSnapshot.child(user.getUid()).getValue(User.class);
-                currentUser = userInfo;
-                if(userInfo != null) {
-                    view.setUserInfo(userInfo);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                view.onErrorMessage("Load user information failed");
-            }
-        });
+        manager.loadUserInformation(view);
     }
 
     @Override
@@ -193,8 +156,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
             return;
         }
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        String email = user.getEmail();
+        String email = manager.getAuthUserEmail();
         userInfo.setEmail(email);
         if(!userInfo.getImg_path().equals(""))
             uploadImageToFirebaseStorage(userInfo.getImg_path());

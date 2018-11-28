@@ -1,20 +1,22 @@
 package com.example.user.myapplication.Presenter;
 
-import android.util.Log;
-
+import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.Interface.ILoginPresenter;
 import com.example.user.myapplication.View.ILoginView;
 import com.example.user.myapplication.model.User;
 import com.example.user.myapplication.utils.Constants;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginPresenter {
 
     private static LoginPresenter instance = new LoginPresenter();
-
+    private DatabaseManager databaseManager;
 
     public static LoginPresenter getInstance(){
         return instance;
+    }
+
+    private LoginPresenter(){
+        databaseManager = DatabaseManager.getInstance();
     }
 
     private int onLogin(String email, String password) {
@@ -24,7 +26,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginP
 
 
     @Override
-    public void userLogin(FirebaseAuth firebaseAuth) {
+    public void userLogin() {
         String email = view.getUserLogin();
         String password = view.getUserPassword();
 
@@ -40,7 +42,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginP
             return;
         }
 
-        view.addListenerToFirebaseAuth(firebaseAuth.signInWithEmailAndPassword(email, password));
+        view.addListenerToFirebaseAuth(databaseManager.getAuth().signInWithEmailAndPassword(email, password));
 
     }
 
