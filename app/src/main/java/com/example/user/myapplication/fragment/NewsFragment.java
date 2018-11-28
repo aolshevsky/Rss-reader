@@ -4,8 +4,6 @@ package com.example.user.myapplication.fragment;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +12,13 @@ import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.ListAdapter;
 import com.example.user.myapplication.Adapter.VerticalSpace;
-import com.example.user.myapplication.Presenter.ReadRssPresenter;
+import com.example.user.myapplication.Presenter.ReadRssTask;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.model.RSSItem;
 import com.example.user.myapplication.utils.Connection;
 import com.example.user.myapplication.utils.Parser;
 import com.example.user.myapplication.utils.RSSParser;
-import com.orm.query.Select;
 
 import java.util.ArrayList;
 
@@ -96,7 +93,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
     }
 
     private void refreshOnlineNews(ArrayList<RSSItem> rssItems, Boolean isWithUpdateButton){
-        ReadRssPresenter readRss = new ReadRssPresenter(rssLink, rssItems.size() != 0 ? rssItems.get(0):  null, isWithUpdateButton);
+        ReadRssTask readRss = new ReadRssTask(rssLink, rssItems.size() != 0 ? rssItems.get(0):  null, isWithUpdateButton);
         readRss.attachView(this);
         readRss.execute();
     }

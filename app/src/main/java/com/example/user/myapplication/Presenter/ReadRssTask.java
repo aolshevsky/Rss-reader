@@ -11,7 +11,7 @@ import com.example.user.myapplication.utils.RSSParser;
 import java.util.ArrayList;
 
 
-public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
+public class ReadRssTask extends AsyncTask<Void, Void, Void> {
 
     private IReadRssView view;
 /*
@@ -39,7 +39,7 @@ public class ReadRssPresenter extends AsyncTask<Void, Void, Void> {
         initializePD();
     }
 
-    public ReadRssPresenter(String address, RSSItem item, Boolean isWithUpdateButton) {
+    public ReadRssTask(String address, RSSItem item, Boolean isWithUpdateButton) {
         this.lastRssItem = item;
         this.address = address;
         this.isWithUpdateButton = isWithUpdateButton;
