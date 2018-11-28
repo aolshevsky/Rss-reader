@@ -8,7 +8,6 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp" >
 
-
     <LinearLayout
         android:id="@+id/profile_click_place"
         android:layout_width="match_parent"
@@ -41,6 +40,5 @@
             android:layout_marginTop="5dp"
             android:textColor="?attr/backgroundcolor" />
     </LinearLayout>
-
 
 </LinearLayout>

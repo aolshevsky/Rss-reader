@@ -12,7 +12,7 @@ public interface IRegisterView {
     void validUserSurname(String message);
     void validUserEmail(String message);
     void validUserPhone(String message);
-    void validUserPassord(String message);
-    void validUserConfPassord(String message);
+    void validUserPassword(String message);
+    void validUserConfPassword(String message);
     void addListenerToFirebaseAuth(Task<AuthResult> authResultTask, User user);
 }

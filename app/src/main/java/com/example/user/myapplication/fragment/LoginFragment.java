@@ -120,8 +120,9 @@ public class LoginFragment extends Fragment implements ILoginView {
                 if(task.isSuccessful()){
                     startActivity(new Intent(getContext(), MainActivity.class));
                     getActivity().finish();
+                    onLoginSuccess("Login Success");
                 } else {
-                    onLoginError("Could not register.." + task.getException());
+                    onLoginError(task.getException().getMessage());
                 }
             }
         });

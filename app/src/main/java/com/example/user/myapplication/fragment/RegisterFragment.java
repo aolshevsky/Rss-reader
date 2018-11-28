@@ -104,7 +104,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         String surname = editTextSurname.getText().toString();
         String phone_number = editTextPhone.getText().toString();
 
-        return new User(name, surname, phone_number, email, password, con_password);
+        return new User(name, surname, email, phone_number, password, con_password);
     }
 
 
@@ -118,8 +118,9 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
                     databasePresenter.saveUserToDatabase(userInfo);
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
+                    onRegisterSuccess("Register Success");
                 } else {
-                    onRegisterError("Could not register.." + task.getException());
+                    onRegisterError(task.getException().getMessage());
                 }
             }
         });
@@ -150,13 +151,13 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
     }
 
     @Override
-    public void validUserPassord(String message) {
+    public void validUserPassword(String message) {
         editTextPassword.setError(message);
         editTextPassword.requestFocus();
     }
 
     @Override
-    public void validUserConfPassord(String message) {
+    public void validUserConfPassword(String message) {
         editTextConfirmPassword.setError(message);
         editTextConfirmPassword.requestFocus();
     }

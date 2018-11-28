@@ -1,5 +1,7 @@
 package com.example.user.myapplication.Presenter;
 
+import android.util.Log;
+
 import com.example.user.myapplication.Presenter.Interface.ILoginPresenter;
 import com.example.user.myapplication.View.ILoginView;
 import com.example.user.myapplication.model.User;
@@ -36,9 +38,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginP
         if (loginCode == Constants.VALID_PASSWORD){
             view.validUserPassord("Password must be at least 6 characters");
             return;
-        }
-        if(loginCode == Constants.LOGIN_SUCCESS) {
-            view.onLoginSuccess("Login Success");
         }
 
         view.addListenerToFirebaseAuth(firebaseAuth.signInWithEmailAndPassword(email, password));

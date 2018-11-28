@@ -7,5 +7,6 @@
         <attr name="toolbar" format="color"/>
         <attr name="button_txt" format="color"/>
         <attr name="button_color" format="color"/>
+        <attr name="nav_bar_color" format="color"/>
     </declare-styleable>
 </resources>

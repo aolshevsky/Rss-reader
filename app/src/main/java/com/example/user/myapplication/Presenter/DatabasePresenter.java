@@ -205,12 +205,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
     @Override
     public int validEditData(String name, String surname, String phone_number){
         User user = new User(name, surname, phone_number);
-        int editCode = user.isValidEditData();
-        /*
-        if(editCode == -1)
-            view.onSuccessMessage("Save Success");
-        */
-        return editCode;
+        return user.isValidEditData();
     }
 
 }

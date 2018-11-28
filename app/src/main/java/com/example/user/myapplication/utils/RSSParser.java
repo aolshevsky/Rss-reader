@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.user.myapplication.model.RSSFeed;
 import com.example.user.myapplication.model.RSSItem;
 import com.orm.query.Select;
-import com.orm.util.Collection;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,7 +29,7 @@ public class RSSParser {
 
                 String title = getValue(e, Constants.TAG_TITLE);
                 String link = getValue(e, Constants.TAG_LINK);
-                String description = getValue(e, Constants.TAG_DESRIPTION);
+                String description = getValue(e, Constants.TAG_DESCRIPTION);
                 String language = getValue(e, Constants.TAG_LANGUAGE);
 
                 rssFeed = new RSSFeed(title, description, link, url, language);
@@ -62,7 +61,7 @@ public class RSSParser {
                         String title = getVal(nodes, Constants.TAG_TITLE, false);
                         String image = getVal(nodes, Constants.TAG_IMAGE, true);
                         String link = getVal(nodes, Constants.TAG_LINK, false);
-                        String description = getVal(nodes, Constants.TAG_DESRIPTION, false);
+                        String description = getVal(nodes, Constants.TAG_DESCRIPTION, false);
                         String pubDate = getVal(nodes, Constants.TAG_PUB_DATE, false);
 
                         RSSItem rssItem = new RSSItem(image, title, description, link, pubDate, url);

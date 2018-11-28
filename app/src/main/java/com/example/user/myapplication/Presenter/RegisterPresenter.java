@@ -42,15 +42,12 @@ public class RegisterPresenter extends BasePresenter<IRegisterView> implements I
         }
 
         if (registerCode == Constants.VALID_PASSWORD){
-            view.validUserPassord("Password must be at least 6 characters");
+            view.validUserPassword("Password must be at least 6 characters");
             return;
         }
         if (registerCode == Constants.VALID_CONF_PASSWORD){
-            view.validUserConfPassord("Password not matching");
+            view.validUserConfPassword("Password not matching");
             return;
-        }
-        if(registerCode == Constants.REGISTER_SUCCESS) {
-            view.onRegisterSuccess("Register Success");
         }
 
         view.addListenerToFirebaseAuth(

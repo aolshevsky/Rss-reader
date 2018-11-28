@@ -1,8 +1,10 @@
 package com.example.user.myapplication.model;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 
+import com.example.user.myapplication.utils.Connection;
 import com.example.user.myapplication.utils.Constants;
 
 public class User {
@@ -83,10 +85,10 @@ public class User {
     public int isValidLoginData(){
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return Constants.VALID_EMAIL;
-        if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
+        if(password == null || password.length() < Constants.MIN_PASSWORD_LENGTH)
             return Constants.VALID_PASSWORD;
-        else
-            return Constants.LOGIN_SUCCESS;
+        return Constants.LOGIN_SUCCESS;
+
     }
 
     public int isValidRegisterData(){
@@ -98,9 +100,9 @@ public class User {
             return Constants.EMPTY_PHONE_NUMBER;
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return Constants.VALID_EMAIL;
-        if(password != null && TextUtils.isEmpty(password) && password.length() < 6)
+        if(password == null || password.length() < Constants.MIN_PASSWORD_LENGTH)
             return Constants.VALID_PASSWORD;
-        if(password != null && password.equals(confirm_password))
+        if(confirm_password == null && password.equals(confirm_password))
             return Constants.VALID_CONF_PASSWORD;
         else
             return Constants.REGISTER_SUCCESS;

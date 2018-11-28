@@ -9,7 +9,7 @@ public class Constants {
     static String TAG_CHANNEL = "channel";
     static String TAG_TITLE = "title";
     static String TAG_LINK = "link";
-    static String TAG_DESRIPTION = "description";
+    static String TAG_DESCRIPTION = "description";
     static String TAG_IMAGE = "enclosure";
     static String TAG_LANGUAGE = "language";
     static String TAG_PUB_DATE = "pubDate";
@@ -22,4 +22,5 @@ public class Constants {
     public static int LOGIN_SUCCESS = -1;
     public static int REGISTER_SUCCESS = -1;
     public static int EDIT_SUCCESS = -1;
+    public static int MIN_PASSWORD_LENGTH = 6;
 }
