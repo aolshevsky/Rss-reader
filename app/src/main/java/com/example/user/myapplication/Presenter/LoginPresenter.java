@@ -3,8 +3,8 @@ package com.example.user.myapplication.Presenter;
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.Interface.ILoginPresenter;
 import com.example.user.myapplication.View.ILoginView;
-import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.Constants;
+import com.example.user.myapplication.Model.User;
+import com.example.user.myapplication.Utils.Constants;
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginPresenter {
 

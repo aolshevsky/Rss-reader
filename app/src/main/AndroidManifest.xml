@@ -21,7 +21,7 @@
         <meta-data android:name="QUERY_LOG" android:value="true"/>
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example.user.myapplication.model" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -37,7 +37,7 @@
             </intent-filter>
             <nav-graph android:value="@navigation/nav_graph"/>
         </activity>
-        <activity android:name=".activity.NewsDetailsActivity" />
+        <activity android:name=".Activity.NewsDetailsActivity" />
     </application>
 
 </manifest>

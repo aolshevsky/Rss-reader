@@ -2,8 +2,8 @@ package com.example.user.myapplication.Presenter;
 
 import com.example.user.myapplication.Presenter.Interface.IRegisterPresenter;
 import com.example.user.myapplication.View.IRegisterView;
-import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.Constants;
+import com.example.user.myapplication.Model.User;
+import com.example.user.myapplication.Utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterPresenter extends BasePresenter<IRegisterView> implements IRegisterPresenter {

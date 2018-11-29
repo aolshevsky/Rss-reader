@@ -7,37 +7,37 @@
 
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.user.myapplication.fragment.AboutFragment"
+        android:name="com.example.user.myapplication.Fragment.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.user.myapplication.fragment.ProfileFragment"
+        android:name="com.example.user.myapplication.Fragment.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.user.myapplication.fragment.HomeFragment"
+        android:name="com.example.user.myapplication.Fragment.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.user.myapplication.fragment.SettingsFragment"
+        android:name="com.example.user.myapplication.Fragment.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.example.user.myapplication.fragment.NewsFragment"
+        android:name="com.example.user.myapplication.Fragment.NewsFragment"
         android:label="fragment_news"
         tools:layout="@layout/fragment_news" />
     <fragment
         android:id="@+id/rssItemListFragment"
-        android:name="com.example.user.myapplication.fragment.RssItemListFragment"
+        android:name="com.example.user.myapplication.Fragment.RssItemListFragment"
         android:label="fragment_rss_item_list"
         tools:layout="@layout/fragment_rss_item_list" />
     <fragment
         android:id="@+id/addNewSiteFragment"
-        android:name="com.example.user.myapplication.fragment.AddNewSiteFragment"
+        android:name="com.example.user.myapplication.Fragment.AddNewSiteFragment"
         android:label="fragment_add_new_site"
         tools:layout="@layout/fragment_add_new_site" />
 </navigation>

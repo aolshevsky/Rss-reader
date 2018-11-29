@@ -1,4 +1,4 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
-import com.example.user.myapplication.model.RSSFeed;
-import com.example.user.myapplication.utils.Parser;
-import com.example.user.myapplication.utils.RSSParser;
+import com.example.user.myapplication.Activity.MainActivity;
+import com.example.user.myapplication.Model.RSSFeed;
+import com.example.user.myapplication.Utils.Parser;
+import com.example.user.myapplication.Utils.RSSParser;
 
 import java.util.List;
 

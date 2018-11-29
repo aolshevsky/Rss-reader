@@ -2,9 +2,9 @@ package com.example.user.myapplication.Presenter;
 
 import com.example.user.myapplication.Presenter.Interface.INewsPresenter;
 import com.example.user.myapplication.View.IReadRssView;
-import com.example.user.myapplication.model.RSSItem;
-import com.example.user.myapplication.utils.Parser;
-import com.example.user.myapplication.utils.RSSParser;
+import com.example.user.myapplication.Model.RSSItem;
+import com.example.user.myapplication.Utils.Parser;
+import com.example.user.myapplication.Utils.RSSParser;
 
 import java.util.ArrayList;
 

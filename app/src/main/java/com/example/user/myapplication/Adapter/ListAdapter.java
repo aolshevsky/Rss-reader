@@ -10,11 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.NewsDetailsActivity;
-import com.example.user.myapplication.fragment.NewsFragment;
-import com.example.user.myapplication.model.RSSItem;
-import com.example.user.myapplication.utils.Connection;
-import com.example.user.myapplication.utils.Parser;
+import com.example.user.myapplication.Activity.NewsDetailsActivity;
+import com.example.user.myapplication.Model.RSSItem;
+import com.example.user.myapplication.Utils.Connection;
+import com.example.user.myapplication.Utils.Parser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,11 +1,9 @@
-package com.example.user.myapplication.model;
+package com.example.user.myapplication.Model;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 
-import com.example.user.myapplication.utils.Connection;
-import com.example.user.myapplication.utils.Constants;
+import com.example.user.myapplication.Utils.Constants;
 
 public class User {
 

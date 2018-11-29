@@ -1,6 +1,6 @@
 package com.example.user.myapplication.Presenter.Interface;
 
-import com.example.user.myapplication.model.RSSItem;
+import com.example.user.myapplication.Model.RSSItem;
 
 import java.util.ArrayList;
 

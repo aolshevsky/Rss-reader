@@ -1,21 +1,18 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import es.dmoral.toasty.Toasty;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.SiteListAdapter;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.model.RSSFeed;
+import com.example.user.myapplication.Model.RSSFeed;
 
 import java.util.List;
 

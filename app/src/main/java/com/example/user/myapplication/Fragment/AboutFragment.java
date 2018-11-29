@@ -1,4 +1,4 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.utils.PermissionsHelper;
+import com.example.user.myapplication.Utils.PermissionsHelper;
 
 import androidx.fragment.app.Fragment;
 

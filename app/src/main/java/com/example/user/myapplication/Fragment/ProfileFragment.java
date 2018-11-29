@@ -1,4 +1,4 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -28,10 +28,8 @@ import com.example.user.myapplication.Presenter.ImagePresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IImageView;
-import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.Constants;
-import com.example.user.myapplication.utils.PermissionsHelper;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.user.myapplication.Model.User;
+import com.example.user.myapplication.Utils.PermissionsHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -45,8 +43,8 @@ import androidx.fragment.app.Fragment;
 import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static com.example.user.myapplication.utils.Constants.CAMERA;
-import static com.example.user.myapplication.utils.Constants.GALLERY;
+import static com.example.user.myapplication.Utils.Constants.CAMERA;
+import static com.example.user.myapplication.Utils.Constants.GALLERY;
 
 
 public class ProfileFragment extends Fragment implements IImageView, IDatabaseView {

@@ -1,4 +1,4 @@
-package com.example.user.myapplication.activity;
+package com.example.user.myapplication.Activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -22,12 +22,12 @@ import com.example.user.myapplication.Presenter.DeepLinksPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IDeepLinksView;
-import com.example.user.myapplication.fragment.NewsFragment;
-import com.example.user.myapplication.fragment.ProfileFragment;
-import com.example.user.myapplication.fragment.RssItemListFragment;
-import com.example.user.myapplication.model.User;
-import com.example.user.myapplication.utils.PermissionsHelper;
-import com.example.user.myapplication.utils.SharedPref;
+import com.example.user.myapplication.Fragment.NewsFragment;
+import com.example.user.myapplication.Fragment.ProfileFragment;
+import com.example.user.myapplication.Fragment.RssItemListFragment;
+import com.example.user.myapplication.Model.User;
+import com.example.user.myapplication.Utils.PermissionsHelper;
+import com.example.user.myapplication.Utils.SharedPref;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;

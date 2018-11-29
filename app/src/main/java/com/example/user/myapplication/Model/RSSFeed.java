@@ -1,4 +1,4 @@
-package com.example.user.myapplication.model;
+package com.example.user.myapplication.Model;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;

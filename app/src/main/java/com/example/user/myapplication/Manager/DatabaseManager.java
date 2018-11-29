@@ -1,7 +1,7 @@
 package com.example.user.myapplication.Manager;
 
 import com.example.user.myapplication.View.IDatabaseView;
-import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

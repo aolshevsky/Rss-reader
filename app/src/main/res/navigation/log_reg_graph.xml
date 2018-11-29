@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.user.myapplication.fragment.LoginFragment"
+        android:name="com.example.user.myapplication.Fragment.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.user.myapplication.fragment.RegisterFragment"
+        android:name="com.example.user.myapplication.Fragment.RegisterFragment"
         android:label="RegisterFragment" />
 </navigation>

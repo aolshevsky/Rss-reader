@@ -1,8 +1,8 @@
-package com.example.user.myapplication.utils;
+package com.example.user.myapplication.Utils;
 
 import android.util.Log;
 
-import com.example.user.myapplication.model.RSSItem;
+import com.example.user.myapplication.Model.RSSItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

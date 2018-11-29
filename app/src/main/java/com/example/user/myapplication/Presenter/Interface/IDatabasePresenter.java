@@ -1,8 +1,6 @@
 package com.example.user.myapplication.Presenter.Interface;
 
-import com.example.user.myapplication.model.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import com.example.user.myapplication.Model.User;
 
 public interface IDatabasePresenter {
     void saveUserToDatabase(User userInfo);

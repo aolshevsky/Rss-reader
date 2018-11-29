@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.activity.MainActivity;
-import com.example.user.myapplication.model.RSSFeed;
+import com.example.user.myapplication.Activity.MainActivity;
+import com.example.user.myapplication.Model.RSSFeed;
 
 import java.util.List;
 

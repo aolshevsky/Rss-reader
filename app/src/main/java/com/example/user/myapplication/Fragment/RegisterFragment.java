@@ -1,4 +1,4 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,13 +17,12 @@ import com.example.user.myapplication.Presenter.RegisterPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IRegisterView;
-import com.example.user.myapplication.activity.LoginActivity;
-import com.example.user.myapplication.activity.MainActivity;
-import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.Activity.LoginActivity;
+import com.example.user.myapplication.Activity.MainActivity;
+import com.example.user.myapplication.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

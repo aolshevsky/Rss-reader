@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import androidx.appcompat.app.AlertDialog;
 
-import static com.example.user.myapplication.utils.Constants.IMAGE_DIRECTORY;
+import static com.example.user.myapplication.Utils.Constants.IMAGE_DIRECTORY;
 
 public class ImagePresenter extends BasePresenter<IImageView> implements IImagePresenter {
 

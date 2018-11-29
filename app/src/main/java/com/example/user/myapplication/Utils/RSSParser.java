@@ -1,9 +1,9 @@
-package com.example.user.myapplication.utils;
+package com.example.user.myapplication.Utils;
 
 import android.util.Log;
 
-import com.example.user.myapplication.model.RSSFeed;
-import com.example.user.myapplication.model.RSSItem;
+import com.example.user.myapplication.Model.RSSFeed;
+import com.example.user.myapplication.Model.RSSItem;
 import com.orm.query.Select;
 
 import org.w3c.dom.Document;

@@ -1,4 +1,4 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 
 import android.app.ProgressDialog;
@@ -16,8 +16,8 @@ import com.example.user.myapplication.Presenter.NewsPresenter;
 import com.example.user.myapplication.Presenter.ReadRssTask;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
-import com.example.user.myapplication.model.RSSItem;
-import com.example.user.myapplication.utils.Connection;
+import com.example.user.myapplication.Model.RSSItem;
+import com.example.user.myapplication.Utils.Connection;
 
 import java.util.ArrayList;
 

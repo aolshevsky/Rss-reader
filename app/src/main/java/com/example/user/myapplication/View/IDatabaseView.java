@@ -3,7 +3,7 @@ package com.example.user.myapplication.View;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 
-import com.example.user.myapplication.model.User;
+import com.example.user.myapplication.Model.User;
 
 public interface IDatabaseView {
     ProgressDialog getProgressDialog();

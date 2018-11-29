@@ -1,10 +1,9 @@
-package com.example.user.myapplication.fragment;
+package com.example.user.myapplication.Fragment;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.example.user.myapplication.R;
-import com.example.user.myapplication.utils.SharedPref;
+import com.example.user.myapplication.Utils.SharedPref;
 
 
 public class SettingsFragment extends Fragment {
