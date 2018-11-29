@@ -134,17 +134,14 @@ public class NewsFragment extends Fragment implements IReadRssView {
     @Override
     public void initializeRecyclerView() {
         int orientation = this.getResources().getConfiguration().orientation;
-        Boolean isHorizontal;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            isHorizontal = false;
             newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
-            isHorizontal = true;
             newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         }
 
         newsRecyclerView.addItemDecoration(new VerticalSpace(20));
-        adapter = new ListAdapter(getContext(), isHorizontal);
+        adapter = new ListAdapter(getContext());
     }
 
     @Override

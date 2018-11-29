@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dip" >
+    android:padding="8dip"
+    android:background="?attr/background_2" >
 
 
     <TextView
@@ -14,7 +15,7 @@
         android:paddingBottom="1dip"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="#303030"
+        android:textColor="?attr/header_txt_color"
         android:maxLines="1"
         android:text="Tut.by" />
 
@@ -26,7 +27,7 @@
         android:paddingBottom="3dp"
         android:textSize="14sp"
         android:maxLines="1"
-        android:textColor="#8d8d8d"
+        android:textColor="?attr/textcolor"
         android:text="Самые горячие новости" />
 
     <TextView android:id="@+id/rss_link"
@@ -34,7 +35,7 @@
         android:layout_width="wrap_content"
         android:paddingBottom="6dip"
         android:textSize="15sp"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="?attr/link_color"
         android:text="https://www.tut.by"
         android:maxLines="1"
         android:layout_below="@id/rss_description"/>

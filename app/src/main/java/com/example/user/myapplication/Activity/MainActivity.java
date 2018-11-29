@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     public NavController navController;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private Toolbar toolbar;
 
     private MenuItem logout_item;
     private MenuItem about_item;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "onCreate");
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initializeNavigation();

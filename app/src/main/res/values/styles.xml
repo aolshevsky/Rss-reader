@@ -13,11 +13,15 @@
         <item name="button_txt">@color/button_txt</item>
         <item name="button_color">@color/colorPrimary1</item>
         <item name="nav_bar_color">@color/colorAccent</item>
+        <item name="header_txt_color">@color/header_txt_color</item>
+        <item name="link_color">@color/link_color</item>
+        <item name="success_btn_color">@color/success_btn_color</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <!-- Night / dark Mode theme. -->
-    <style name="darktheme" parent="Theme.MaterialComponents.Light">
+    <style name="darktheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryDT</item>
         <item name="toolbar">@color/colorPrimaryDT</item>
@@ -29,6 +33,10 @@
         <item name="button_txt">@color/button_txt</item>
         <item name="button_color">@color/button_color</item>
         <item name="nav_bar_color">@color/button_color</item>
+        <item name="header_txt_color">@color/header_txt_color_dark</item>
+        <item name="link_color">@color/link_color_dark</item>
+        <item name="success_btn_color">@color/success_btn_color_dark</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -47,7 +55,6 @@
 
     <style name="date" parent="section">
         <item name="android:layout_weight">1.3</item>
-        <item name="android:gravity">end</item>
     </style>
 
 </resources>

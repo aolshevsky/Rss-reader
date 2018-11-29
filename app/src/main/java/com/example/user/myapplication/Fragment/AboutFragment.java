@@ -13,6 +13,7 @@ import com.example.user.myapplication.BuildConfig;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.Utils.PermissionsHelper;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class AboutFragment extends Fragment {
@@ -24,13 +25,6 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState != null &&
-                savedInstanceState.getString("IMEI") != null) {
-            String saved_imei = savedInstanceState.getString("IMEI");
-            TextView imei_txt = (TextView) getView().findViewById(R.id.imei_view);
-            imei_txt.setText(String.format("IMEI: %s",saved_imei));
-        }
-
         phoneStateView = inflater.inflate(R.layout.fragment_about, container, false);
 
         permissionsHelper = new PermissionsHelper();
@@ -38,6 +32,17 @@ public class AboutFragment extends Fragment {
         getActivity().setTitle("About");
 
         return phoneStateView;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null &&
+                savedInstanceState.getString("IMEI") != null) {
+            String saved_imei = savedInstanceState.getString("IMEI");
+            TextView imei_txt = (TextView) getView().findViewById(R.id.imei_view);
+            imei_txt.setText(String.format("IMEI: %s",saved_imei));
+        }
     }
 
     @Override

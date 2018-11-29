@@ -8,12 +8,23 @@
     <color name="background">#ffffff</color>
     <color name="backgroundDT">#303030</color>
     <color name="textcolor">#6c6c6c</color>
-    <color name="textcolorDT">#ffffff</color>
+    <color name="textcolorDT">#d4d4d4</color>
     <color name="background_2">#fafafa</color>
     <color name="background_2DT">#424242</color>
     <color name="button_txt">#fafafa</color>
     <color name="button_color">#b2bec3</color>
     <color name="city_lights">#dfe6e9</color>
+    <color name="header_txt_color">#000000</color>
+    <color name="header_txt_color_dark">#ffffff</color>
+
+    <color name="link_color">#3498db</color>
+    <color name="link_color_dark">#b898ce</color>
+
+    <color name="cancel_color">#c0392b</color>
+
+
+    <color name="success_btn_color">#3498db</color>
+    <color name="success_btn_color_dark">#dedede</color>
 
     <color name="refresh">#008000</color>
     <color name="refresh1">#008080</color>

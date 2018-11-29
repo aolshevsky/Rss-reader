@@ -8,5 +8,8 @@
         <attr name="button_txt" format="color"/>
         <attr name="button_color" format="color"/>
         <attr name="nav_bar_color" format="color"/>
+        <attr name="header_txt_color" format="color"/>
+        <attr name="link_color" format="color"/>
+        <attr name="success_btn_color" format="color"/>
     </declare-styleable>
 </resources>
