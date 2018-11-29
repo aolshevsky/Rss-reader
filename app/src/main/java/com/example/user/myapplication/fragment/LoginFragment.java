@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment implements ILoginView {
 
     private void initializeDatabase(){
         DatabaseManager databaseManager = DatabaseManager.getInstance();
-        if(databaseManager.getCurrentUser() != null){
+        if(databaseManager.getAuthUser() != null){
             getActivity().finish();
             startActivity(new Intent(getContext(), MainActivity.class));
         }

@@ -12,13 +12,12 @@ import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.ListAdapter;
 import com.example.user.myapplication.Adapter.VerticalSpace;
+import com.example.user.myapplication.Presenter.NewsPresenter;
 import com.example.user.myapplication.Presenter.ReadRssTask;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.model.RSSItem;
 import com.example.user.myapplication.utils.Connection;
-import com.example.user.myapplication.utils.Parser;
-import com.example.user.myapplication.utils.RSSParser;
 
 import java.util.ArrayList;
 
@@ -32,11 +31,12 @@ import es.dmoral.toasty.Toasty;
 public class NewsFragment extends Fragment implements IReadRssView {
 
     private RecyclerView newsRecyclerView;
-    private ListAdapter adapter;
     private ImageButton reload_news_btn;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private ListAdapter adapter;
     private String rssLink;
+
+    private NewsPresenter newsPresenter;
 
     private View newsView;
 
@@ -47,9 +47,10 @@ public class NewsFragment extends Fragment implements IReadRssView {
         Bundle bundle = getActivity().getIntent().getExtras();
         rssLink = bundle.getString("RssLink");
 
-
+        newsPresenter = new NewsPresenter();
+        newsPresenter.attachView(this);
         initializeView();
-        loadNews();
+        newsPresenter.loadNews();
 
 
         getActivity().setTitle("News");
@@ -66,76 +67,68 @@ public class NewsFragment extends Fragment implements IReadRssView {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                ArrayList<RSSItem> rssItems = getSortedNewsFromDB();
+                setSwipeRefreshingVisibility(true);
+                ArrayList<RSSItem> rssItems = newsPresenter.getSortedNewsFromDB();
                 refreshOnlineNews(rssItems, false);
             }
         });
 
     }
 
-
-    private void loadNews(){
-        initializeRecyclerView();
-
-        if(Connection.isOnline(getContext())) {
-            ArrayList<RSSItem> rssItems = getSortedNewsFromDB();
-            adapter.addModels(rssItems);
-            newsRecyclerView.setAdapter(adapter);
-            //Log.d("myDB", "Last item: " + rssItems.get(0).getTitle());
-            refreshOnlineNews(rssItems, true);
-        } else {
-            ArrayList<RSSItem> rssItems = getSortedNewsFromDB();
-            adapter.addModels(rssItems);
-            newsRecyclerView.setAdapter(adapter);
-            Toasty.error(getContext(), "No Internet Connection. See last saving news.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void refreshOnlineNews(ArrayList<RSSItem> rssItems, Boolean isWithUpdateButton){
+    @Override
+    public void refreshOnlineNews(ArrayList<RSSItem> rssItems, Boolean isWithUpdateButton){
         ReadRssTask readRss = new ReadRssTask(rssLink, rssItems.size() != 0 ? rssItems.get(0):  null, isWithUpdateButton);
         readRss.attachView(this);
         readRss.execute();
     }
 
-    private ArrayList<RSSItem> getSortedNewsFromDB(){
-        ArrayList<RSSItem> rssItems = RSSParser.getRssItems(rssLink);
-        Parser.sortDates(rssItems);
-        return rssItems;
-    }
-
-    @Override
-    public void checkNeedToUpdateNews(final ArrayList<RSSItem> newRssItems, Boolean isWithUpdateButton) {
-        ArrayList<RSSItem> rssItems = RSSParser.getRssItems(rssLink);
-        Parser.sortDates(rssItems);
-        if (newRssItems.size() != 0){
-            if (rssItems.size() == 0 || !newRssItems.get(0).getTitle().equals(rssItems.get(0).getTitle())){
-                if (isWithUpdateButton) {
-                    reload_news_btn.setVisibility(View.VISIBLE);
-                    Toasty.info(getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
-                    reload_news_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            reload_news_btn.setVisibility(View.INVISIBLE);
-                            initializeRecyclerView();
-                            setListAdapter(newRssItems);
-                        }
-                    });
-                } else {
-                    adapter.addModels(rssItems);
-                    newsRecyclerView.setAdapter(adapter);
-                    initializeRecyclerView();
-                    setListAdapter(newRssItems);
-                    reload_news_btn.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-        swipeRefreshLayout.setRefreshing(false);
-    }
 
     @Override
     public ProgressDialog getProgressDialog() {
         return new ProgressDialog(getContext());
+    }
+
+    @Override
+    public Boolean isOnline() {
+        return Connection.isOnline(getContext());
+    }
+
+    @Override
+    public void onLoadNewsError(String message) {
+        Toasty.error(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public String getRssLink() {
+        return rssLink;
+    }
+
+    @Override
+    public void setReloadBtnVisibility(Boolean isVisible) {
+        if (isVisible)
+            reload_news_btn.setVisibility(View.VISIBLE);
+        else
+            reload_news_btn.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setSwipeRefreshingVisibility(Boolean isVisible) {
+        swipeRefreshLayout.setRefreshing(isVisible);
+    }
+
+    @Override
+    public void onReloadBtnClick(final ArrayList<RSSItem> newRssItems) {
+        Toasty.info(getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
+        reload_news_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSwipeRefreshingVisibility(true);
+                setReloadBtnVisibility(false);
+                initializeRecyclerView();
+                newsPresenter.addNewNews(newRssItems);
+                setSwipeRefreshingVisibility(false);
+            }
+        });
     }
 
     @Override
@@ -155,21 +148,13 @@ public class NewsFragment extends Fragment implements IReadRssView {
     }
 
     @Override
-    public void setListAdapter(ArrayList<RSSItem> rssItems) {
-
-        ArrayList<RSSItem> rssItemsDB = getSortedNewsFromDB();
-        //Log.d("myDB", "Items delete: " + String.valueOf(rssItemsDelete.size()));
-        //Log.d("myDB", "Items new: " + String.valueOf(rssItems.size()));
-        /*
-        for (RSSItem item:rssItemsDelete) {
-            item.delete();
-        }
-        */
-        for (RSSItem item:rssItems) {
-            item.save();
-        }
-        rssItems.addAll(rssItemsDB);
+    public void setListAdapter(ArrayList<RSSItem> rssItems){
         adapter.addModels(rssItems);
         newsRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void checkNeedToUpdateNews(ArrayList<RSSItem> newRssItems, Boolean isWithUpdateButton) {
+        newsPresenter.checkNeedToUpdateNews(newRssItems, isWithUpdateButton);
     }
 }
