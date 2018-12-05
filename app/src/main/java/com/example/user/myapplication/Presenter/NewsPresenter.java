@@ -18,6 +18,12 @@ public class NewsPresenter extends BasePresenter<IReadRssView> implements INewsP
             item.save();
 
         rssItems.addAll(rssItemsDB);
+        int rss_size = rssItems.size();
+        if (rss_size > 200){
+            for (int i = 200; i < rss_size; i++){
+                rssItems.get(i).delete();
+            }
+        }
         view.setListAdapter(rssItems);
     }
 
