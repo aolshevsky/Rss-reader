@@ -54,6 +54,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                         if (view != null)
                             view.onSuccessMessage("Upload image success");
                         pDialog.dismiss();
+                        view.unableOrientation();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -61,6 +62,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                     public void onFailure(@NonNull Exception exception) {
                         view.onErrorMessage("Upload image failed");
                         pDialog.dismiss();
+                        view.unableOrientation();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -98,11 +100,13 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                         view.setProfileImg(bmp);
                         saveUser();
                         pDialog.dismiss();
+                        view.unableOrientation();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         pDialog.dismiss();
+                        view.unableOrientation();
                         view.onErrorMessage("Download failed. Check internet connection");
                     }
                 }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {

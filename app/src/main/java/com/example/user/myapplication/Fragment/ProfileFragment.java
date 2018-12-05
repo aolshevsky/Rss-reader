@@ -1,6 +1,7 @@
 package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.user.myapplication.Fragment.Interface.IOrientationListener;
 import com.example.user.myapplication.Manager.DatabaseManager;
+import com.example.user.myapplication.Model.User;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.ImagePresenter;
 import com.example.user.myapplication.R;
+import com.example.user.myapplication.Utils.PermissionsHelper;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IImageView;
-import com.example.user.myapplication.Model.User;
-import com.example.user.myapplication.Utils.PermissionsHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -66,6 +67,8 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     private DatabasePresenter databasePresenter;
     private DatabaseManager databaseManager;
 
+    private IOrientationListener orientationListener;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +78,9 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         permissionsHelper = PermissionsHelper.getInstance();
         imagePresenter = ImagePresenter.getInstance();
         imagePresenter.attachView(this);
+        databasePresenter = new DatabasePresenter();
+        databasePresenter.attachView(this);
 
-        attachPresenter();
         databaseManager = DatabaseManager.getInstance();
 
         initializeView();
@@ -88,19 +92,13 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         return profileView;
     }
 
-    private void attachPresenter() {
-        databasePresenter = (DatabasePresenter) getActivity().getLastCustomNonConfigurationInstance();
-        if (databasePresenter == null) {
-            Log.d("ololo", "rrrrrrr");
-            databasePresenter = new DatabasePresenter();
-        }
-        databasePresenter.attachView(this);
-    }
-
     @Override
-    public void onDestroy() {
-        databasePresenter.detachView();
-        super.onDestroy();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            orientationListener = (IOrientationListener) context;
+        } catch (ClassCastException ignored) {
+        }
     }
 
 
@@ -132,6 +130,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        orientationListener.disableOrientation();
                         databasePresenter.saveUser();
                         break;
 
@@ -145,6 +144,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                orientationListener.disableOrientation();
                 databasePresenter.saveUser();
             }
         });
@@ -236,6 +236,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                         imageview_edit.setImageBitmap(iconBitmap);
                         img_path = userInfo.getImg_path();
                     } else {
+                        orientationListener.disableOrientation();
                         databasePresenter.downloadFromFirebaseStorage();
                     }
                 }
@@ -261,7 +262,13 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     }
 
     public void saveUser(){
+        orientationListener.disableOrientation();
         databasePresenter.saveUser();
+    }
+
+    @Override
+    public void unableOrientation() {
+        orientationListener.unableOrientation();
     }
 
     @Override

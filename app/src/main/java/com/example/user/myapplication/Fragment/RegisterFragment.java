@@ -192,6 +192,11 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
     }
 
     @Override
+    public void unableOrientation() {
+
+    }
+
+    @Override
     public User getUserInfo() {
         return null;
     }

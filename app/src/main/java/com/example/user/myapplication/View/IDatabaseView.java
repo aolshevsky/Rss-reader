@@ -15,4 +15,5 @@ public interface IDatabaseView {
     void validUserName(String message);
     void validUserSurname(String message);
     void validUserPhone(String message);
+    void unableOrientation();
 }

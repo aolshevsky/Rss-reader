@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.user.myapplication.Adapter.Interface.ISiteAdapterListener;
 import com.example.user.myapplication.Fragment.Interface.IAddNewSiteListener;
+import com.example.user.myapplication.Fragment.Interface.IOrientationListener;
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.DeepLinksPresenter;
@@ -47,15 +48,16 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+
 
 public class MainActivity extends AppCompatActivity  implements
         IDeepLinksView,
         IDatabaseView,
         IAddNewSiteListener,
-        ISiteAdapterListener {
-
-
-    final String LOG_TAG = "myLogs";
+        ISiteAdapterListener,
+        IOrientationListener {
 
     public NavController navController;
     private DrawerLayout drawerLayout;
@@ -254,6 +256,16 @@ public class MainActivity extends AppCompatActivity  implements
     }
 
     @Override
+    public void disableOrientation(){
+        setRequestedOrientation(SCREEN_ORIENTATION_NOSENSOR);
+    }
+
+    @Override
+    public void unableOrientation(){
+        setRequestedOrientation(SCREEN_ORIENTATION_SENSOR);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
         logout_item = menu.findItem(R.id.logout_item);
@@ -301,7 +313,9 @@ public class MainActivity extends AppCompatActivity  implements
     @Override
     protected void onResume() {
         super.onResume();
+        disableOrientation();
         databasePresenter.loadUserInformationMenu();
+        unableOrientation();
     }
 
 

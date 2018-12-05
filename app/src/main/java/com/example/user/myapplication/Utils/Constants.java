@@ -23,4 +23,5 @@ public class Constants {
     public static int REGISTER_SUCCESS = -1;
     public static int EDIT_SUCCESS = -1;
     public static int MIN_PASSWORD_LENGTH = 6;
+    public static int CACHED_RSS_ITEMS = 200;
 }

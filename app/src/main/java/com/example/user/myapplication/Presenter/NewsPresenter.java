@@ -1,6 +1,7 @@
 package com.example.user.myapplication.Presenter;
 
 import com.example.user.myapplication.Presenter.Interface.INewsPresenter;
+import com.example.user.myapplication.Utils.Constants;
 import com.example.user.myapplication.View.IReadRssView;
 import com.example.user.myapplication.Model.RSSItem;
 import com.example.user.myapplication.Utils.Parser;
@@ -19,8 +20,8 @@ public class NewsPresenter extends BasePresenter<IReadRssView> implements INewsP
 
         rssItems.addAll(rssItemsDB);
         int rss_size = rssItems.size();
-        if (rss_size > 200){
-            for (int i = 200; i < rss_size; i++){
+        if (rss_size > Constants.CACHED_RSS_ITEMS){
+            for (int i = Constants.CACHED_RSS_ITEMS; i < rss_size; i++){
                 rssItems.get(i).delete();
             }
         }
