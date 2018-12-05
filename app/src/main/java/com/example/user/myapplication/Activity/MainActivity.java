@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Adapter.Interface.ISiteAdapterListener;
+import com.example.user.myapplication.Fragment.Interface.IAddNewSiteListener;
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.DeepLinksPresenter;
@@ -46,7 +48,11 @@ import androidx.navigation.ui.NavigationUI;
 import es.dmoral.toasty.Toasty;
 
 
-public class MainActivity extends AppCompatActivity  implements IDeepLinksView, IDatabaseView {
+public class MainActivity extends AppCompatActivity  implements
+        IDeepLinksView,
+        IDatabaseView,
+        IAddNewSiteListener,
+        ISiteAdapterListener {
 
 
     final String LOG_TAG = "myLogs";
@@ -296,7 +302,6 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     protected void onResume() {
         super.onResume();
         databasePresenter.loadUserInformationMenu();
-        Log.d(LOG_TAG, "onStart");
     }
 
 
@@ -322,6 +327,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         drawerLayout.closeDrawers();
     }
 
+    @Override
     public void onSubmitSiteClick(){
         navController.navigate(R.id.rssItemListFragment);
         add_site_item.setVisible(true);
@@ -329,11 +335,13 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
         fragment.getView().clearFocus();
     }
 
+    @Override
     public void onRssItemClick(){
         navController.navigate(R.id.newsFragment);
         add_site_item.setVisible(true);
     }
 
+    @Override
     public void putExtra(String tag, String message){
         Intent intent = getIntent();
         intent.putExtra(tag, message);

@@ -1,6 +1,7 @@
 package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,13 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Fragment.Interface.IRegisterListener;
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.DatabasePresenter;
 import com.example.user.myapplication.Presenter.RegisterPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.IDatabaseView;
 import com.example.user.myapplication.View.IRegisterView;
-import com.example.user.myapplication.Activity.LoginActivity;
 import com.example.user.myapplication.Activity.MainActivity;
 import com.example.user.myapplication.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +41,8 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
     private RegisterPresenter registerPresenter;
     private DatabaseManager databaseManager;
 
+    private IRegisterListener registerListener;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +60,15 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         getActivity().setTitle("Register");
 
         return registerView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            registerListener = (IRegisterListener) context;
+        } catch (ClassCastException ignored) {
+        }
     }
 
     private void initializeView(){
@@ -78,7 +90,7 @@ public class RegisterFragment extends Fragment implements IRegisterView, IDataba
         to_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LoginActivity)getActivity()).onLoginSwitchClick();
+                registerListener.onLoginSwitchClick();
             }
         });
     }

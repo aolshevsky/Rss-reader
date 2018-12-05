@@ -1,5 +1,6 @@
 package com.example.user.myapplication.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Fragment.Interface.ILoginListener;
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.LoginPresenter;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.View.ILoginView;
-import com.example.user.myapplication.Activity.LoginActivity;
 import com.example.user.myapplication.Activity.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +34,8 @@ public class LoginFragment extends Fragment implements ILoginView {
 
     private LoginPresenter loginPresenter;
 
+    private ILoginListener loginListener;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +52,16 @@ public class LoginFragment extends Fragment implements ILoginView {
 
         return loginView;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            loginListener = (ILoginListener) context;
+        } catch (ClassCastException ignored) {
+        }
+    }
+
 
     @Override
     public void onLoginSuccess(String message) {
@@ -82,7 +95,7 @@ public class LoginFragment extends Fragment implements ILoginView {
         to_register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LoginActivity)getActivity()).onRegisterSwitchClick();
+                loginListener.onRegisterSwitchClick();
             }
         });
     }

@@ -1,9 +1,9 @@
 package com.example.user.myapplication.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.user.myapplication.Fragment.Interface.IAddNewSiteListener;
+import com.example.user.myapplication.Fragment.Interface.IRegisterListener;
 import com.example.user.myapplication.R;
 import com.example.user.myapplication.Activity.MainActivity;
 import com.example.user.myapplication.Model.RSSFeed;
@@ -32,6 +34,8 @@ public class AddNewSiteFragment extends Fragment {
 
     private RSSFeed rssFeed;
 
+    private IAddNewSiteListener addNewSiteListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +43,15 @@ public class AddNewSiteFragment extends Fragment {
         initializeView();
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            addNewSiteListener = (IAddNewSiteListener) context;
+        } catch (ClassCastException ignored) {
+        }
     }
 
     private void initializeView(){
@@ -66,7 +79,7 @@ public class AddNewSiteFragment extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).onSubmitSiteClick();
+                addNewSiteListener.onSubmitSiteClick();
             }
         });
 
@@ -108,7 +121,7 @@ public class AddNewSiteFragment extends Fragment {
                 if (rssFeeds.size() == 0)
                     rssFeed.save();
             }
-            ((MainActivity) getActivity()).onSubmitSiteClick();
+            addNewSiteListener.onSubmitSiteClick();
             pDialog.dismiss();
         }
 
