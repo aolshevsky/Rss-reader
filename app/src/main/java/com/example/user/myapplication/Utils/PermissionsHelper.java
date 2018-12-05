@@ -27,7 +27,7 @@ public class PermissionsHelper {
     }
 
     public boolean hasAllPermissions(Activity activity){
-        int res = 0;
+        int res;
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
@@ -41,7 +41,7 @@ public class PermissionsHelper {
         return true;
     }
     public boolean hasNeedPermissions(Activity activity, int per_ind){
-        int res = 0;
+        int res;
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};

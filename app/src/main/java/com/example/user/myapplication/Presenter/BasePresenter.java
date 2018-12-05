@@ -7,4 +7,9 @@ public class BasePresenter<V> {
         this.view = view;
     }
 
+
+    public void detachView() {
+        this.view = null;
+    }
+
 }

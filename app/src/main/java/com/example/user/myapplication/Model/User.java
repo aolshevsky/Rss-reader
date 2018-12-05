@@ -100,7 +100,7 @@ public class User {
             return Constants.VALID_EMAIL;
         if(password == null || password.length() < Constants.MIN_PASSWORD_LENGTH)
             return Constants.VALID_PASSWORD;
-        if(confirm_password == null && password.equals(confirm_password))
+        if(!password.equals(confirm_password))
             return Constants.VALID_CONF_PASSWORD;
         else
             return Constants.REGISTER_SUCCESS;

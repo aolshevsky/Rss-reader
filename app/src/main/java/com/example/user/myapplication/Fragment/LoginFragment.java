@@ -111,7 +111,7 @@ public class LoginFragment extends Fragment implements ILoginView {
     }
 
     @Override
-    public void addListenerToFirebaseAuth(Task<AuthResult> authResultTask) {
+    public void addListenerToDatabaseAuth(Task<AuthResult> authResultTask) {
         authResultTask.addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

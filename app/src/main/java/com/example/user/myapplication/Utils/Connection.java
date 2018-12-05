@@ -23,7 +23,7 @@ public class Connection {
             return db.parse(url.openStream());
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("myLog",  e.getMessage());
+            Log.e("ConnectError",  e.getMessage());
             return null;
         }
     }

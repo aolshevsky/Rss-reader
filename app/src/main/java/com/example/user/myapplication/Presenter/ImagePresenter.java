@@ -77,7 +77,6 @@ public class ImagePresenter extends BasePresenter<IImageView> implements IImageP
         }
 
         try {
-            // Calendar.getInstance().getTime()
             File f = new File(wallpaperDirectory, "profile_icon.jpg");
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);

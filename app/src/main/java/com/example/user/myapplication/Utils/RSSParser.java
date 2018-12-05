@@ -36,8 +36,6 @@ public class RSSParser {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            //
         }
         return rssFeed;
     }
@@ -52,7 +50,6 @@ public class RSSParser {
                 Element root = doc.getDocumentElement();
                 Node channel = root.getChildNodes().item(1);
                 NodeList items = channel.getChildNodes();
-                Log.d("myDB", "ITEMS LENGTH: " + items.getLength() + url);
                 for (int i = 0; i < items.getLength(); i++) {
                     Node element = items.item(i);
                     if (element.getNodeName().equalsIgnoreCase("item")) {
@@ -84,12 +81,7 @@ public class RSSParser {
 
     private static Boolean equalsRssItems(RSSItem item){
         ArrayList<RSSItem> find_items = (ArrayList<RSSItem>)RSSItem.find(RSSItem.class, "link = ?", item.getLink());
-        if (find_items.size() != 0){
-            //Log.d("myDB", "CMP: " + item.getTitle());
-            return true;
-        }
-        //Log.d("myDB", "CMP: " + item.getTitle());
-        return false;
+        return find_items.size() != 0;
     }
 
 

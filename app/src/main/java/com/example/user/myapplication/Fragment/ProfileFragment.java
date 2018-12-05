@@ -75,8 +75,8 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         permissionsHelper = PermissionsHelper.getInstance();
         imagePresenter = ImagePresenter.getInstance();
         imagePresenter.attachView(this);
-        databasePresenter = new DatabasePresenter();
-        databasePresenter.attachView(this);
+
+        attachPresenter();
         databaseManager = DatabaseManager.getInstance();
 
         initializeView();
@@ -88,17 +88,19 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         return profileView;
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+    private void attachPresenter() {
+        databasePresenter = (DatabasePresenter) getActivity().getLastCustomNonConfigurationInstance();
+        if (databasePresenter == null) {
+            Log.d("ololo", "rrrrrrr");
+            databasePresenter = new DatabasePresenter();
+        }
+        databasePresenter.attachView(this);
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-        // saveUser();
+    public void onDestroy() {
+        databasePresenter.detachView();
+        super.onDestroy();
     }
 
 
@@ -297,7 +299,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
     @Override
     public void choosePhotoFromGallary() {
-        Log.d("myLogs", "Image from galary");
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
@@ -313,7 +314,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("myLogs", "Boom");
         if (resultCode == RESULT_CANCELED) {
             return;
         }

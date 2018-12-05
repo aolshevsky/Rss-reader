@@ -40,7 +40,7 @@ public class AboutFragment extends Fragment {
         if (savedInstanceState != null &&
                 savedInstanceState.getString("IMEI") != null) {
             String saved_imei = savedInstanceState.getString("IMEI");
-            TextView imei_txt = (TextView) getView().findViewById(R.id.imei_view);
+            TextView imei_txt = getView().findViewById(R.id.imei_view);
             imei_txt.setText(String.format("IMEI: %s",saved_imei));
         }
     }
@@ -58,7 +58,7 @@ public class AboutFragment extends Fragment {
 
     private void showPhoneState() {
         TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        TextView imei_txt = (TextView) phoneStateView.findViewById(R.id.imei_view);
+        TextView imei_txt = phoneStateView.findViewById(R.id.imei_view);
         try {
             imei_txt.setText(String.format("IMEI: %s", tm.getDeviceId()));
         } catch (SecurityException e) {
@@ -70,7 +70,6 @@ public class AboutFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("IMEI", phoneStateView.findViewById(R.id.imei_view).toString());
-        Log.d("myLog", "onSaveInstanceState");
     }
 
     private void onOpenAbout(){

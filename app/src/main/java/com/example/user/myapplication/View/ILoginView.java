@@ -10,5 +10,5 @@ public interface ILoginView {
     String getUserPassword();
     void validUserEmail(String message);
     void validUserPassord(String message);
-    void addListenerToFirebaseAuth(Task<AuthResult> authResultTask);
+    void addListenerToDatabaseAuth(Task<AuthResult> authResultTask);
 }

@@ -42,7 +42,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements ILoginP
             return;
         }
 
-        view.addListenerToFirebaseAuth(databaseManager.getAuth().signInWithEmailAndPassword(email, password));
+        view.addListenerToDatabaseAuth(databaseManager.getAuth().signInWithEmailAndPassword(email, password));
 
     }
 

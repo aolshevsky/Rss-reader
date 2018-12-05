@@ -73,14 +73,13 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(LOG_TAG, "onCreate");
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initializeNavigation();
 
-        databasePresenter =  new DatabasePresenter();
+        databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
         permissionsHelper = PermissionsHelper.getInstance();
         databaseManager = DatabaseManager.getInstance();
@@ -99,9 +98,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
     }
 
     private void initializeDatabase(){
-        Log.d(LOG_TAG, "LogoutFragment");
         if(databaseManager.getAuthUser() == null){
-            Log.d(LOG_TAG, "Logout1");
             finish();
             startActivity(new Intent(this, LoginActivity.class));
         }
@@ -136,7 +133,7 @@ public class MainActivity extends AppCompatActivity  implements IDeepLinksView, 
 
     private Fragment getCurrentFragment(){
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        return (Fragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+        return navHostFragment.getChildFragmentManager().getFragments().get(0);
     }
 
     private void initializeNavigation(){

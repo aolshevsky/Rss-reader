@@ -14,19 +14,7 @@ import java.util.ArrayList;
 public class ReadRssTask extends AsyncTask<Void, Void, Void> {
 
     private IReadRssView view;
-/*
-// gazeta, lenta, scincemag, vesti
-    private String[] address = {"https://www.nasa.gov/rss/dyn/ames_news.rss",
-            "http://www.sciencemag.org/rss/news_current.xml",
-            "http://www.zrpress.ru/rss/sport.xml",
-            "https://lenta.ru/rss",
-            "https://news.yandex.ru/society.rss",
-            "http://news.yandex.ru/Pskov/index.rss",
-            "https://www.gazeta.ru/export/rss/social_more.xml",
-            "http://www.vesti.ru/vesti.rss",
-            "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/news.rss",
-            "https://news.tut.by/rss/all.rss"};
-            */
+
     private String address;
 
     private ProgressDialog progressDialog;
@@ -53,23 +41,20 @@ public class ReadRssTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-        Log.d("myLog", "PreExecute");
        // progressDialog.show();
         super.onPreExecute();
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        Log.d("myLog", "onPostExecute");
+    protected void onPostExecute(Void v) {
+        super.onPostExecute(v);
         //progressDialog.dismiss();
         view.checkNeedToUpdateNews(rssItems, isWithUpdateButton);
     }
 
 
     @Override
-    protected Void doInBackground(Void... params) {
-        Log.d("myLog", "doInBackground");
+    protected Void doInBackground(Void... v) {
         rssItems.addAll(RSSParser.getRSSFeedItems(address, lastRssItem));
         return null;
     }

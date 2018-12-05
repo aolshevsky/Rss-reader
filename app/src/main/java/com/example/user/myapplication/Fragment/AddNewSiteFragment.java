@@ -93,15 +93,8 @@ public class AddNewSiteFragment extends Fragment {
         @Override
         protected String doInBackground(String... args) {
             String url = args[0];
-            //url = "https://news.tut.by/rss/index.rss";
             rssFeed = RSSParser.getRSSFeed(url);
-            Log.d("rssFeed", " "+ rssFeed);
-            if (rssFeed != null) {
-                Log.d("url",
-                        "" + rssFeed.getTitle() + " " + rssFeed.getLink() + " "
-                                + rssFeed.getDescription() + " "
-                                + rssFeed.getLanguage());
-            } else {
+            if (rssFeed == null) {
                 onErrorMessage("Rss url not found. Please check the url or try again");
             }
             return null;

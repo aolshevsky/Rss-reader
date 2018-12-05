@@ -25,13 +25,12 @@ import androidx.annotation.NonNull;
 
 public class DatabasePresenter extends BasePresenter<IDatabaseView> implements IDatabasePresenter{
 
-
-
     private DatabaseManager manager;
 
     public DatabasePresenter(){
         manager = DatabaseManager.getInstance();
     }
+
 
     @Override
     public void saveUserToDatabase(User userInfo){
@@ -52,7 +51,8 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        view.onSuccessMessage("Upload image success");
+                        if (view != null)
+                            view.onSuccessMessage("Upload image success");
                         pDialog.dismiss();
                     }
                 })

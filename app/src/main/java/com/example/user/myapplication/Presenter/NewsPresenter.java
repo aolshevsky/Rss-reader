@@ -14,16 +14,9 @@ public class NewsPresenter extends BasePresenter<IReadRssView> implements INewsP
     @Override
     public void addNewNews(ArrayList<RSSItem> rssItems) {
         ArrayList<RSSItem> rssItemsDB = getSortedNewsFromDB();
-        //Log.d("myDB", "Items delete: " + String.valueOf(rssItemsDelete.size()));
-        //Log.d("myDB", "Items new: " + String.valueOf(rssItems.size()));
-        /*
-        for (RSSItem item:rssItemsDelete) {
-            item.delete();
-        }
-        */
-        for (RSSItem item:rssItems) {
+        for (RSSItem item:rssItems)
             item.save();
-        }
+
         rssItems.addAll(rssItemsDB);
         view.setListAdapter(rssItems);
     }
@@ -62,7 +55,6 @@ public class NewsPresenter extends BasePresenter<IReadRssView> implements INewsP
         if(view.isOnline()) {
             ArrayList<RSSItem> rssItems = getSortedNewsFromDB();
             view.setListAdapter(rssItems);
-            //Log.d("myDB", "Last item: " + rssItems.get(0).getTitle());
             view.refreshOnlineNews(rssItems, true);
         } else {
             ArrayList<RSSItem> rssItems = getSortedNewsFromDB();
