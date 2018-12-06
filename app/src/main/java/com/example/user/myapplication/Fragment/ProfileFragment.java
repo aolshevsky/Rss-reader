@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                         img_path = userInfo.getImg_path();
                     } else {
                         orientationListener.disableOrientation();
-                        databasePresenter.downloadFromFirebaseStorage();
+                        databasePresenter.downloadFromDatabaseStorage();
                     }
                 }
             }

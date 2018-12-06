@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -84,15 +87,14 @@ public class MainActivity extends AppCompatActivity  implements
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        sharedPref = new SharedPref(this);
+        initializeTheme();
         initializeNavigation();
 
         databasePresenter = new DatabasePresenter();
         databasePresenter.attachView(this);
         permissionsHelper = PermissionsHelper.getInstance();
         databaseManager = DatabaseManager.getInstance();
-        sharedPref = new SharedPref(this);
-        initializeTheme();
         initializeDatabase();
 
         DeepLinksPresenter deepLinksPresenter = DeepLinksPresenter.getInstance();
@@ -155,7 +157,6 @@ public class MainActivity extends AppCompatActivity  implements
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 Fragment fragment = getCurrentFragment();
-                fragment.getView().clearFocus();
                 switch (id) {
                     case R.id.rssItemListFragment:
                         onNewsFragment(true);
@@ -205,10 +206,22 @@ public class MainActivity extends AppCompatActivity  implements
     }
 
     @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                v.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         Fragment fragment = getCurrentFragment();
-        fragment.getView().clearFocus();
         switch (id) {
             case R.id.about_toolbar_button:
                 if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
@@ -345,8 +358,6 @@ public class MainActivity extends AppCompatActivity  implements
     public void onSubmitSiteClick(){
         navController.navigate(R.id.rssItemListFragment);
         add_site_item.setVisible(true);
-        Fragment fragment = getCurrentFragment();
-        fragment.getView().clearFocus();
     }
 
     @Override

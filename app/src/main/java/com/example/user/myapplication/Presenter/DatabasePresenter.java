@@ -81,7 +81,7 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
     }
 
     @Override
-    public void downloadFromFirebaseStorage() {
+    public void downloadFromDatabaseStorage() {
         final ProgressDialog pDialog = view.getProgressDialog();
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
