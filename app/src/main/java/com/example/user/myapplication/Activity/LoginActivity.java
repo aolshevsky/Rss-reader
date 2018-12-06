@@ -38,26 +38,24 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener, 
 
     @Override
     public void onRegisterSwitchClick() {
+        dispatchTouchEvent();
         navController.popBackStack();
         navController.navigate(R.id.registerFragment);
     }
 
     @Override
     public void onLoginSwitchClick() {
+        dispatchTouchEvent();
         navController.popBackStack();
         navController.navigate(R.id.loginFragment);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                v.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
+    private void dispatchTouchEvent() {
+        View v = getCurrentFocus();
+        if (v instanceof EditText) {
+            v.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
-        return super.dispatchTouchEvent(event);
     }
 }

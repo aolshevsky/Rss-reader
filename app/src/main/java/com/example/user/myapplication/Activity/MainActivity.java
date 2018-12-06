@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity  implements
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 Fragment fragment = getCurrentFragment();
+                dispatchTouchEvent();
                 switch (id) {
                     case R.id.rssItemListFragment:
                         onNewsFragment(true);
@@ -205,23 +206,20 @@ public class MainActivity extends AppCompatActivity  implements
         });
     }
 
-    @Override
-    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                v.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
+    private void dispatchTouchEvent() {
+        View v = getCurrentFocus();
+        if (v instanceof EditText) {
+            v.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
-        return super.dispatchTouchEvent(event);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         Fragment fragment = getCurrentFragment();
+        dispatchTouchEvent();
         switch (id) {
             case R.id.about_toolbar_button:
                 if(fragment instanceof ProfileFragment && ((ProfileFragment) fragment).checkNeedToUpdateUser())
@@ -358,6 +356,7 @@ public class MainActivity extends AppCompatActivity  implements
     public void onSubmitSiteClick(){
         navController.navigate(R.id.rssItemListFragment);
         add_site_item.setVisible(true);
+        dispatchTouchEvent();
     }
 
     @Override
