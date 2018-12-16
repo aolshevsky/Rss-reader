@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.MainActivity">
+
+    <ViewSwitcher
+        android:id="@+id/profile_switcher"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="?attr/backgroundcolor">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="?attr/backgroundcolor"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/backgroundcolor"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/avatarImgView1"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/userphoto" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Name"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/name_txtView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Surname"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/surname_txtView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Email"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/email_txtView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Phone number"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/phone_txtView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="18sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/switch_btn1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:adjustViewBounds="true"
+                        android:background="?attr/backgroundcolor"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/change" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="?attr/backgroundcolor"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/edit_image_touch_place"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/avatarImgView"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/userphoto" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/avatarImgView"
+                        android:layout_alignTop="@+id/avatarImgView"
+                        android:layout_alignRight="@id/avatarImgView"
+                        android:layout_alignBottom="@id/avatarImgView"
+                        android:background="#41fdfdfd"
+                        android:gravity="center"
+                        android:text="Click to change image"
+                        android:textColor="#89454545" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Name"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/name_txtEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:textColor="?attr/textcolor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Surname"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/surname_txtEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:ems="10"
+                    android:hint="Surname"
+                    android:inputType="textPersonName"
+                    android:textColor="?attr/textcolor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:text="Phone number"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/phone_txtEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_marginRight="40sp"
+                    android:background="@drawable/reg_edittext_style"
+                    android:ems="10"
+                    android:hint="Phone number"
+                    android:inputType="phone"
+                    android:textColor="?attr/textcolor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/save_btn"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="50dp"
+                        android:background="@drawable/reg_btn_style"
+                        android:text="Save"
+                        android:textColor="?attr/background_2" />
+
+                    <ImageButton
+                        android:id="@+id/switch_btn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:adjustViewBounds="true"
+                        android:background="?attr/backgroundcolor"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/change_back" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </ViewSwitcher>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

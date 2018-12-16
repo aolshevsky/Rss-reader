@@ -4,7 +4,17 @@
     <string name="imei_txt">No permission to get imei</string>
     <string name="app_ver">app version: </string>
     <string name="msg_no_per">No permission to get imei</string>
-    <string name="msg_ph_per_den">Phone Permissions denied.</string>
     <string name="msg_ph_per_no_grtd">Phone permission isn\'t granted</string>
-    <string name="msg_open_per">Open Permissions and grant the Phone permission</string>
+    <string name="msg_cam_per_no_grtd">Camera permission isn\'t granted</string>
+    <string name="msg_store_per_no_grtd">Storage permission isn\'t granted</string>
+    <string name="msg_open_ph_per">Open Permissions and grant the Phone permission</string>
+    <string name="msg_open_cam_per">Open Permissions and grant the Camera permission</string>
+    <string name="msg_open_store_per">Open Permissions and grant the Storage permission</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

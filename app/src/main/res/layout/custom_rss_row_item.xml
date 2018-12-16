@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rss_item_click"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dip"
+    android:background="?attr/background_2" >
+
+
+    <TextView
+        android:id="@+id/rss_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="1dip"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="?attr/header_txt_color"
+        android:maxLines="1"
+        android:text="Tut.by" />
+
+    <TextView
+        android:id="@+id/rss_description"
+        android:layout_below="@id/rss_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:textColor="?attr/textcolor"
+        android:text="Самые горячие новости" />
+
+    <TextView android:id="@+id/rss_link"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingBottom="6dip"
+        android:textSize="15sp"
+        android:textColor="?attr/link_color"
+        android:text="https://www.tut.by"
+        android:maxLines="1"
+        android:layout_below="@id/rss_description"/>
+</RelativeLayout>
