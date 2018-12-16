@@ -118,7 +118,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
 
     @Override
     public void onReloadBtnClick(final ArrayList<RSSItem> newRssItems) {
-        Toasty.info(getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
+        Toasty.info(newsView.getContext(), "Press reload to get new news.", Toast.LENGTH_LONG).show();
         reload_news_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +141,7 @@ public class NewsFragment extends Fragment implements IReadRssView {
         }
 
         newsRecyclerView.addItemDecoration(new VerticalSpace(20));
-        adapter = new ListAdapter(getContext());
+        adapter = new ListAdapter(newsView.getContext());
     }
 
     @Override

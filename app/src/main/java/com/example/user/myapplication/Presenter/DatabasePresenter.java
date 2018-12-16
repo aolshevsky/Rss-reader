@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.user.myapplication.Manager.DatabaseManager;
 import com.example.user.myapplication.Presenter.Interface.IDatabasePresenter;
@@ -53,15 +54,22 @@ public class DatabasePresenter extends BasePresenter<IDatabaseView> implements I
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         if (view != null)
                             view.onSuccessMessage("Upload image success");
-                        pDialog.dismiss();
-                        view.unableOrientation();
+                        if(pDialog.isShowing()) {
+                            try {
+                                pDialog.dismiss();
+                            } catch (Exception e) {// nothing }
+
+                            }
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         view.onErrorMessage("Upload image failed");
-                        pDialog.dismiss();
+                        if (pDialog.isShowing()) {
+                            pDialog.cancel();
+                        }
                         view.unableOrientation();
                     }
                 })

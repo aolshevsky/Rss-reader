@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,14 +76,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                              Bundle savedInstanceState) {
         profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        permissionsHelper = PermissionsHelper.getInstance();
-        imagePresenter = ImagePresenter.getInstance();
-        imagePresenter.attachView(this);
-        databasePresenter = new DatabasePresenter();
-        databasePresenter.attachView(this);
-
-        databaseManager = DatabaseManager.getInstance();
-
         initializeView();
 
         loadUserInformation();
@@ -97,10 +90,22 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         super.onAttach(context);
         try {
             orientationListener = (IOrientationListener) context;
+            permissionsHelper = PermissionsHelper.getInstance();
+            imagePresenter = ImagePresenter.getInstance();
+            imagePresenter.attachView(this);
+            databasePresenter = new DatabasePresenter();
+            databasePresenter.attachView(this);
+
+            databaseManager = DatabaseManager.getInstance();
         } catch (ClassCastException ignored) {
         }
     }
 
+    @Override
+    public void onDetach() {
+        databasePresenter.detachView();
+        super.onDetach();
+    }
 
     private void initializeView(){
         imageview_edit = profileView.findViewById(R.id.avatarImgView);
@@ -122,15 +127,15 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
         Animation out = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
         viewSwitcher.setOutAnimation(out);
-
-        progressBar = new ProgressDialog(getActivity());
+        if (progressBar == null)
+            progressBar = new ProgressDialog(profileView.getContext());
         img_path = "";
         final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        orientationListener.disableOrientation();
+                        //orientationListener.disableOrientation();
                         databasePresenter.saveUser();
                         break;
 
@@ -144,7 +149,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                orientationListener.disableOrientation();
+                //orientationListener.disableOrientation();
                 databasePresenter.saveUser();
             }
         });
@@ -177,8 +182,8 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
     @Override
     public void setUserInfo(User userInfo) {
-        TextView textViewFullName = getActivity().findViewById(R.id.full_name_txt);
-        TextView textViewEmail = getActivity().findViewById(R.id.email_txt);
+        TextView textViewFullName = profileView.findViewById(R.id.full_name_txt);
+        TextView textViewEmail = profileView.findViewById(R.id.email_txt);
         if (textViewFullName != null)
             textViewFullName.setText(String.format("%s %s", userInfo.getName(), userInfo.getSurname()));
         if (textViewEmail != null)
@@ -188,7 +193,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
         if (imgFile.exists()) {
             Bitmap iconBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            ImageView profileImgView = getActivity().findViewById(R.id.profileImgView);
+            ImageView profileImgView = profileView.findViewById(R.id.profileImgView);
             if (profileImgView != null)
                 profileImgView.setImageBitmap(iconBitmap);
         }
@@ -236,7 +241,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
                         imageview_edit.setImageBitmap(iconBitmap);
                         img_path = userInfo.getImg_path();
                     } else {
-                        orientationListener.disableOrientation();
+                        //orientationListener.disableOrientation();
                         databasePresenter.downloadFromDatabaseStorage();
                     }
                 }
@@ -262,7 +267,6 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
     }
 
     public void saveUser(){
-        orientationListener.disableOrientation();
         databasePresenter.saveUser();
     }
 
@@ -291,7 +295,7 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
     @Override
     public AlertDialog.Builder createPictureDialog() {
-        return new AlertDialog.Builder(getContext());
+        return new AlertDialog.Builder(profileView.getContext());
     }
 
     @Override
@@ -352,11 +356,11 @@ public class ProfileFragment extends Fragment implements IImageView, IDatabaseVi
 
     @Override
     public void onSuccessMessage(String message) {
-        Toasty.success(getActivity(), message, Toast.LENGTH_SHORT).show();
+        Toasty.success(profileView.getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onErrorMessage(String message) {
-        Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
+        Toasty.error(profileView.getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
