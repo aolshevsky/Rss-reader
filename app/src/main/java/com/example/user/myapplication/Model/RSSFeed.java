@@ -13,8 +13,7 @@ public class RSSFeed extends SugarRecord {
     private String link;
     private String rss_link;
     private String language;
-    @Ignore
-    List<RSSItem> items;
+
 
     public RSSFeed() {}
 
@@ -27,16 +26,6 @@ public class RSSFeed extends SugarRecord {
         this.language = language;
     }
 
-
-    public void setItems(List<RSSItem> items) {
-        this.items = items;
-    }
-
-
-
-    public List<RSSItem> getItems() {
-        return this.items;
-    }
 
     public String getTitle() {
         return this.title;
@@ -66,7 +55,6 @@ public class RSSFeed extends SugarRecord {
                 ", link='" + link + '\'' +
                 ", rss_link='" + rss_link + '\'' +
                 ", language='" + language + '\'' +
-                ", items=" + items +
                 '}';
     }
 }

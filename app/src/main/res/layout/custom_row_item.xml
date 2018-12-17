@@ -37,7 +37,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Алеша продал почку или две..."
-                android:maxLines="1"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif"
                 android:textSize="18sp"
